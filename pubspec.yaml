@@ -1,0 +1,8 @@
+name: parser_builder_lite
+description: Parser Builder Lite is a lightweight and uncomplicated parser builder.
+homepage: https://github.com/mezoni/parser_builder_lite
+environment:
+  sdk: '>=2.18.0 <3.0.0'
+dev_dependencies:
+  dart_style: ^2.2.4
+  lints: ^2.0.0

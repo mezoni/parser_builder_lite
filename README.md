@@ -34,6 +34,13 @@ while (true) {
 }
 return Result(list);''';
 
+  @override
+  Map<String, Object?> get values => {
+        'O': O,
+        'p1': parser,
+      };
+}
+
 ```
 
 A typical example of using a parser builder.

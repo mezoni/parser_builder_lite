@@ -5,11 +5,8 @@ class Eof extends ParserBuilder<String, Object?> {
 
   @override
   String get template => '''
-{
-  if (state.pos >= state.source.length) {
-    return const Result(null);
-  }
-  final error = ErrorExpectedEof(state.pos);
-  return state.fail(error);
-}''';
+if (state.pos >= state.source.length) {
+  return const Result(null);
+}
+return state.fail(state.pos, const ErrorExpectedEof());''';
 }

@@ -9,14 +9,12 @@ class Map1<I, O, O1> extends ParserBuilder<I, O> {
 
   @override
   String get template => '''
-{
-  final r1 = {{p1}};
-  if (r1 == null) {
-    return null;
-  }
-  final v = {{f}}(r1.value);
-  return Result(v);
-}''';
+final r1 = {{p1}};
+if (r1 == null) {
+  return null;
+}
+final v = {{f}}(r1.value);
+return Result(v);''';
 
   @override
   Map<String, Object?> get values => {

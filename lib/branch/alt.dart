@@ -76,25 +76,23 @@ class Alt4<I, O> extends ParserBuilder<I, O> {
 
   @override
   String get template => '''
-{
-  final r1 = {{p1}};
-  if (r1 != null) {
-    return r1;
-  }
-  final r2 = {{p2}};
-  if (r2 != null) {
-    return r2;
-  }
-  final r3 = {{p3}};
-  if (r3 != null) {
-    return r3;
-  }
-  final r4 = {{p4}};
-  if (r4 != null) {
-    return r4;
-  }
-  return null;
-}''';
+final r1 = {{p1}};
+if (r1 != null) {
+  return r1;
+}
+final r2 = {{p2}};
+if (r2 != null) {
+  return r2;
+}
+final r3 = {{p3}};
+if (r3 != null) {
+  return r3;
+}
+final r4 = {{p4}};
+if (r4 != null) {
+  return r4;
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {

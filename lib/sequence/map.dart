@@ -11,19 +11,17 @@ class Map2<I, O, O1, O2> extends ParserBuilder<I, O> {
 
   @override
   String get template => '''
-{
-  final pos = state.pos;
-  final r1 = {{p1}};
-  if (r1 != null) {
-    final r2 = {{p2}};
-    if (r2 != null) {
-      final v = {{f}}(r1.value, r2.value);
-      return Result(v);
-    }
-    state.pos = pos;
+final pos = state.pos;
+final r1 = {{p1}};
+if (r1 != null) {
+  final r2 = {{p2}};
+  if (r2 != null) {
+    final v = {{f}}(r1.value, r2.value);
+    return Result(v);
   }
-  return null;
-}''';
+  state.pos = pos;
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {
@@ -46,22 +44,20 @@ class Map3<I, O, O1, O2, O3> extends ParserBuilder<I, O> {
 
   @override
   String get template => '''
-{
-  final pos = state.pos;
-  final r1 = {{p1}};
-  if (r1 != null) {
-    final r2 = {{p2}};
-    if (r2 != null) {
-      final r3 = {{p3}};
-      if (r3 != null) {
-        final v = {{f}}(r1.value, r2.value, r3.value);
-        return Result(v);
-      }
+final pos = state.pos;
+final r1 = {{p1}};
+if (r1 != null) {
+  final r2 = {{p2}};
+  if (r2 != null) {
+    final r3 = {{p3}};
+    if (r3 != null) {
+      final v = {{f}}(r1.value, r2.value, r3.value);
+      return Result(v);
     }
-    state.pos = pos;
   }
-  return null;
-}''';
+  state.pos = pos;
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {

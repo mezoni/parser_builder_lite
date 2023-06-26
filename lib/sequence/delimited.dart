@@ -11,21 +11,19 @@ class Delimited<I, O> extends ParserBuilder<I, O> {
 
   @override
   String get template => '''
-{
-  final pos = state.pos;
-  final r1 = {{p1}};
-  if (r1 != null) {
-    final r2 = {{p2}};
-    if (r2 != null) {
-      final r3 = {{p3}};
-      if (r3 != null) {
-        return Result(r2.value);
-      }
+final pos = state.pos;
+final r1 = {{p1}};
+if (r1 != null) {
+  final r2 = {{p2}};
+  if (r2 != null) {
+    final r3 = {{p3}};
+    if (r3 != null) {
+      return Result(r2.value);
     }
-    state.pos = pos;
   }
-  return null;
-}''';
+  state.pos = pos;
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {

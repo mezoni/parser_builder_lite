@@ -7,15 +7,13 @@ class And<I> extends ParserBuilder<I, Object?> {
 
   @override
   String get template => '''
-{
-  final pos = state.pos;
-  final r1 = {{p1}};
-  if (r1 != null) {
-    state.pos = pos;
-    return const Result(null);
-  }
-  return null;
-}''';
+final pos = state.pos;
+final r1 = {{p1}};
+if (r1 != null) {
+  state.pos = pos;
+  return const Result(null);
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {

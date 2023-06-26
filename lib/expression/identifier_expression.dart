@@ -12,36 +12,32 @@ class _IdentifierExpression extends ParserBuilder<String, String> {
 
   @override
   String get template => '''
-{
-  final pos = state.pos;
-  final source = state.source;
-  if (state.pos >= source.length) {
-    final error = ErrorUnexpectedError();
-    return state.fail(error);
+final pos = state.pos;
+final source = state.source;
+if (state.pos >= source.length) {
+  return state.fail(state.pos, const ErrorUnexpectedEof());
+}
+final c = source.readRune(state);
+var ok = {{identStart}}(c);
+if (ok) {
+  while (state.pos < source.length) {
+    final pos = state.pos;
+    final c = source.readRune(state);
+    ok = {{identCont}}(c);
+    if (!ok) {
+      state.pos = pos;
+      break;
+    }
   }
-  final c = source.readRune(state);
-  var ok = {{identStart}}(c);
+  final word = source.substring(pos, state.pos);
+  const words = <String>{{words}};
+  ok = words.isEmpty || !words.contains(word);
   if (ok) {
-    while (state.pos < source.length) {
-      final pos = state.pos;
-      final c = source.readRune(state);
-      ok = {{identCont}}(c);
-      if (!ok) {
-        state.pos = pos;
-        break;
-      }
-    }
-    final word = source.substring(pos, state.pos);
-    const words = <String>{{words}};
-    ok = words.isEmpty || !words.contains(word);
-    if (ok) {
-      return const Result(word);
-    }
+    return const Result(word);
   }
-  if (!ok) {
-    state.pos = pos;
-    final error = ErrorExpectedError(pos, 'identifier');
-    state.fail(error);
-  }
+}
+if (!ok) {
+  state.pos = pos;
+  state.fail(pos, const ErrorExpectedTags(pos, ['identifier']));
 }''';
 }

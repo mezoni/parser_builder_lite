@@ -9,13 +9,11 @@ class Value<I, O> extends ParserBuilder<I, O> {
 
   @override
   String get template => '''
-{
-  final r1 = {{p1}};
-  if (r1 != null) {
-    return Result({{value}});
-  }
-  return null;
-}''';
+final r1 = {{p1}};
+if (r1 != null) {
+  return Result({{value}});
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {

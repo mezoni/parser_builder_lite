@@ -1,5 +1,5 @@
 void main() {
-  final r = parse('{"rocket": "🚀 flies to the stars"}');
+  final r = parse(r'{"rocket": "🚀 flies to the stars\u004 "}');
   print(r);
 }
 
@@ -7,7 +7,7 @@ Object? parse(String source) {
   final state = State(source);
   final result = json(state);
   if (result == null) {
-    final message = _errorMessage(source, state.errors);
+    final message = _errorMessage(source, state.failPos, state.errors);
     throw message;
   }
   return result.value;
@@ -16,24 +16,25 @@ Object? parse(String source) {
 bool _$g0(int a) => a == 9 || a == 10 || a == 13 || a == 32;
 
 Result<Object?>? _ws(State<String> state) {
-  final source = state.source;
-  while (state.pos < source.length) {
-    final pos = state.pos;
-    final c = source.readRune(state);
-    final v = _$g0(c);
-    if (!v) {
-      state.pos = pos;
-      break;
+  {
+    final source = state.source;
+    while (state.pos < source.length) {
+      final pos = state.pos;
+      final c = source.readRune(state);
+      final v = _$g0(c);
+      if (!v) {
+        state.pos = pos;
+        break;
+      }
     }
+    return const Result(null);
   }
-  return const Result(null);
 }
 
 Result<String>? _$g1(State<String> state) {
   const tag = '"';
   if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos += 1;
   return const Result(tag);
@@ -51,8 +52,7 @@ Result<String>? _normalChars(State<String> state) {
   final source = state.source;
   final start = state.pos;
   if (start >= source.length) {
-    final error = ErrorUnexpectedEof(start);
-    return state.fail(error);
+    return state.fail(start, const ErrorUnexpectedEof());
   }
   while (state.pos < source.length) {
     final pos = state.pos;
@@ -64,8 +64,7 @@ Result<String>? _normalChars(State<String> state) {
     }
   }
   if (state.pos == start) {
-    final error = ErrorUnexpectedChar(start, source);
-    return state.fail(error);
+    return state.fail(start, const ErrorUnexpectedChar());
   }
   return Result(source.substring(start, state.pos));
 }
@@ -73,42 +72,41 @@ Result<String>? _normalChars(State<String> state) {
 Result<String>? _$g6(State<String> state) {
   const tag = '\\';
   if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos += 1;
   return const Result(tag);
 }
 
 Result<String>? _escapeChar(State<String> state) {
-  final source = state.source;
-  final pos = state.pos;
-  if (pos >= source.length) {
-    final error = ErrorUnexpectedEof(pos);
-    return state.fail(error);
+  {
+    final source = state.source;
+    final pos = state.pos;
+    if (pos >= source.length) {
+      return state.fail(pos, const ErrorUnexpectedEof());
+    }
+    final c = source.readRune(state);
+    switch (c) {
+      case 34:
+        return const Result('"');
+      case 47:
+        return const Result('/');
+      case 92:
+        return const Result('\\');
+      case 98:
+        return const Result('\b');
+      case 102:
+        return const Result('\f');
+      case 110:
+        return const Result('\n');
+      case 114:
+        return const Result('\r');
+      case 116:
+        return const Result('\t');
+    }
+    state.pos = pos;
+    return state.fail(pos, const ErrorUnexpectedChar());
   }
-  final c = source.readRune(state);
-  switch (c) {
-    case 34:
-      return const Result('"');
-    case 47:
-      return const Result('/');
-    case 92:
-      return const Result('\\');
-    case 98:
-      return const Result('\b');
-    case 102:
-      return const Result('\f');
-    case 110:
-      return const Result('\n');
-    case 114:
-      return const Result('\r');
-    case 116:
-      return const Result('\t');
-  }
-  state.pos = pos;
-  final error = ErrorUnexpectedChar(pos, source);
-  return state.fail(error);
 }
 
 Result<String>? _escape(State<String> state) {
@@ -127,18 +125,14 @@ Result<String>? _escape(State<String> state) {
 Result<String>? _$g7(State<String> state) {
   const tag = '\\u';
   if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos += 2;
   return const Result(tag);
 }
 
-Object? _$g8(State<String> a) {
-  final error = ErrorMessage(a.failPos, 'Expected 4 digit hexadecimal number');
-  error.start = a.pos;
-  //a.errors = [];
-  return error;
+Object? _$g8(int start, int end) {
+  return ErrorMessage(end - start, 'Expected 4 digit hexadecimal number');
 }
 
 String _$g9(String a) => String.fromCharCode(_toHexValue(a));
@@ -147,31 +141,34 @@ bool _$g11(int a) =>
     (a >= 48 && a <= 57) || (a >= 65 && a <= 70) || (a >= 97 && a <= 102);
 
 Result<String>? _$g10(State<String> state) {
-  final source = state.source;
-  final start = state.pos;
-  var count = 0;
-  while (count < 4 && state.pos < source.length) {
-    final pos = state.pos;
-    final c = source.readRune(state);
-    final ok = _$g11(c);
-    if (!ok) {
-      state.pos = pos;
-      break;
+  {
+    final source = state.source;
+    final start = state.pos;
+    var count = 0;
+    while (count < 4 && state.pos < source.length) {
+      final pos = state.pos;
+      final c = source.readRune(state);
+      final ok = _$g11(c);
+      if (!ok) {
+        state.pos = pos;
+        break;
+      }
+      count++;
     }
-    count++;
+    if (count >= 4) {
+      final v = source.substring(start, state.pos);
+      return Result(v);
+    }
+    final ParseError error;
+    final end = state.pos;
+    if (state.pos < source.length) {
+      error = const ErrorUnexpectedChar();
+    } else {
+      error = const ErrorUnexpectedEof();
+    }
+    state.pos = start;
+    return state.fail(end, error);
   }
-  if (count >= 4) {
-    final v = source.substring(start, state.pos);
-    return Result(v);
-  }
-  final ParseError error;
-  if (state.pos < source.length) {
-    error = ErrorUnexpectedChar(state.pos, source);
-  } else {
-    error = ErrorUnexpectedEof(state.pos);
-  }
-  state.pos = start;
-  return state.fail(error);
 }
 
 Result<String>? _hexValue(State<String> state) {
@@ -184,26 +181,30 @@ Result<String>? _hexValue(State<String> state) {
 }
 
 Result<String>? _hexValueChecked(State<String> state) {
+  final pos = state.pos;
   final failPos = state.failPos;
   final errors = state.errors;
   state.errors = [];
   state.failPos = -1;
   final r1 = _hexValue(state);
+  var failPos2 = state.failPos;
+  if (failPos2 < failPos) {
+    state.failPos = failPos;
+    state.errors = errors;
+  } else if (failPos2 == failPos) {
+    state.errors.addAll(errors);
+  }
+
   if (r1 != null) {
     return r1;
   }
-  if (state.failPos >= failPos) {
-    final error = _$g8(state) as ParseError;
-    if (state.failPos == failPos) {
-      state.errors.addAll(errors);
-    }
-    return state.fail(error);
-  } else {
-    state.failPos = failPos;
-    state.errors = [];
-    state.errors.addAll(errors);
+
+  if (failPos2 < pos) {
+    failPos2 = pos;
   }
-  return null;
+
+  final error = _$g8(pos, failPos2) as ParseError;
+  return state.fail(failPos2, error);
 }
 
 Result<String>? _hexChar(State<String> state) {
@@ -220,31 +221,35 @@ Result<String>? _hexChar(State<String> state) {
 }
 
 Result<String>? _$g4(State<String> state) {
-  final r1 = _normalChars(state);
-  if (r1 != null) {
-    return r1;
+  {
+    final r1 = _normalChars(state);
+    if (r1 != null) {
+      return r1;
+    }
+    final r2 = _escape(state);
+    if (r2 != null) {
+      return r2;
+    }
+    final r3 = _hexChar(state);
+    if (r3 != null) {
+      return r3;
+    }
+    return null;
   }
-  final r2 = _escape(state);
-  if (r2 != null) {
-    return r2;
-  }
-  final r3 = _hexChar(state);
-  if (r3 != null) {
-    return r3;
-  }
-  return null;
 }
 
 Result<List<String>>? _stringChars(State<String> state) {
-  final list = <String>[];
-  while (true) {
-    final r1 = _$g4(state);
-    if (r1 == null) {
-      break;
+  {
+    final list = <String>[];
+    while (true) {
+      final r1 = _$g4(state);
+      if (r1 == null) {
+        break;
+      }
+      list.add(r1.value);
     }
-    list.add(r1.value);
+    return Result(list);
   }
-  return Result(list);
 }
 
 Result<String>? _$g2(State<String> state) {
@@ -259,8 +264,7 @@ Result<String>? _$g2(State<String> state) {
 Result<String>? _$g12(State<String> state) {
   const tag = '"';
   if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos += 1;
   return const Result(tag);
@@ -295,13 +299,12 @@ Result<String>? _string(State<String> state) {
   return null;
 }
 
-dynamic _$g13(String a) => num.parse(a);
+num _$g13(String a) => num.parse(a);
 
 Result<String>? _$g16(State<String> state) {
   const tag = '-';
   if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos += 1;
   return const Result(tag);
@@ -318,8 +321,7 @@ Result<String?>? _minus(State<String> state) {
 Result<String>? _$g17(State<String> state) {
   const tag = '0';
   if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos += 1;
   return const Result(tag);
@@ -331,8 +333,7 @@ Result<int>? _$g19(State<String> state) {
   final pos = state.pos;
   final source = state.source;
   if (pos >= source.length) {
-    final error = ErrorUnexpectedEof(pos);
-    return state.fail(error);
+    return state.fail(pos, ErrorUnexpectedEof());
   }
   final c = source.readRune(state);
   final ok = _$g20(c);
@@ -340,24 +341,25 @@ Result<int>? _$g19(State<String> state) {
     return Result(c);
   }
   state.pos = pos;
-  final error = ErrorUnexpectedChar(pos, source);
-  return state.fail(error);
+  return state.fail(pos, ErrorUnexpectedChar());
 }
 
 bool _$g21(int a) => a >= 48 && a <= 57;
 
 Result<Object?>? _digit0(State<String> state) {
-  final source = state.source;
-  while (state.pos < source.length) {
-    final pos = state.pos;
-    final c = source.readRune(state);
-    final v = _$g21(c);
-    if (!v) {
-      state.pos = pos;
-      break;
+  {
+    final source = state.source;
+    while (state.pos < source.length) {
+      final pos = state.pos;
+      final c = source.readRune(state);
+      final v = _$g21(c);
+      if (!v) {
+        state.pos = pos;
+        break;
+      }
     }
+    return const Result(null);
   }
-  return const Result(null);
 }
 
 Result<Object?>? _$g18(State<String> state) {
@@ -374,22 +376,23 @@ Result<Object?>? _$g18(State<String> state) {
 }
 
 Result<Object?>? _integer(State<String> state) {
-  final r1 = _$g17(state);
-  if (r1 != null) {
-    return r1;
+  {
+    final r1 = _$g17(state);
+    if (r1 != null) {
+      return r1;
+    }
+    final r2 = _$g18(state);
+    if (r2 != null) {
+      return r2;
+    }
+    return null;
   }
-  final r2 = _$g18(state);
-  if (r2 != null) {
-    return r2;
-  }
-  return null;
 }
 
 Result<String>? _$g23(State<String> state) {
   const tag = '.';
   if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos += 1;
   return const Result(tag);
@@ -399,8 +402,7 @@ Result<Object?>? _digit1(State<String> state) {
   final source = state.source;
   final start = state.pos;
   if (start >= source.length) {
-    final error = ErrorUnexpectedEof(start);
-    return state.fail(error);
+    return state.fail(start, const ErrorUnexpectedEof());
   }
   while (state.pos < source.length) {
     final pos = state.pos;
@@ -412,8 +414,7 @@ Result<Object?>? _digit1(State<String> state) {
     }
   }
   if (state.pos == start) {
-    final error = ErrorUnexpectedChar(start, source);
-    return state.fail(error);
+    return state.fail(start, const ErrorUnexpectedChar());
   }
   return const Result(null);
 }
@@ -450,8 +451,7 @@ Result<String>? _$g25(State<String> state) {
       return Result(tag);
     }
   }
-  final error = ErrorExpectedTags(pos, tags);
-  return state.fail(error);
+  return state.fail(pos, const ErrorExpectedTags(tags));
 }
 
 Result<String>? _$g27(State<String> state) {
@@ -465,8 +465,7 @@ Result<String>? _$g27(State<String> state) {
       return Result(tag);
     }
   }
-  final error = ErrorExpectedTags(pos, tags);
-  return state.fail(error);
+  return state.fail(pos, const ErrorExpectedTags(tags));
 }
 
 Result<Object?>? _$g26(State<String> state) {
@@ -532,7 +531,7 @@ Result<String>? _$g14(State<String> state) {
   return Result(state.source.substring(start, state.pos));
 }
 
-Result<dynamic>? _num(State<String> state) {
+Result<num>? _num(State<String> state) {
   final r1 = _$g14(state);
   if (r1 == null) {
     return null;
@@ -541,7 +540,7 @@ Result<dynamic>? _num(State<String> state) {
   return Result(v);
 }
 
-Result<dynamic>? _number(State<String> state) {
+Result<num>? _number(State<String> state) {
   final pos = state.pos;
   final r1 = _num(state);
   if (r1 != null) {
@@ -557,8 +556,7 @@ Result<dynamic>? _number(State<String> state) {
 Result<String>? _$g29(State<String> state) {
   const tag = 'true';
   if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos += 4;
   return const Result(tag);
@@ -588,8 +586,7 @@ Result<bool>? _true(State<String> state) {
 Result<String>? _$g31(State<String> state) {
   const tag = 'false';
   if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos += 5;
   return const Result(tag);
@@ -619,8 +616,7 @@ Result<bool>? _false(State<String> state) {
 Result<String>? _$g33(State<String> state) {
   const tag = 'null';
   if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos += 4;
   return const Result(tag);
@@ -650,8 +646,7 @@ Result<Object?>? _null(State<String> state) {
 Result<String>? _$g34(State<String> state) {
   const tag = '[';
   if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos += 1;
   return const Result(tag);
@@ -673,8 +668,7 @@ Result<String>? _openBracket(State<String> state) {
 Result<String>? _$g35(State<String> state) {
   const tag = ',';
   if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos += 1;
   return const Result(tag);
@@ -715,8 +709,7 @@ Result<List<Object?>>? _values(State<String> state) {
 Result<String>? _$g36(State<String> state) {
   const tag = ']';
   if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos += 1;
   return const Result(tag);
@@ -757,8 +750,7 @@ Map<String, Object?> _$g37(a, List<MapEntry<String, Object?>> b, c) =>
 Result<String>? _$g38(State<String> state) {
   const tag = '{';
   if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos += 1;
   return const Result(tag);
@@ -783,8 +775,7 @@ MapEntry<String, Object?> _$g39(String a, b, Object? c) =>
 Result<String>? _$g40(State<String> state) {
   const tag = ':';
   if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos += 1;
   return const Result(tag);
@@ -842,8 +833,7 @@ Result<List<MapEntry<String, Object?>>>? _keyValues(State<String> state) {
 Result<String>? _$g41(State<String> state) {
   const tag = '}';
   if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos += 1;
   return const Result(tag);
@@ -879,47 +869,48 @@ Result<Map<String, Object?>>? _object(State<String> state) {
   return null;
 }
 
-Result<dynamic>? _value(State<String> state) {
-  final r1 = _string(state);
-  if (r1 != null) {
-    return r1;
+Result<Object?>? _value(State<String> state) {
+  {
+    final r1 = _string(state);
+    if (r1 != null) {
+      return r1;
+    }
+    final r2 = _number(state);
+    if (r2 != null) {
+      return r2;
+    }
+    final r3 = _true(state);
+    if (r3 != null) {
+      return r3;
+    }
+    final r4 = _false(state);
+    if (r4 != null) {
+      return r4;
+    }
+    final r5 = _null(state);
+    if (r5 != null) {
+      return r5;
+    }
+    final r6 = _array(state);
+    if (r6 != null) {
+      return r6;
+    }
+    final r7 = _object(state);
+    if (r7 != null) {
+      return r7;
+    }
+    return null;
   }
-  final r2 = _number(state);
-  if (r2 != null) {
-    return r2;
-  }
-  final r3 = _true(state);
-  if (r3 != null) {
-    return r3;
-  }
-  final r4 = _false(state);
-  if (r4 != null) {
-    return r4;
-  }
-  final r5 = _null(state);
-  if (r5 != null) {
-    return r5;
-  }
-  final r6 = _array(state);
-  if (r6 != null) {
-    return r6;
-  }
-  final r7 = _object(state);
-  if (r7 != null) {
-    return r7;
-  }
-  return null;
 }
 
 Result<Object?>? _$g42(State<String> state) {
   if (state.pos >= state.source.length) {
     return const Result(null);
   }
-  final error = ErrorExpectedEof(state.pos);
-  return state.fail(error);
+  return state.fail(state.pos, const ErrorExpectedEof());
 }
 
-Result<dynamic>? json(State<String> state) {
+Result<Object?>? json(State<String> state) {
   final pos = state.pos;
   final r1 = _ws(state);
   if (r1 != null) {
@@ -957,43 +948,49 @@ int _toHexValue(String s) {
   return r;
 }
 
-// ignore: unused_element
-String _errorMessage(String source, List<ParseError> errors) {
+String _errorMessage(String source, int offset, List<ParseError> errors) {
   final sb = StringBuffer();
-  final maxOffset = errors.map((e) => e.offset).reduce((v, e) => v > e ? v : e);
-  final newErrors = errors.where((e) => e.offset == maxOffset).toSet().toList();
+  final errorList = errors.toList();
   final mapByStart = <int, List<ParseError>>{};
-  for (final error in newErrors) {
-    final start = error.start ?? maxOffset;
+  for (final error in errorList) {
+    final start = offset - error.length;
     (mapByStart[start] ??= []).add(error);
   }
 
-  final expectedTags = newErrors.whereType<ErrorExpectedTags>();
+  final expectedTags = errorList.whereType<ErrorExpectedTags>();
   if (expectedTags.isNotEmpty) {
     final map = <int, Set<String>>{};
-    newErrors.removeWhere((e) => e is ErrorExpectedTags);
+    errorList.removeWhere((e) => e is ErrorExpectedTags);
     for (final error in expectedTags) {
-      final start = error.start ?? maxOffset;
+      final start = offset - error.length;
       (map[start] ??= {}).addAll(error.tags);
     }
 
     for (final start in map.keys) {
       final tags = map[start]!;
-      final error = ErrorExpectedTags(maxOffset, tags.toList());
-      error.start = start;
-      newErrors.add(error);
+      final error = ErrorExpectedTags(tags.toList());
+      errorList.add(error);
     }
   }
 
-  for (var i = 0; i < newErrors.length; i++) {
+  final errorInfoList = errorList
+      .map((e) => (
+            error: e,
+            message: e.getErrorMessage(offset: offset, source: source),
+          ))
+      .toList();
+
+  for (var i = 0; i < errorInfoList.length; i++) {
     if (sb.isNotEmpty) {
       sb.writeln();
       sb.writeln();
     }
 
-    final error = newErrors[i];
-    final end = error.offset;
-    final start = error.start ?? end;
+    final errorInfo = errorInfoList[i];
+    final error = errorInfo.error;
+    final message = errorInfo.message;
+    final end = offset;
+    final start = offset - error.length;
     RangeError.checkValidRange(start, end, source.length);
     var row = 1;
     var lineStart = 0, next = 0, pos = 0;
@@ -1043,7 +1040,7 @@ String _errorMessage(String source, List<ParseError> errors) {
     text = text.replaceAll('\n', ' ');
     text = text.replaceAll('\r', ' ');
     text = text.replaceAll('\t', ' ');
-    sb.writeln('line $row, column $column: $error');
+    sb.writeln('line $row, column $column: $message');
     sb.writeln(text);
     sb.write(' ' * leftLen + '^' * indicatorLen);
   }
@@ -1054,34 +1051,30 @@ String _errorMessage(String source, List<ParseError> errors) {
 class ErrorExpectedChar extends ParseError {
   final int char;
 
-  ErrorExpectedChar(super.offset, this.char);
+  const ErrorExpectedChar(this.char);
 
   @override
-  int get hashCode => super.hashCode ^ char.hashCode;
-
-  @override
-  bool operator ==(other) {
-    return other is ErrorExpectedChar && other.char == char && super == other;
-  }
-
-  @override
-  String toString() {
-    final value = escape(char);
-    return 'Expected character $value';
+  String getErrorMessage({
+    required int offset,
+    required Object source,
+  }) {
+    if (source is String) {
+      final value = escape(char);
+      return 'Expected character $value';
+    } else {
+      return 'Expected character';
+    }
   }
 }
 
 class ErrorExpectedEof extends ParseError {
-  ErrorExpectedEof(super.offset);
+  const ErrorExpectedEof();
 
   @override
-  // ignore: hash_and_equals
-  bool operator ==(other) {
-    return other is ErrorExpectedEof && super == other;
-  }
-
-  @override
-  String toString() {
+  String getErrorMessage({
+    required int offset,
+    required Object source,
+  }) {
     return 'Expected end of file';
   }
 }
@@ -1089,134 +1082,83 @@ class ErrorExpectedEof extends ParseError {
 class ErrorExpectedTags extends ParseError {
   final List<String> tags;
 
-  ErrorExpectedTags(super.offset, this.tags);
+  const ErrorExpectedTags(this.tags);
 
   @override
-  int get hashCode {
-    var result = super.hashCode;
-    for (var i = 0; i < tags.length; i++) {
-      final tag = tags[i];
-      result ^= tag.hashCode;
-    }
-
-    return result;
-  }
-
-  @override
-  bool operator ==(other) {
-    if (other is ErrorExpectedTags) {
-      final otherTags = other.tags;
-      if (otherTags.length == tags.length) {
-        for (var i = 0; i < tags.length; i++) {
-          final tag = tags[i];
-          final otherTag = otherTags[i];
-          if (tag != otherTag) {
-            return false;
-          }
-        }
-      }
-
-      return super == other;
-    }
-
-    return false;
-  }
-
-  @override
-  String toString() {
+  String getErrorMessage({
+    required int offset,
+    required Object source,
+  }) {
     final value = tags.map(escape).join(', ');
     return 'Expected $value';
   }
 }
 
 class ErrorMessage extends ParseError {
+  @override
+  final int length;
+
   final String message;
 
-  ErrorMessage(super.offset, this.message);
+  const ErrorMessage(this.length, this.message);
 
   @override
-  int get hashCode => super.hashCode ^ message.hashCode;
-
-  @override
-  bool operator ==(other) {
-    return other is ErrorMessage && other.message == message && super == other;
-  }
-
-  @override
-  String toString() {
+  String getErrorMessage({
+    required int offset,
+    required Object source,
+  }) {
     return message;
   }
 }
 
 class ErrorUnexpectedChar extends ParseError {
-  final String source;
-
-  ErrorUnexpectedChar(super.offset, this.source);
+  const ErrorUnexpectedChar();
 
   @override
-  int get hashCode => super.hashCode ^ source.hashCode;
-
-  @override
-  bool operator ==(other) {
-    return other is ErrorUnexpectedChar &&
-        other.source == source &&
-        super == other;
-  }
-
-  @override
-  String toString() {
-    final char = source.runeAt(offset);
-    final value = escape(char);
-    return 'Unexpected character $value';
+  String getErrorMessage({
+    required int offset,
+    required Object source,
+  }) {
+    if (source is String) {
+      final char = source.runeAt(offset);
+      final value = escape(char);
+      return 'Unexpected character $value';
+    } else {
+      return 'Unexpected character';
+    }
   }
 }
 
 class ErrorUnexpectedEof extends ParseError {
-  ErrorUnexpectedEof(super.offset);
+  const ErrorUnexpectedEof();
 
   @override
-  // ignore: hash_and_equals
-  bool operator ==(other) {
-    return other is ErrorUnexpectedEof && super == other;
-  }
-
-  @override
-  String toString() {
+  String getErrorMessage({
+    required int offset,
+    required Object source,
+  }) {
     return 'Unexpected end of file';
   }
 }
 
 class ErrorUnexpectedInput extends ParseError {
-  ErrorUnexpectedInput(super.offset);
+  final int start;
+
+  const ErrorUnexpectedInput(this.start);
 
   @override
-  // ignore: hash_and_equals
-  bool operator ==(other) {
-    return other is ErrorUnexpectedInput && super == other;
-  }
-
-  @override
-  String toString() {
+  String getErrorMessage({
+    required int offset,
+    required Object source,
+  }) {
     return 'Unexpected input';
   }
 }
 
 abstract class ParseError {
-  int offset;
+  const ParseError();
 
-  int? start;
-
-  ParseError(this.offset);
-
-  @override
-  int get hashCode => offset.hashCode ^ start.hashCode;
-
-  @override
-  bool operator ==(Object? other) {
-    return other is ParseError &&
-        other.offset == offset &&
-        other.start == start;
-  }
+  int get length => 0;
 
   String escape(Object? value, [bool quote = true]) {
     if (value is int) {
@@ -1249,6 +1191,11 @@ abstract class ParseError {
 
     return result;
   }
+
+  String getErrorMessage({
+    required int offset,
+    required Object source,
+  });
 }
 
 class Result<T> {
@@ -1273,8 +1220,7 @@ class State<T> {
 
   State(this.source);
 
-  Result<R>? fail<R>(ParseError error) {
-    final offset = error.offset;
+  Result<R>? fail<R>(int offset, ParseError error) {
     if (offset < failPos) {
       return null;
     }

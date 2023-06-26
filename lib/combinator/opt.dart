@@ -7,13 +7,11 @@ class Opt<I, O> extends ParserBuilder<I, O?> {
 
   @override
   String get template => '''
-{
-  final r1 = {{p1}};
-  if (r1 == null) {
-    return const Result(null);
-  }
-  return Result(r1.value);
-}''';
+final r1 = {{p1}};
+if (r1 == null) {
+  return const Result(null);
+}
+return Result(r1.value);''';
 
   @override
   Map<String, Object?> get values => {

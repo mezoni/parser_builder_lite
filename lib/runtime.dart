@@ -1,41 +1,47 @@
 const errorMessageTemplate = r'''
-// ignore: unused_element
-String _errorMessage(String source, List<ParseError> errors) {
+String _errorMessage(String source, int offset, List<ParseError> errors) {
   final sb = StringBuffer();
-  final maxOffset = errors.map((e) => e.offset).reduce((v, e) => v > e ? v : e);
-  final newErrors = errors.where((e) => e.offset == maxOffset).toSet().toList();
+  final errorList = errors.toList();
   final mapByStart = <int, List<ParseError>>{};
-  for (final error in newErrors) {
-    final start = error.start ?? maxOffset;
+  for (final error in errorList) {
+    final start = offset - error.length;
     (mapByStart[start] ??= []).add(error);
   }
 
-  final expectedTags = newErrors.whereType<ErrorExpectedTags>();
+  final expectedTags = errorList.whereType<ErrorExpectedTags>();
   if (expectedTags.isNotEmpty) {
     final map = <int, Set<String>>{};
-    newErrors.removeWhere((e) => e is ErrorExpectedTags);
+    errorList.removeWhere((e) => e is ErrorExpectedTags);
     for (final error in expectedTags) {
-      final start = error.start ?? maxOffset;
+      final start = offset - error.length;
       (map[start] ??= {}).addAll(error.tags);
     }
 
     for (final start in map.keys) {
       final tags = map[start]!;
-      final error = ErrorExpectedTags(maxOffset, tags.toList());
-      error.start = start;
-      newErrors.add(error);
+      final error = ErrorExpectedTags(tags.toList());
+      errorList.add(error);
     }
   }
 
-  for (var i = 0; i < newErrors.length; i++) {
+  final errorInfoList = errorList
+      .map((e) => (
+            error: e,
+            message: e.getErrorMessage(offset: offset, source: source),
+          ))
+      .toList();
+
+  for (var i = 0; i < errorInfoList.length; i++) {
     if (sb.isNotEmpty) {
       sb.writeln();
       sb.writeln();
     }
 
-    final error = newErrors[i];
-    final end = error.offset;
-    final start = error.start ?? end;
+    final errorInfo = errorInfoList[i];
+    final error = errorInfo.error;
+    final message = errorInfo.message;
+    final end = offset;
+    final start = offset - error.length;
     RangeError.checkValidRange(start, end, source.length);
     var row = 1;
     var lineStart = 0, next = 0, pos = 0;
@@ -85,7 +91,7 @@ String _errorMessage(String source, List<ParseError> errors) {
     text = text.replaceAll('\n', ' ');
     text = text.replaceAll('\r', ' ');
     text = text.replaceAll('\t', ' ');
-    sb.writeln('line $row, column $column: $error');
+    sb.writeln('line $row, column $column: $message');
     sb.writeln(text);
     sb.write(' ' * leftLen + '^' * indicatorLen);
   }
@@ -99,34 +105,30 @@ const runtimeTemplate = r'''
 class ErrorExpectedChar extends ParseError {
   final int char;
 
-  ErrorExpectedChar(super.offset, this.char);
+  const ErrorExpectedChar(this.char);
 
   @override
-  int get hashCode => super.hashCode ^ char.hashCode;
-
-  @override
-  bool operator ==(other) {
-    return other is ErrorExpectedChar && other.char == char && super == other;
-  }
-
-  @override
-  String toString() {
-    final value = escape(char);
-    return 'Expected character $value';
+  String getErrorMessage({
+    required int offset,
+    required Object source,
+  }) {
+    if (source is String) {
+      final value = escape(char);
+      return 'Expected character $value';
+    } else {
+      return 'Expected character';
+    }
   }
 }
 
 class ErrorExpectedEof extends ParseError {
-  ErrorExpectedEof(super.offset);
+  const ErrorExpectedEof();
 
   @override
-  // ignore: hash_and_equals
-  bool operator ==(other) {
-    return other is ErrorExpectedEof && super == other;
-  }
-
-  @override
-  String toString() {
+  String getErrorMessage({
+    required int offset,
+    required Object source,
+  }) {
     return 'Expected end of file';
   }
 }
@@ -134,134 +136,83 @@ class ErrorExpectedEof extends ParseError {
 class ErrorExpectedTags extends ParseError {
   final List<String> tags;
 
-  ErrorExpectedTags(super.offset, this.tags);
+  const ErrorExpectedTags(this.tags);
 
   @override
-  int get hashCode {
-    var result = super.hashCode;
-    for (var i = 0; i < tags.length; i++) {
-      final tag = tags[i];
-      result ^= tag.hashCode;
-    }
-
-    return result;
-  }
-
-  @override
-  bool operator ==(other) {
-    if (other is ErrorExpectedTags) {
-      final otherTags = other.tags;
-      if (otherTags.length == tags.length) {
-        for (var i = 0; i < tags.length; i++) {
-          final tag = tags[i];
-          final otherTag = otherTags[i];
-          if (tag != otherTag) {
-            return false;
-          }
-        }
-      }
-
-      return super == other;
-    }
-
-    return false;
-  }
-
-  @override
-  String toString() {
+  String getErrorMessage({
+    required int offset,
+    required Object source,
+  }) {
     final value = tags.map(escape).join(', ');
     return 'Expected $value';
   }
 }
 
 class ErrorMessage extends ParseError {
+  @override
+  final int length;
+
   final String message;
 
-  ErrorMessage(super.offset, this.message);
+  const ErrorMessage(this.length, this.message);
 
   @override
-  int get hashCode => super.hashCode ^ message.hashCode;
-
-  @override
-  bool operator ==(other) {
-    return other is ErrorMessage && other.message == message && super == other;
-  }
-
-  @override
-  String toString() {
+  String getErrorMessage({
+    required int offset,
+    required Object source,
+  }) {
     return message;
   }
 }
 
 class ErrorUnexpectedChar extends ParseError {
-  final String source;
-
-  ErrorUnexpectedChar(super.offset, this.source);
+  const ErrorUnexpectedChar();
 
   @override
-  int get hashCode => super.hashCode ^ source.hashCode;
-
-  @override
-  bool operator ==(other) {
-    return other is ErrorUnexpectedChar &&
-        other.source == source &&
-        super == other;
-  }
-
-  @override
-  String toString() {
-    final char = source.runeAt(offset);
-    final value = escape(char);
-    return 'Unexpected character $value';
+  String getErrorMessage({
+    required int offset,
+    required Object source,
+  }) {
+    if (source is String) {
+      final char = source.runeAt(offset);
+      final value = escape(char);
+      return 'Unexpected character $value';
+    } else {
+      return 'Unexpected character';
+    }
   }
 }
 
 class ErrorUnexpectedEof extends ParseError {
-  ErrorUnexpectedEof(super.offset);
+  const ErrorUnexpectedEof();
 
   @override
-  // ignore: hash_and_equals
-  bool operator ==(other) {
-    return other is ErrorUnexpectedEof && super == other;
-  }
-
-  @override
-  String toString() {
+  String getErrorMessage({
+    required int offset,
+    required Object source,
+  }) {
     return 'Unexpected end of file';
   }
 }
 
 class ErrorUnexpectedInput extends ParseError {
-  ErrorUnexpectedInput(super.offset);
+  final int start;
+
+  const ErrorUnexpectedInput(this.start);
 
   @override
-  // ignore: hash_and_equals
-  bool operator ==(other) {
-    return other is ErrorUnexpectedInput && super == other;
-  }
-
-  @override
-  String toString() {
+  String getErrorMessage({
+    required int offset,
+    required Object source,
+  }) {
     return 'Unexpected input';
   }
 }
 
 abstract class ParseError {
-  int offset;
+  const ParseError();
 
-  int? start;
-
-  ParseError(this.offset);
-
-  @override
-  int get hashCode => offset.hashCode ^ start.hashCode;
-
-  @override
-  bool operator ==(Object? other) {
-    return other is ParseError &&
-        other.offset == offset &&
-        other.start == start;
-  }
+  int get length => 0;
 
   String escape(Object? value, [bool quote = true]) {
     if (value is int) {
@@ -294,6 +245,11 @@ abstract class ParseError {
 
     return result;
   }
+
+  String getErrorMessage({
+    required int offset,
+    required Object source,
+  });
 }
 
 class Result<T> {
@@ -318,8 +274,7 @@ class State<T> {
 
   State(this.source);
 
-  Result<R>? fail<R>(ParseError error) {
-    final offset = error.offset;
+  Result<R>? fail<R>(int offset, ParseError error) {
     if (offset < failPos) {
       return null;
     }

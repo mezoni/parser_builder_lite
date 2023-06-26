@@ -8,25 +8,21 @@ class NoneOf extends ParserBuilder<String, int> {
 
   @override
   String get template => '''
-{
-  final pos = state.pos;
-  final source = state.source;
-  if (pos >= source.length) {
-    final error = ErrorUnexpectedEof(pos);
-    return state.fail(error);
+final pos = state.pos;
+final source = state.source;
+if (pos >= source.length) {
+  return state.fail(pos, const ErrorUnexpectedEof());
+}
+final ch = source.readRune(state);
+final chars = const {{chars}};
+for (var i = 0; i < {{length}}; i++) {
+  final c = chars[i];
+  if (ch == c) {
+    state.pos = pos;
+    return state.fail(pos, const ErrorUnexpectedChar());
   }
-  final ch = source.readRune(state);
-  final chars = const {{chars}};
-  for (var i = 0; i < {{length}}; i++) {
-    final c = chars[i];
-    if (ch == c) {
-      state.pos = pos;
-      final error = ErrorUnexpectedChar(pos, source);
-      return state.fail(error);
-    }
-  }
-  return Result(ch);
-}''';
+}
+return Result(ch);''';
 
   @override
   Map<String, Object?> get values => {

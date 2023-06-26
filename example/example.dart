@@ -89,7 +89,7 @@ Object? parse(String source) {
   final state = State(source);
   final result = json(state);
   if (result == null) {
-    final message = _errorMessage(source, state.errors);
+    final message = _errorMessage(source, state.failPos, state.errors);
     throw message;
   }
   return result.value;
@@ -151,11 +151,8 @@ const _hexValue = Named(
 
 const _hexValueChecked =
     Named('_hexValueChecked', HandleError(_hexValue, Func('''
-(State<String> a) {
-  final error = ErrorMessage(a.failPos, 'Expected 4 digit hexadecimal number');
-  error.start = a.pos;
-  //a.errors = [];
-  return error;
+(int start, int end) {
+  return ErrorMessage(end - start, 'Expected 4 digit hexadecimal number');
 }''')));
 
 const _integer = Named(
@@ -196,7 +193,7 @@ const _num = Named(
         _frac,
         _exp,
       )),
-      Func('(String a) => num.parse(a);'),
+      Func<num>('(String a) => num.parse(a);'),
     ));
 
 const _number = Named('_number', Terminated(_num, _ws));
@@ -263,16 +260,14 @@ case {{key}}:
   final source = state.source;
   final pos = state.pos;
   if (pos >= source.length) {
-    final error = ErrorUnexpectedEof(pos);
-    return state.fail(error);
+    return state.fail(pos, const ErrorUnexpectedEof());
   }
   final c = source.readRune(state);
   switch (c) {
     {{cases}}
   }
   state.pos = pos;
-  final error = ErrorUnexpectedChar(pos, source);
-  return state.fail(error);
+  return state.fail(pos, const ErrorUnexpectedChar());
 }''';
 
   final Map<int, String> map;

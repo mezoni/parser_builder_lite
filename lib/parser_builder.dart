@@ -101,7 +101,9 @@ class Named<I, O> extends ParserBuilder<I, O> {
 
 abstract class ParserBuilder<I, O> {
   static const _template = '''
-Result<{{O}}>? {{name}}(State<{{I}}> state) {{body}}''';
+Result<{{O}}>? {{name}}(State<{{I}}> state) {
+{{body}}
+}''';
 
   const ParserBuilder();
 

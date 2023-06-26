@@ -15,26 +15,28 @@ class HandleError<I, O> extends ParserBuilder<I, O> {
 
   @override
   String get template => '''
-{
-  final failPos = state.failPos;
-  final errors = state.errors;
-  state.errors = [];
-  state.failPos = -1;
-  final r1 = {{p1}};
-  if (r1 != null) {
-    return r1;
-  }
-  if (state.failPos >= failPos) {
-    final error = {{f}}(state) as ParseError;
-    if (state.failPos == failPos) {
-      state.errors.addAll(errors);
-    }
-    return state.fail(error);
-  } else {
-    state.failPos = failPos;
-    state.errors = [];
-    state.errors.addAll(errors);
-  }
-  return null;
-}''';
+final pos = state.pos;
+final failPos = state.failPos;
+final errors = state.errors;
+state.errors = [];
+state.failPos = -1;
+final r1 = {{p1}};
+var failPos2 = state.failPos;
+if (failPos2 < failPos) {
+  state.failPos = failPos;
+  state.errors = errors;
+} else if (failPos2 == failPos) {
+  state.errors.addAll(errors);
+}
+
+if (r1 != null) {
+  return r1;
+}
+
+if (failPos2 < pos) {
+  failPos2 = pos;
+}
+
+final error = {{f}}(pos, failPos2) as ParseError;
+return state.fail(failPos2, error);''';
 }

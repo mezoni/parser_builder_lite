@@ -9,18 +9,16 @@ class Terminated<I, O> extends ParserBuilder<I, O> {
 
   @override
   String get template => '''
-{
-  final pos = state.pos;
-  final r1 = {{p1}};
-  if (r1 != null) {
-    final r2 = {{p2}};
-    if (r2 != null) {
-      return r1;
-    }
-    state.pos = pos;
+final pos = state.pos;
+final r1 = {{p1}};
+if (r1 != null) {
+  final r2 = {{p2}};
+  if (r2 != null) {
+    return r1;
   }
-  return null;
-}''';
+  state.pos = pos;
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {

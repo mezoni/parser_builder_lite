@@ -7,20 +7,16 @@ class Char extends ParserBuilder<String, int> {
 
   @override
   String get template => '''
-{
-  final source = state.source;
-  final pos = state.pos;
-  if (state.pos >= source.length) {
-    final error = UnexpectedEof(source.length);
-    return state.fail(error);
-  }
-  final c = source.readRune(state);
-  if (c == {{char}}) {
-    return const Result({{char}});
-  }
-  final error = ErrorExpectedChar(pos, source)
-  return state.fail(error);
-}''';
+final source = state.source;
+final pos = state.pos;
+if (state.pos >= source.length) {
+  return state.fail(state.pos, const UnexpectedEof());
+}
+final c = source.readRune(state);
+if (c == {{char}}) {
+  return const Result({{char}});
+}
+return state.fail(pos, const ErrorExpectedChar({{char}}));''';
 
   @override
   Map<String, Object?> get values => {

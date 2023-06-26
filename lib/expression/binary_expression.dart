@@ -21,30 +21,28 @@ class _BinaryExpression<I, O1, O> extends ParserBuilder<I, O> {
 
   @override
   String get template => '''
-{
-  {{O}} left;
-  final r1 = {{p1}};
-  if (r1 != null) {
-    left = r1;
-    while (true) {
-      final pos = state.pos;
-      final r2 = {{p2}};
-      if (r2 == null) {
-        state.ok = true;
-        break;
-      }
-      final r3 = {{p3}};
-      if (r3 == null) {
-        state.pos = pos;
-        break;
-      }
-      final op = r2.value;
-      final right = r3.value;
-      left = {{f}}();
+{{O}} left;
+final r1 = {{p1}};
+if (r1 != null) {
+  left = r1;
+  while (true) {
+    final pos = state.pos;
+    final r2 = {{p2}};
+    if (r2 == null) {
+      state.ok = true;
+      break;
     }
+    final r3 = {{p3}};
+    if (r3 == null) {
+      state.pos = pos;
+      break;
+    }
+    final op = r2.value;
+    final right = r3.value;
+    left = {{f}}();
   }
-  if (state.ok) {
-    {{res0}} = {{left}};
-  }
+}
+if (state.ok) {
+  {{res0}} = {{left}};
 }''';
 }

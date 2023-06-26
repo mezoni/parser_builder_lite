@@ -8,15 +8,12 @@ class Tag extends ParserBuilder<String, String> {
 
   @override
   String get template => '''
-{
-  const tag = {{tag}};
-  if (!state.source.startsWith(tag, state.pos)) {
-    final error = ErrorExpectedTags(state.pos, const [tag]);
-    return state.fail(error);
-  }
-  state.pos += {{length}};
-  return const Result(tag);
-}''';
+const tag = {{tag}};
+if (!state.source.startsWith(tag, state.pos)) {
+  return state.fail(state.pos, const ErrorExpectedTags([tag]));
+}
+state.pos += {{length}};
+return const Result(tag);''';
 
   @override
   Map<String, Object?> get values => {

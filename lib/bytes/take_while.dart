@@ -2,23 +2,21 @@ import '../parser_builder.dart';
 
 class TakeWhile0 extends ParserBuilder<String, String> {
   static const takeWhile0Template = '''
-{
-  final source = state.source;
-  final start = state.pos;
-  while (state.pos < source.length) {
-    final pos = state.pos;
-    final c = source.readRune(state);
-    final v = {{f}}(c);
-    if (!v) {
-      state.pos = pos;
-      break;
-    }
+final source = state.source;
+final start = state.pos;
+while (state.pos < source.length) {
+  final pos = state.pos;
+  final c = source.readRune(state);
+  final v = {{f}}(c);
+  if (!v) {
+    state.pos = pos;
+    break;
   }
-  if (state.pos == start) {
-    return const Result('');
-  }
-  return Result(source.substring(start, state.pos));
-}''';
+}
+if (state.pos == start) {
+  return const Result('');
+}
+return Result(source.substring(start, state.pos));''';
 
   final Func<bool> f;
 
@@ -35,28 +33,24 @@ class TakeWhile0 extends ParserBuilder<String, String> {
 
 class TakeWhile1 extends ParserBuilder<String, String> {
   static const takeWhile1Template = '''
-{
-  final source = state.source;
-  final start = state.pos;
-  if (start >= source.length) {
-    final error = ErrorUnexpectedEof(start);
-    return state.fail(error);
+final source = state.source;
+final start = state.pos;
+if (start >= source.length) {
+  return state.fail(start, const ErrorUnexpectedEof());
+}
+while (state.pos < source.length) {
+  final pos = state.pos;
+  final c = source.readRune(state);
+  final ok = {{f}}(c);
+  if (!ok) {
+    state.pos = pos;
+    break;
   }
-  while (state.pos < source.length) {
-    final pos = state.pos;
-    final c = source.readRune(state);
-    final ok = {{f}}(c);
-    if (!ok) {
-      state.pos = pos;
-      break;
-    }
-  }
-  if (state.pos == start) {
-    final error = ErrorUnexpectedChar(start, source);
-    return state.fail(error);
-  }
-  return Result(source.substring(start, state.pos));
-}''';
+}
+if (state.pos == start) {
+  return state.fail(start, const ErrorUnexpectedChar());
+}
+return Result(source.substring(start, state.pos));''';
 
   final Func<bool> f;
 
@@ -92,13 +86,14 @@ class TakeWhileMN extends ParserBuilder<String, String> {
     return Result(v);
   }
   final ParseError error;
+  final end = state.pos;
   if (state.pos < source.length) {
-    error = ErrorUnexpectedChar(state.pos, source);
+    error = const ErrorUnexpectedChar();
   } else {
-    error = ErrorUnexpectedEof(state.pos);
+    error = const ErrorUnexpectedEof();
   }
   state.pos = start;
-  return state.fail(error);
+  return state.fail(end, error);
 }''';
 
   final Func<bool> f;

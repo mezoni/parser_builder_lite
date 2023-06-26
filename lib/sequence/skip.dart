@@ -9,18 +9,16 @@ class Skip2<I> extends ParserBuilder<I, Object?> {
 
   @override
   String get template => '''
-{
-  final pos = state.pos;
-  final r1 = {{p1}};
-  if (r1 != null) {
-    final r2 = {{p2}};
-    if (r2 != null) {
-       return const Result(null);
-    }
-    state.pos = pos;
+final pos = state.pos;
+final r1 = {{p1}};
+if (r1 != null) {
+  final r2 = {{p2}};
+  if (r2 != null) {
+     return const Result(null);
   }
-  return null;
-}''';
+  state.pos = pos;
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {
@@ -40,21 +38,19 @@ class Skip3<I> extends ParserBuilder<I, Object?> {
 
   @override
   String get template => '''
-{
-  final pos = state.pos;
-  final r1 = {{p1}};
-  if (r1 != null) {
-    final r2 = {{p2}};
-    if (r2 != null) {
-      final r3 = {{p3}};
-      if (r3 != null) {
-        return const Result(null);
-      }
+final pos = state.pos;
+final r1 = {{p1}};
+if (r1 != null) {
+  final r2 = {{p2}};
+  if (r2 != null) {
+    final r3 = {{p3}};
+    if (r3 != null) {
+      return const Result(null);
     }
-    state.pos = pos;
   }
-  return null;
-}''';
+  state.pos = pos;
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {
@@ -77,24 +73,22 @@ class Skip4<I> extends ParserBuilder<I, Object?> {
 
   @override
   String get template => '''
-{
-  final pos = state.pos;
-  final r1 = {{p1}};
-  if (r1 != null) {
-    final r2 = {{p2}};
-    if (r2 != null) {
-      final r3 = {{p3}};
-      if (r3 != null) {
-        final r4 = {{p4}};
-        if (r4 != null) {
-          return const Result(null);
-        }
+final pos = state.pos;
+final r1 = {{p1}};
+if (r1 != null) {
+  final r2 = {{p2}};
+  if (r2 != null) {
+    final r3 = {{p3}};
+    if (r3 != null) {
+      final r4 = {{p4}};
+      if (r4 != null) {
+        return const Result(null);
       }
     }
-    state.pos = pos;
-  }
-  return null;
-}''';
+ }
+  state.pos = pos;
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {
@@ -120,27 +114,25 @@ class Skip5<I> extends ParserBuilder<I, Object?> {
 
   @override
   String get template => '''
-{
-  final pos = state.pos;
-  final r1 = {{p1}};
-  if (r1 != null) {
-    final r2 = {{p2}};
-    if (r2 != null) {
-      final r3 = {{p3}};
-      if (r3 != null) {
-        final r4 = {{p4}};
-        if (r4 != null) {
-          final r5 = {{p5}};
-          if (r5 != null) {
-            return const Result(null);
-          }
+final pos = state.pos;
+final r1 = {{p1}};
+if (r1 != null) {
+  final r2 = {{p2}};
+  if (r2 != null) {
+    final r3 = {{p3}};
+    if (r3 != null) {
+      final r4 = {{p4}};
+      if (r4 != null) {
+        final r5 = {{p5}};
+        if (r5 != null) {
+          return const Result(null);
         }
       }
     }
-    state.pos = pos;
   }
-  return null;
-}''';
+  state.pos = pos;
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {
@@ -169,30 +161,28 @@ class Skip6<I> extends ParserBuilder<I, Object?> {
 
   @override
   String get template => '''
-{
-  final pos = state.pos;
-  final r1 = {{p1}};
-  if (r1 != null) {
-    final r2 = {{p2}};
-    if (r2 != null) {
-      final r3 = {{p3}};
-      if (r3 != null) {
-        final r4 = {{p4}};
-        if (r4 != null) {
-          final r5 = {{p5}};
-          if (r5 != null) {
-            final r6 = {{p6}};
-            if (r6 != null) {
-              return const Result(null);
-            }
+final pos = state.pos;
+final r1 = {{p1}};
+if (r1 != null) {
+  final r2 = {{p2}};
+  if (r2 != null) {
+    final r3 = {{p3}};
+    if (r3 != null) {
+      final r4 = {{p4}};
+      if (r4 != null) {
+        final r5 = {{p5}};
+        if (r5 != null) {
+          final r6 = {{p6}};
+          if (r6 != null) {
+           return const Result(null);
           }
         }
       }
     }
-    state.pos = pos;
   }
-  return null;
-}''';
+  state.pos = pos;
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {
@@ -224,33 +214,31 @@ class Skip7<I> extends ParserBuilder<I, Object?> {
 
   @override
   String get template => '''
-{
-  final pos = state.pos;
-  final r1 = {{p1}};
-  if (r1 != null) {
-    final r2 = {{p2}};
-    if (r2 != null) {
-      final r3 = {{p3}};
-      if (r3 != null) {
-        final r4 = {{p4}};
-        if (r4 != null) {
-          final r5 = {{p5}};
-          if (r5 != null) {
-            final r6 = {{p6}};
-            if (r6 != null) {
-              final r7 = {{p7}};
-              if (r7 != null) {
-                return const Result(null);
-              }
+final pos = state.pos;
+final r1 = {{p1}};
+if (r1 != null) {
+  final r2 = {{p2}};
+  if (r2 != null) {
+    final r3 = {{p3}};
+    if (r3 != null) {
+      final r4 = {{p4}};
+      if (r4 != null) {
+        final r5 = {{p5}};
+        if (r5 != null) {
+          final r6 = {{p6}};
+          if (r6 != null) {
+            final r7 = {{p7}};
+            if (r7 != null) {
+              return const Result(null);
             }
           }
         }
       }
     }
-    state.pos = pos;
   }
-  return null;
-}''';
+  state.pos = pos;
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {

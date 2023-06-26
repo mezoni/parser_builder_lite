@@ -936,33 +936,24 @@ int _toHexValue(String s) {
 String _errorMessage(String source, int offset, List<ParseError> errors) {
   final sb = StringBuffer();
   final errorList = errors.toList();
-  final mapByStart = <int, List<ParseError>>{};
-  for (final error in errorList) {
-    final start = offset - error.length;
-    (mapByStart[start] ??= []).add(error);
-  }
-
-  final expectedTags = errorList.whereType<ErrorExpectedTags>();
+  final expectedTags = errorList.whereType<ErrorExpectedTags>().toList();
   if (expectedTags.isNotEmpty) {
-    final map = <int, Set<String>>{};
     errorList.removeWhere((e) => e is ErrorExpectedTags);
+    final tags = <String>[];
     for (final error in expectedTags) {
-      final start = offset - error.length;
-      (map[start] ??= {}).addAll(error.tags);
+      tags.addAll(error.tags);
     }
 
-    for (final start in map.keys) {
-      final tags = map[start]!;
-      final error = ErrorExpectedTags(tags.toList());
-      errorList.add(error);
-    }
+    final error = ErrorExpectedTags(tags);
+    errorList.add(error);
   }
 
   final errorInfoList = errorList
       .map((e) => (
-            error: e,
             message: e.getMessage(offset: offset, source: source),
+            start: offset - e.length,
           ))
+      .toSet()
       .toList();
 
   for (var i = 0; i < errorInfoList.length; i++) {
@@ -972,10 +963,9 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
     }
 
     final errorInfo = errorInfoList[i];
-    final error = errorInfo.error;
     final message = errorInfo.message;
     final end = offset;
-    final start = offset - error.length;
+    final start = errorInfo.start;
     RangeError.checkValidRange(start, end, source.length);
     var row = 1;
     var lineStart = 0, next = 0, pos = 0;

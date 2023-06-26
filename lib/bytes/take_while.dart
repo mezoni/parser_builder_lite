@@ -67,34 +67,32 @@ return Result(source.substring(start, state.pos));''';
 
 class TakeWhileMN extends ParserBuilder<String, String> {
   static const takeWhileMNTemplate = '''
-{
-  final source = state.source;
-  final start = state.pos;
-  var count = 0;
-  while (count < {{n}} && state.pos < source.length) {
-    final pos = state.pos;
-    final c = source.readRune(state);
-    final ok = {{f}}(c);
-    if (!ok) {
-      state.pos = pos;
-      break;
-    }
-    count++;
+final source = state.source;
+final start = state.pos;
+var count = 0;
+while (count < {{n}} && state.pos < source.length) {
+  final pos = state.pos;
+  final c = source.readRune(state);
+  final ok = {{f}}(c);
+  if (!ok) {
+    state.pos = pos;
+    break;
   }
-  if (count >= {{m}}) {
-    final v = source.substring(start, state.pos);
-    return Result(v);
-  }
-  final ParseError error;
-  final end = state.pos;
-  if (state.pos < source.length) {
-    error = const ErrorUnexpectedChar();
-  } else {
-    error = const ErrorUnexpectedEof();
-  }
-  state.pos = start;
-  return state.fail(end, error);
-}''';
+  count++;
+}
+if (count >= {{m}}) {
+  final v = source.substring(start, state.pos);
+  return Result(v);
+}
+final ParseError error;
+final end = state.pos;
+if (state.pos < source.length) {
+  error = const ErrorUnexpectedChar();
+} else {
+  error = const ErrorUnexpectedEof();
+}
+state.pos = start;
+return state.fail(end, error);''';
 
   final Func<bool> f;
 

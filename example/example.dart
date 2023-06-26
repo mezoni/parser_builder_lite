@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -47,10 +48,8 @@ void main(List<String> args) async {
   if (format) {
     final process =
         await Process.start(Platform.executable, ['format', filename]);
-    // ignore: unawaited_futures
-    process.stdout.transform(utf8.decoder).forEach(print);
-    // ignore: unawaited_futures
-    process.stderr.transform(utf8.decoder).forEach(print);
+    unawaited(process.stdout.transform(utf8.decoder).forEach(print));
+    unawaited(process.stderr.transform(utf8.decoder).forEach(print));
   }
 }
 
@@ -133,7 +132,7 @@ const _exp = Named(
         Skip3(Tags(['e', 'E']), Opt(Tags(['+', '-'])), _digit1)));
 
 const _false = Named<String, bool>(
-    '_false', Value(Terminated(Tag('false'), _ws), 'false'));
+    '_false', Value('false', Terminated(Tag('false'), _ws)));
 
 const _frac = Named('_frac', Opt<String, Object?>(Skip2(Tag('.'), _digit1)));
 
@@ -169,7 +168,7 @@ const _keyValue = Named(
         _semicolon,
         _value,
         Func<MapEntry<String, Object?>>(
-            '(String a, b, Object? c) => MapEntry<String, Object?>(a, c);')));
+            r'((String, Object?, Object?) kv) => MapEntry(kv.$1, kv.$3);')));
 
 const _keyValues = Named('_keyValues', SeparatedList0(_keyValue, _comma));
 
@@ -181,7 +180,7 @@ const _normalChars = Named(
         '(int a) => a <= 91 ? a <= 33 ? a >= 32 : a >= 35 : a <= 1114111 && a >= 93;')));
 
 const _null = Named(
-    '_null', Value<String, Object?>(Terminated(Tag('null'), _ws), 'null'));
+    '_null', Value<String, Object?>('null', Terminated(Tag('null'), _ws)));
 
 /// '-'?('0'|[1-9][0-9]*)('.'[0-9]+)?([eE][+-]?[0-9]+)?
 const _num = Named(
@@ -205,7 +204,7 @@ const _object = Named(
         _keyValues,
         _closeBrace,
         Func<Map<String, Object?>>(
-            '(a, List<MapEntry<String, Object?>> b, c) => Map.fromEntries(b);')));
+            r'((Object?, List<MapEntry<String, Object?>>, Object?) e) => Map.fromEntries(e.$2);')));
 
 const _openBrace = Named('_openBrace', Terminated(Tag('{'), _ws));
 
@@ -229,7 +228,7 @@ const _stringChars = Named(
     )));
 
 const _true =
-    Named<String, bool>('_true', Value(Terminated(Tag('true'), _ws), 'true'));
+    Named<String, bool>('_true', Value('true', Terminated(Tag('true'), _ws)));
 
 const _value = Ref<String, Object?>('_value');
 

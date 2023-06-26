@@ -9,17 +9,15 @@ class Alt2<I, O> extends ParserBuilder<I, O> {
 
   @override
   String get template => '''
-{
-  final r1 = {{p1}};
-  if (r1 != null) {
-    return r1;
-  }
-  final r2 = {{p2}};
-  if (r2 != null) {
-    return r2;
-  }
-  return null;
-}''';
+final r1 = {{p1}};
+if (r1 != null) {
+  return r1;
+}
+final r2 = {{p2}};
+if (r2 != null) {
+  return r2;
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {
@@ -39,21 +37,19 @@ class Alt3<I, O> extends ParserBuilder<I, O> {
 
   @override
   String get template => '''
-{
-  final r1 = {{p1}};
-  if (r1 != null) {
-    return r1;
-  }
-  final r2 = {{p2}};
-  if (r2 != null) {
-    return r2;
-  }
-  final r3 = {{p3}};
-  if (r3 != null) {
-    return r3;
-  }
-  return null;
-}''';
+final r1 = {{p1}};
+if (r1 != null) {
+  return r1;
+}
+final r2 = {{p2}};
+if (r2 != null) {
+  return r2;
+}
+final r3 = {{p3}};
+if (r3 != null) {
+  return r3;
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {
@@ -118,29 +114,27 @@ class Alt5<I, O> extends ParserBuilder<I, O> {
 
   @override
   String get template => '''
-{
-  final r1 = {{p1}};
-  if (r1 != null) {
-    return r1;
-  }
-  final r2 = {{p2}};
-  if (r2 != null) {
-    return r2;
-  }
-  final r3 = {{p3}};
-  if (r3 != null) {
-    return r3;
-  }
-  final r4 = {{p4}};
-  if (r4 != null) {
-    return r4;
-  }
-  final r5 = {{p5}};
-  if (r5 != null) {
-    return r5;
-  }
-  return null;
-}''';
+final r1 = {{p1}};
+if (r1 != null) {
+  return r1;
+}
+final r2 = {{p2}};
+if (r2 != null) {
+  return r2;
+}
+final r3 = {{p3}};
+if (r3 != null) {
+  return r3;
+}
+final r4 = {{p4}};
+if (r4 != null) {
+  return r4;
+}
+final r5 = {{p5}};
+if (r5 != null) {
+  return r5;
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {
@@ -169,33 +163,31 @@ class Alt6<I, O> extends ParserBuilder<I, O> {
 
   @override
   String get template => '''
-{
-  final r1 = {{p1}};
-  if (r1 != null) {
-    return r1;
-  }
-  final r2 = {{p2}};
-  if (r2 != null) {
-    return r2;
-  }
-  final r3 = {{p3}};
-  if (r3 != null) {
-    return r3;
-  }
-  final r4 = {{p4}};
-  if (r4 != null) {
-    return r4;
-  }
-  final r5 = {{p5}};
-  if (r5 != null) {
-    return r5;
-  }
-  final r6 = {{p6}};
-  if (r6 != null) {
-    return r6;
-  }
-  return null;
-}''';
+final r1 = {{p1}};
+if (r1 != null) {
+  return r1;
+}
+final r2 = {{p2}};
+if (r2 != null) {
+  return r2;
+}
+final r3 = {{p3}};
+if (r3 != null) {
+  return r3;
+}
+final r4 = {{p4}};
+if (r4 != null) {
+  return r4;
+}
+final r5 = {{p5}};
+if (r5 != null) {
+  return r5;
+}
+final r6 = {{p6}};
+if (r6 != null) {
+  return r6;
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {
@@ -227,37 +219,35 @@ class Alt7<I, O> extends ParserBuilder<I, O> {
 
   @override
   String get template => '''
-{
-  final r1 = {{p1}};
-  if (r1 != null) {
-    return r1;
-  }
-  final r2 = {{p2}};
-  if (r2 != null) {
-    return r2;
-  }
-  final r3 = {{p3}};
-  if (r3 != null) {
-    return r3;
-  }
-  final r4 = {{p4}};
-  if (r4 != null) {
-    return r4;
-  }
-  final r5 = {{p5}};
-  if (r5 != null) {
-    return r5;
-  }
-  final r6 = {{p6}};
-  if (r6 != null) {
-    return r6;
-  }
-  final r7 = {{p7}};
-  if (r7 != null) {
-    return r7;
-  }
-  return null;
-}''';
+final r1 = {{p1}};
+if (r1 != null) {
+  return r1;
+}
+final r2 = {{p2}};
+if (r2 != null) {
+  return r2;
+}
+final r3 = {{p3}};
+if (r3 != null) {
+  return r3;
+}
+final r4 = {{p4}};
+if (r4 != null) {
+  return r4;
+}
+final r5 = {{p5}};
+if (r5 != null) {
+  return r5;
+}
+final r6 = {{p6}};
+if (r6 != null) {
+  return r6;
+}
+final r7 = {{p7}};
+if (r7 != null) {
+  return r7;
+}
+return null;''';
 
   @override
   Map<String, Object?> get values => {

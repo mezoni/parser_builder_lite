@@ -16,7 +16,7 @@ final r1 = {{p1}};
 if (r1 != null) {
   final r2 = {{p2}};
   if (r2 != null) {
-    final v = {{f}}(r1.value, r2.value);
+    final v = {{f}}((r1.value, r2.value));
     return Result(v);
   }
   state.pos = pos;
@@ -51,7 +51,7 @@ if (r1 != null) {
   if (r2 != null) {
     final r3 = {{p3}};
     if (r3 != null) {
-      final v = {{f}}(r1.value, r2.value, r3.value);
+      final v = {{f}}((r1.value, r2.value, r3.value));
       return Result(v);
     }
   }

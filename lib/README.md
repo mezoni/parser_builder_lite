@@ -2,7 +2,7 @@
 
 Parser Builder Lite is a lightweight and uncomplicated parser builder.
 
-Version: 0.1.0
+Version: 0.2.0
 
 ## What is it and what is it for?
 
@@ -16,8 +16,6 @@ You can always implement your own parser builders to suit your needs.
 A typical example of a parser builder (with static template).
 
 ```dart
-import '../parser_builder.dart';
-
 class Many0<I, O> extends ParserBuilder<I, List<O>> {
   final ParserBuilder<I, O> parser;
 
@@ -25,24 +23,15 @@ class Many0<I, O> extends ParserBuilder<I, List<O>> {
 
   @override
   String get template => '''
-{
-  final list = <{{O}}>[];
-  while (true) {
-    final r1 = {{p1}};
-    if (r1 == null) {
-      break;
-    }
-    list.add(r1.value);
+final list = <{{O}}>[];
+while (true) {
+  final r1 = {{p1}};
+  if (r1 == null) {
+    break;
   }
-  return Result(list);
-}''';
-
-  @override
-  Map<String, Object?> get values => {
-        'O': O,
-        'p1': parser,
-      };
+  list.add(r1.value);
 }
+return Result(list);''';
 
 ```
 
@@ -119,10 +108,8 @@ void main(List<String> args) async {
   if (format) {
     final process =
         await Process.start(Platform.executable, ['format', filename]);
-    // ignore: unawaited_futures
-    process.stdout.transform(utf8.decoder).forEach(print);
-    // ignore: unawaited_futures
-    process.stderr.transform(utf8.decoder).forEach(print);
+    unawaited(process.stdout.transform(utf8.decoder).forEach(print));
+    unawaited(process.stderr.transform(utf8.decoder).forEach(print));
   }
 }
 

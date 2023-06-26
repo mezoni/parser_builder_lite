@@ -27,7 +27,7 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
   final errorInfoList = errorList
       .map((e) => (
             error: e,
-            message: e.getErrorMessage(offset: offset, source: source),
+            message: e.getMessage(offset: offset, source: source),
           ))
       .toList();
 
@@ -108,7 +108,7 @@ class ErrorExpectedChar extends ParseError {
   const ErrorExpectedChar(this.char);
 
   @override
-  String getErrorMessage({
+  String getMessage({
     required int offset,
     required Object source,
   }) {
@@ -125,7 +125,7 @@ class ErrorExpectedEof extends ParseError {
   const ErrorExpectedEof();
 
   @override
-  String getErrorMessage({
+  String getMessage({
     required int offset,
     required Object source,
   }) {
@@ -139,7 +139,7 @@ class ErrorExpectedTags extends ParseError {
   const ErrorExpectedTags(this.tags);
 
   @override
-  String getErrorMessage({
+  String getMessage({
     required int offset,
     required Object source,
   }) {
@@ -157,7 +157,7 @@ class ErrorMessage extends ParseError {
   const ErrorMessage(this.length, this.message);
 
   @override
-  String getErrorMessage({
+  String getMessage({
     required int offset,
     required Object source,
   }) {
@@ -169,7 +169,7 @@ class ErrorUnexpectedChar extends ParseError {
   const ErrorUnexpectedChar();
 
   @override
-  String getErrorMessage({
+  String getMessage({
     required int offset,
     required Object source,
   }) {
@@ -187,7 +187,7 @@ class ErrorUnexpectedEof extends ParseError {
   const ErrorUnexpectedEof();
 
   @override
-  String getErrorMessage({
+  String getMessage({
     required int offset,
     required Object source,
   }) {
@@ -201,7 +201,7 @@ class ErrorUnexpectedInput extends ParseError {
   const ErrorUnexpectedInput(this.start);
 
   @override
-  String getErrorMessage({
+  String getMessage({
     required int offset,
     required Object source,
   }) {
@@ -246,7 +246,7 @@ abstract class ParseError {
     return result;
   }
 
-  String getErrorMessage({
+  String getMessage({
     required int offset,
     required Object source,
   });

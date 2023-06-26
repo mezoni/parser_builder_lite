@@ -5,7 +5,7 @@ class Value<I, O> extends ParserBuilder<I, O> {
 
   final String value;
 
-  const Value(this.parser, this.value);
+  const Value(this.value, this.parser);
 
   @override
   String get template => '''

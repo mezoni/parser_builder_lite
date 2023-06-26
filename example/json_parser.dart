@@ -1,5 +1,5 @@
 void main() {
-  final r = parse(r'{"rocket": "🚀 flies to the stars\u004 "}');
+  final r = parse('{"rocket": "🚀 flies to the stars"}');
   print(r);
 }
 
@@ -141,34 +141,32 @@ bool _$g11(int a) =>
     (a >= 48 && a <= 57) || (a >= 65 && a <= 70) || (a >= 97 && a <= 102);
 
 Result<String>? _$g10(State<String> state) {
-  {
-    final source = state.source;
-    final start = state.pos;
-    var count = 0;
-    while (count < 4 && state.pos < source.length) {
-      final pos = state.pos;
-      final c = source.readRune(state);
-      final ok = _$g11(c);
-      if (!ok) {
-        state.pos = pos;
-        break;
-      }
-      count++;
+  final source = state.source;
+  final start = state.pos;
+  var count = 0;
+  while (count < 4 && state.pos < source.length) {
+    final pos = state.pos;
+    final c = source.readRune(state);
+    final ok = _$g11(c);
+    if (!ok) {
+      state.pos = pos;
+      break;
     }
-    if (count >= 4) {
-      final v = source.substring(start, state.pos);
-      return Result(v);
-    }
-    final ParseError error;
-    final end = state.pos;
-    if (state.pos < source.length) {
-      error = const ErrorUnexpectedChar();
-    } else {
-      error = const ErrorUnexpectedEof();
-    }
-    state.pos = start;
-    return state.fail(end, error);
+    count++;
   }
+  if (count >= 4) {
+    final v = source.substring(start, state.pos);
+    return Result(v);
+  }
+  final ParseError error;
+  final end = state.pos;
+  if (state.pos < source.length) {
+    error = const ErrorUnexpectedChar();
+  } else {
+    error = const ErrorUnexpectedEof();
+  }
+  state.pos = start;
+  return state.fail(end, error);
 }
 
 Result<String>? _hexValue(State<String> state) {
@@ -221,35 +219,31 @@ Result<String>? _hexChar(State<String> state) {
 }
 
 Result<String>? _$g4(State<String> state) {
-  {
-    final r1 = _normalChars(state);
-    if (r1 != null) {
-      return r1;
-    }
-    final r2 = _escape(state);
-    if (r2 != null) {
-      return r2;
-    }
-    final r3 = _hexChar(state);
-    if (r3 != null) {
-      return r3;
-    }
-    return null;
+  final r1 = _normalChars(state);
+  if (r1 != null) {
+    return r1;
   }
+  final r2 = _escape(state);
+  if (r2 != null) {
+    return r2;
+  }
+  final r3 = _hexChar(state);
+  if (r3 != null) {
+    return r3;
+  }
+  return null;
 }
 
 Result<List<String>>? _stringChars(State<String> state) {
-  {
-    final list = <String>[];
-    while (true) {
-      final r1 = _$g4(state);
-      if (r1 == null) {
-        break;
-      }
-      list.add(r1.value);
+  final list = <String>[];
+  while (true) {
+    final r1 = _$g4(state);
+    if (r1 == null) {
+      break;
     }
-    return Result(list);
+    list.add(r1.value);
   }
+  return Result(list);
 }
 
 Result<String>? _$g2(State<String> state) {
@@ -376,17 +370,15 @@ Result<Object?>? _$g18(State<String> state) {
 }
 
 Result<Object?>? _integer(State<String> state) {
-  {
-    final r1 = _$g17(state);
-    if (r1 != null) {
-      return r1;
-    }
-    final r2 = _$g18(state);
-    if (r2 != null) {
-      return r2;
-    }
-    return null;
+  final r1 = _$g17(state);
+  if (r1 != null) {
+    return r1;
   }
+  final r2 = _$g18(state);
+  if (r2 != null) {
+    return r2;
+  }
+  return null;
 }
 
 Result<String>? _$g23(State<String> state) {
@@ -744,8 +736,9 @@ Result<List<Object?>>? _array(State<String> state) {
   return null;
 }
 
-Map<String, Object?> _$g37(a, List<MapEntry<String, Object?>> b, c) =>
-    Map.fromEntries(b);
+Map<String, Object?> _$g37(
+        (Object?, List<MapEntry<String, Object?>>, Object?) e) =>
+    Map.fromEntries(e.$2);
 
 Result<String>? _$g38(State<String> state) {
   const tag = '{';
@@ -769,8 +762,8 @@ Result<String>? _openBrace(State<String> state) {
   return null;
 }
 
-MapEntry<String, Object?> _$g39(String a, b, Object? c) =>
-    MapEntry<String, Object?>(a, c);
+MapEntry<String, Object?> _$g39((String, Object?, Object?) kv) =>
+    MapEntry(kv.$1, kv.$3);
 
 Result<String>? _$g40(State<String> state) {
   const tag = ':';
@@ -802,7 +795,7 @@ Result<MapEntry<String, Object?>>? _keyValue(State<String> state) {
     if (r2 != null) {
       final r3 = _value(state);
       if (r3 != null) {
-        final v = _$g39(r1.value, r2.value, r3.value);
+        final v = _$g39((r1.value, r2.value, r3.value));
         return Result(v);
       }
     }
@@ -860,7 +853,7 @@ Result<Map<String, Object?>>? _object(State<String> state) {
     if (r2 != null) {
       final r3 = _closeBrace(state);
       if (r3 != null) {
-        final v = _$g37(r1.value, r2.value, r3.value);
+        final v = _$g37((r1.value, r2.value, r3.value));
         return Result(v);
       }
     }
@@ -870,37 +863,35 @@ Result<Map<String, Object?>>? _object(State<String> state) {
 }
 
 Result<Object?>? _value(State<String> state) {
-  {
-    final r1 = _string(state);
-    if (r1 != null) {
-      return r1;
-    }
-    final r2 = _number(state);
-    if (r2 != null) {
-      return r2;
-    }
-    final r3 = _true(state);
-    if (r3 != null) {
-      return r3;
-    }
-    final r4 = _false(state);
-    if (r4 != null) {
-      return r4;
-    }
-    final r5 = _null(state);
-    if (r5 != null) {
-      return r5;
-    }
-    final r6 = _array(state);
-    if (r6 != null) {
-      return r6;
-    }
-    final r7 = _object(state);
-    if (r7 != null) {
-      return r7;
-    }
-    return null;
+  final r1 = _string(state);
+  if (r1 != null) {
+    return r1;
   }
+  final r2 = _number(state);
+  if (r2 != null) {
+    return r2;
+  }
+  final r3 = _true(state);
+  if (r3 != null) {
+    return r3;
+  }
+  final r4 = _false(state);
+  if (r4 != null) {
+    return r4;
+  }
+  final r5 = _null(state);
+  if (r5 != null) {
+    return r5;
+  }
+  final r6 = _array(state);
+  if (r6 != null) {
+    return r6;
+  }
+  final r7 = _object(state);
+  if (r7 != null) {
+    return r7;
+  }
+  return null;
 }
 
 Result<Object?>? _$g42(State<String> state) {
@@ -976,7 +967,7 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
   final errorInfoList = errorList
       .map((e) => (
             error: e,
-            message: e.getErrorMessage(offset: offset, source: source),
+            message: e.getMessage(offset: offset, source: source),
           ))
       .toList();
 
@@ -1054,7 +1045,7 @@ class ErrorExpectedChar extends ParseError {
   const ErrorExpectedChar(this.char);
 
   @override
-  String getErrorMessage({
+  String getMessage({
     required int offset,
     required Object source,
   }) {
@@ -1071,7 +1062,7 @@ class ErrorExpectedEof extends ParseError {
   const ErrorExpectedEof();
 
   @override
-  String getErrorMessage({
+  String getMessage({
     required int offset,
     required Object source,
   }) {
@@ -1085,7 +1076,7 @@ class ErrorExpectedTags extends ParseError {
   const ErrorExpectedTags(this.tags);
 
   @override
-  String getErrorMessage({
+  String getMessage({
     required int offset,
     required Object source,
   }) {
@@ -1103,7 +1094,7 @@ class ErrorMessage extends ParseError {
   const ErrorMessage(this.length, this.message);
 
   @override
-  String getErrorMessage({
+  String getMessage({
     required int offset,
     required Object source,
   }) {
@@ -1115,7 +1106,7 @@ class ErrorUnexpectedChar extends ParseError {
   const ErrorUnexpectedChar();
 
   @override
-  String getErrorMessage({
+  String getMessage({
     required int offset,
     required Object source,
   }) {
@@ -1133,7 +1124,7 @@ class ErrorUnexpectedEof extends ParseError {
   const ErrorUnexpectedEof();
 
   @override
-  String getErrorMessage({
+  String getMessage({
     required int offset,
     required Object source,
   }) {
@@ -1147,7 +1138,7 @@ class ErrorUnexpectedInput extends ParseError {
   const ErrorUnexpectedInput(this.start);
 
   @override
-  String getErrorMessage({
+  String getMessage({
     required int offset,
     required Object source,
   }) {
@@ -1192,7 +1183,7 @@ abstract class ParseError {
     return result;
   }
 
-  String getErrorMessage({
+  String getMessage({
     required int offset,
     required Object source,
   });

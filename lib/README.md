@@ -2,7 +2,7 @@
 
 Parser Builder Lite is a lightweight and uncomplicated parser builder.
 
-Version: 0.2.0
+Version: 0.2.1
 
 ## What is it and what is it for?
 

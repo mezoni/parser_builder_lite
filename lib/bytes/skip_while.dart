@@ -7,19 +7,17 @@ class SkipWhile0 extends ParserBuilder<String, Object?> {
 
   @override
   String get template => '''
-{
-  final source = state.source;
-  while (state.pos < source.length) {
-    final pos = state.pos;
-    final c = source.readRune(state);
-    final v = {{f}}(c);
-    if (!v) {
-      state.pos = pos;
-      break;
-    }
+final source = state.source;
+while (state.pos < source.length) {
+  final pos = state.pos;
+  final c = source.readRune(state);
+  final v = {{f}}(c);
+  if (!v) {
+    state.pos = pos;
+    break;
   }
-  return const Result(null);
-}''';
+}
+return const Result(null);''';
 
   @override
   Map<String, Object?> get values => {

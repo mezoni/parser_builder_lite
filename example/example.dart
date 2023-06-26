@@ -255,19 +255,17 @@ case {{key}}:
   return const Result({{value}});''';
 
   static const _template = '''
-{
-  final source = state.source;
-  final pos = state.pos;
-  if (pos >= source.length) {
-    return state.fail(pos, const ErrorUnexpectedEof());
-  }
-  final c = source.readRune(state);
-  switch (c) {
-    {{cases}}
-  }
-  state.pos = pos;
-  return state.fail(pos, const ErrorUnexpectedChar());
-}''';
+final source = state.source;
+final pos = state.pos;
+if (pos >= source.length) {
+  return state.fail(pos, const ErrorUnexpectedEof());
+}
+final c = source.readRune(state);
+switch (c) {
+  {{cases}}
+}
+state.pos = pos;
+return state.fail(pos, const ErrorUnexpectedChar());''';
 
   final Map<int, String> map;
 

@@ -16,19 +16,17 @@ Object? parse(String source) {
 bool _$g0(int a) => a == 9 || a == 10 || a == 13 || a == 32;
 
 Result<Object?>? _ws(State<String> state) {
-  {
-    final source = state.source;
-    while (state.pos < source.length) {
-      final pos = state.pos;
-      final c = source.readRune(state);
-      final v = _$g0(c);
-      if (!v) {
-        state.pos = pos;
-        break;
-      }
+  final source = state.source;
+  while (state.pos < source.length) {
+    final pos = state.pos;
+    final c = source.readRune(state);
+    final v = _$g0(c);
+    if (!v) {
+      state.pos = pos;
+      break;
     }
-    return const Result(null);
   }
+  return const Result(null);
 }
 
 Result<String>? _$g1(State<String> state) {
@@ -79,34 +77,32 @@ Result<String>? _$g6(State<String> state) {
 }
 
 Result<String>? _escapeChar(State<String> state) {
-  {
-    final source = state.source;
-    final pos = state.pos;
-    if (pos >= source.length) {
-      return state.fail(pos, const ErrorUnexpectedEof());
-    }
-    final c = source.readRune(state);
-    switch (c) {
-      case 34:
-        return const Result('"');
-      case 47:
-        return const Result('/');
-      case 92:
-        return const Result('\\');
-      case 98:
-        return const Result('\b');
-      case 102:
-        return const Result('\f');
-      case 110:
-        return const Result('\n');
-      case 114:
-        return const Result('\r');
-      case 116:
-        return const Result('\t');
-    }
-    state.pos = pos;
-    return state.fail(pos, const ErrorUnexpectedChar());
+  final source = state.source;
+  final pos = state.pos;
+  if (pos >= source.length) {
+    return state.fail(pos, const ErrorUnexpectedEof());
   }
+  final c = source.readRune(state);
+  switch (c) {
+    case 34:
+      return const Result('"');
+    case 47:
+      return const Result('/');
+    case 92:
+      return const Result('\\');
+    case 98:
+      return const Result('\b');
+    case 102:
+      return const Result('\f');
+    case 110:
+      return const Result('\n');
+    case 114:
+      return const Result('\r');
+    case 116:
+      return const Result('\t');
+  }
+  state.pos = pos;
+  return state.fail(pos, const ErrorUnexpectedChar());
 }
 
 Result<String>? _escape(State<String> state) {
@@ -341,19 +337,17 @@ Result<int>? _$g19(State<String> state) {
 bool _$g21(int a) => a >= 48 && a <= 57;
 
 Result<Object?>? _digit0(State<String> state) {
-  {
-    final source = state.source;
-    while (state.pos < source.length) {
-      final pos = state.pos;
-      final c = source.readRune(state);
-      final v = _$g21(c);
-      if (!v) {
-        state.pos = pos;
-        break;
-      }
+  final source = state.source;
+  while (state.pos < source.length) {
+    final pos = state.pos;
+    final c = source.readRune(state);
+    final v = _$g21(c);
+    if (!v) {
+      state.pos = pos;
+      break;
     }
-    return const Result(null);
   }
+  return const Result(null);
 }
 
 Result<Object?>? _$g18(State<String> state) {

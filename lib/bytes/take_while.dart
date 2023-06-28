@@ -84,15 +84,12 @@ if (count >= {{m}}) {
   final v = source.substring(start, state.pos);
   return Result(v);
 }
-final ParseError error;
 final end = state.pos;
-if (state.pos < source.length) {
-  error = const ErrorUnexpectedChar();
-} else {
-  error = const ErrorUnexpectedEof();
-}
 state.pos = start;
-return state.fail(end, error);''';
+if (end < source.length) {
+  return state.fail(end, const ErrorUnexpectedChar());
+}
+return state.fail(end, const ErrorUnexpectedEof());''';
 
   final Func<bool> f;
 

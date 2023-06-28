@@ -5,7 +5,7 @@ class Satisfy extends ParserBuilder<String, int> {
 final pos = state.pos;
 final source = state.source;
 if (pos >= source.length) {
-  return state.fail(pos, ErrorUnexpectedEof());
+  return state.fail(pos, const ErrorUnexpectedEof());
 }
 final c = source.readRune(state);
 final ok = {{f}}(c);
@@ -13,7 +13,7 @@ if (ok) {
   return Result(c);
 }
 state.pos = pos;
-return state.fail(pos, ErrorUnexpectedChar());''';
+return state.fail(pos, const ErrorUnexpectedChar());''';
 
   final Func<bool> f;
 

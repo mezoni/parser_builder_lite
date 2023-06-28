@@ -9,7 +9,6 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
     for (final error in expectedTags) {
       tags.addAll(error.tags);
     }
-
     final error = ErrorExpectedTags(tags);
     errorList.add(error);
   }
@@ -21,13 +20,11 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
           ))
       .toSet()
       .toList();
-
   for (var i = 0; i < errorInfoList.length; i++) {
     if (sb.isNotEmpty) {
       sb.writeln();
       sb.writeln();
     }
-
     final errorInfo = errorInfoList[i];
     final message = errorInfo.message;
     final end = offset;
@@ -51,7 +48,6 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
         lineStart = pos;
       }
     }
-
     int max(int x, int y) => x > y ? x : y;
     int min(int x, int y) => x < y ? x : y;
     final sourceLen = source.length;
@@ -71,7 +67,6 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
 
       list.add(iterator.current);
     }
-
     final column = start - lineStart + 1;
     final left = String.fromCharCodes(list.reversed);
     final end3 = min(sourceLen, start2 + (lineLimit - leftLen));
@@ -85,7 +80,6 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
     sb.writeln(text);
     sb.write(' ' * leftLen + '^' * indicatorLen);
   }
-
   return sb.toString();
 }
 
@@ -228,11 +222,9 @@ abstract class ParseError {
     for (final key in map.keys) {
       result = result.replaceAll(key, map[key]!);
     }
-
     if (quote) {
       result = "'$result'";
     }
-
     return result;
   }
 
@@ -264,16 +256,14 @@ class State<T> {
 
   State(this.source);
 
+  @pragma('vm:prefer-inline')
   Result<R>? fail<R>(int offset, ParseError error) {
     if (offset < failPos) {
       return null;
-    }
-
-    if (failPos < offset) {
+    } else if (failPos < offset) {
       failPos = offset;
       errors = [];
     }
-
     errors.add(error);
     return null;
   }
@@ -285,7 +275,6 @@ class State<T> {
       if (pos >= s.length) {
         return '$pos:';
       }
-
       var length = s.length - pos;
       length = length > 40 ? 40 : length;
       final string = s.substring(pos, pos + length);
@@ -307,13 +296,10 @@ extension on String {
         if ((w2 & 0xfc00) == 0xdc00) {
           return 0x10000 + ((w1 & 0x3ff) << 10) + (w2 & 0x3ff);
         }
-
         state.pos--;
       }
-
       throw FormatException('Invalid UTF-16 character', this, state.pos - 1);
     }
-
     return w1;
   }
 
@@ -328,10 +314,8 @@ extension on String {
           return 0x10000 + ((w1 & 0x3ff) << 10) + (w2 & 0x3ff);
         }
       }
-
       throw FormatException('Invalid UTF-16 character', this, index - 1);
     }
-
     return w1;
   }
 }

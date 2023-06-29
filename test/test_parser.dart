@@ -1,4 +1,52 @@
-const errorMessageTemplate = r'''
+int? _$g1(int value, List<int> list) {
+  if (list.isEmpty) {
+    return null;
+  }
+  var right = list.length >> 1;
+  if (right == 1) {
+    final start = list[0];
+    final end = list[1];
+    if (value <= end && value >= start) {
+      return value;
+    }
+    return null;
+  }
+  var left = 0;
+  int? result;
+  while (left < right) {
+    final middle = (left + right) >> 1;
+    final index = middle << 1;
+    final start = list[index];
+    final end = list[index + 1];
+    if (value > end) {
+      left = middle + 1;
+    } else {
+      if (value >= start) {
+        return value;
+      }
+      right = middle;
+    }
+  }
+  return result;
+}
+
+bool _$g0(int c) => _$g1(c, const [48, 57, 65, 90, 97, 122]) != null;
+
+Result<int>? inAlphanumericRange(State<String> state) {
+  final pos = state.pos;
+  final source = state.source;
+  if (pos >= source.length) {
+    return state.fail(pos, const ErrorUnexpectedEof());
+  }
+  final c = source.readRune(state);
+  final ok = _$g0(c);
+  if (ok) {
+    return Result(c);
+  }
+  state.pos = pos;
+  return state.fail(pos, const ErrorUnexpectedChar());
+}
+
 String _errorMessage(String source, int offset, List<ParseError> errors) {
   final sb = StringBuffer();
   final errorList = errors.toList();
@@ -83,9 +131,6 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
   return sb.toString();
 }
 
-''';
-
-const runtimeTemplate = r'''
 class ErrorExpectedChar extends ParseError {
   final int char;
 
@@ -325,5 +370,3 @@ extension on String {
     return w1;
   }
 }
-
-''';

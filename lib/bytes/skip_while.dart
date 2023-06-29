@@ -1,12 +1,67 @@
 import '../parser_builder.dart';
 
+class Skip16While0 extends ParserBuilder<String, Object?> {
+  final FunctionBuilder<bool> f;
+
+  const Skip16While0(this.f);
+
+  @override
+  String getTemplate(BuildContext context) => '''
+final source = state.source;
+while (state.pos < source.length) {
+  final c = source.codeUnitAt(state.pos);
+  final v = {{f}}(c);
+  if (!v) {
+    break;
+  }
+  state.pos++;
+}
+return const Result(null);''';
+
+  @override
+  Map<String, Object?> getValues(BuildContext context) => {
+        'f': f,
+      };
+}
+
+class Skip16While1 extends ParserBuilder<String, Object?> {
+  final FunctionBuilder<bool> f;
+
+  const Skip16While1(this.f);
+
+  @override
+  String getTemplate(BuildContext context) => '''
+final source = state.source;
+final start = state.pos;
+if (start >= source.length) {
+  return state.fail(start, const ErrorUnexpectedEof());
+}
+while (state.pos < source.length) {
+  final c = source.codeUnitAt(state.pos);
+  final v = {{f}}(c);
+  if (!v) {
+    break;
+  }
+  state.pos++;
+}
+if (state.pos == start) {
+  return state.fail(start, const ErrorUnexpectedChar());
+}
+return const Result(null);''';
+
+  @override
+  Map<String, Object?> getValues(BuildContext context) => {
+        'f': f,
+      };
+}
+
 class SkipWhile0 extends ParserBuilder<String, Object?> {
-  final Func<bool> f;
+  final FunctionBuilder<bool> f;
 
   const SkipWhile0(this.f);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final source = state.source;
 while (state.pos < source.length) {
   final pos = state.pos;
@@ -20,42 +75,18 @@ while (state.pos < source.length) {
 return const Result(null);''';
 
   @override
-  Map<String, Object?> get values => {
-        'f': f,
-      };
-}
-
-class Skip16While0 extends ParserBuilder<String, Object?> {
-  final Func<bool> f;
-
-  const Skip16While0(this.f);
-
-  @override
-  String get template => '''
-final source = state.source;
-while (state.pos < source.length) {
-  final c = source.codeUnitAt(state.pos);
-  final v = {{f}}(c);
-  if (!v) {
-    break;
-  }
-  state.pos++;
-}
-return const Result(null);''';
-
-  @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'f': f,
       };
 }
 
 class SkipWhile1 extends ParserBuilder<String, Object?> {
-  final Func<bool> f;
+  final FunctionBuilder<bool> f;
 
   const SkipWhile1(this.f);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final source = state.source;
 final start = state.pos;
 if (start >= source.length) {
@@ -76,38 +107,7 @@ if (state.pos == start) {
 return const Result(null);''';
 
   @override
-  Map<String, Object?> get values => {
-        'f': f,
-      };
-}
-
-class Skip16While1 extends ParserBuilder<String, Object?> {
-  final Func<bool> f;
-
-  const Skip16While1(this.f);
-
-  @override
-  String get template => '''
-final source = state.source;
-final start = state.pos;
-if (start >= source.length) {
-  return state.fail(start, const ErrorUnexpectedEof());
-}
-while (state.pos < source.length) {
-  final c = source.codeUnitAt(state.pos);
-  final v = {{f}}(c);
-  if (!v) {
-    break;
-  }
-  state.pos++;
-}
-if (state.pos == start) {
-  return state.fail(start, const ErrorUnexpectedChar());
-}
-return const Result(null);''';
-
-  @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'f': f,
       };
 }

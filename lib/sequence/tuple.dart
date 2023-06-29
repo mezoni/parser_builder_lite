@@ -8,7 +8,7 @@ class Tuple2<I, O1, O2> extends ParserBuilder<I, (O1, O2)> {
   const Tuple2(this.p1, this.p2);
 
   @override
-  String get template => r'''
+  String getTemplate(BuildContext context) => r'''
 final pos = state.pos;
 final r1 = {{p1}};
 if (r1 != null) {
@@ -21,7 +21,7 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'p1': p1,
         'p2': p2,
       };
@@ -37,7 +37,7 @@ class Tuple3<I, O1, O2, O3> extends ParserBuilder<I, (O1, O2, O3)> {
   const Tuple3(this.p1, this.p2, this.p3);
 
   @override
-  String get template => r'''
+  String getTemplate(BuildContext context) => r'''
 final pos = state.pos;
 final r1 = {{p1}};
 if (r1 != null) {
@@ -53,7 +53,7 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'p1': p1,
         'p2': p2,
         'p3': p3,
@@ -72,7 +72,7 @@ class Tuple4<I, O1, O2, O3, O4> extends ParserBuilder<I, (O1, O2, O3, O4)> {
   const Tuple4(this.p1, this.p2, this.p3, this.p4);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final r1 = {{p1}};
 if (r1 != null) {
@@ -91,7 +91,7 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'p1': p1,
         'p2': p2,
         'p3': p3,
@@ -114,7 +114,7 @@ class Tuple5<I, O1, O2, O3, O4, O5>
   const Tuple5(this.p1, this.p2, this.p3, this.p4, this.p5);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final r1 = {{p1}};
 if (r1 != null) {
@@ -136,7 +136,7 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'p1': p1,
         'p2': p2,
         'p3': p3,
@@ -162,7 +162,7 @@ class Tuple6<I, O1, O2, O3, O4, O5, O6>
   const Tuple6(this.p1, this.p2, this.p3, this.p4, this.p5, this.p6);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final r1 = {{p1}};
 if (r1 != null) {
@@ -187,7 +187,7 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'p1': p1,
         'p2': p2,
         'p3': p3,
@@ -216,7 +216,7 @@ class Tuple7<I, O1, O2, O3, O4, O5, O6, O7>
   const Tuple7(this.p1, this.p2, this.p3, this.p4, this.p5, this.p6, this.p7);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final r1 = {{p1}};
 if (r1 != null) {
@@ -244,7 +244,7 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'p1': p1,
         'p2': p2,
         'p3': p3,

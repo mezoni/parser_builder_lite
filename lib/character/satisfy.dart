@@ -16,15 +16,15 @@ if (ok) {
 state.pos = pos;
 return state.fail(pos, const ErrorUnexpectedChar());''';
 
-  final Func<bool> f;
+  final FunctionBuilder<bool> f;
 
   const Satisfy(this.f);
 
   @override
-  String get template => satisfyTemplate;
+  String getTemplate(BuildContext context) => satisfyTemplate;
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'f': f,
       };
 }

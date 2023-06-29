@@ -1,3 +1,13 @@
+## 0.3.0
+
+- Breaking changes. Changes have been made to enable code generation in the global context at build time.
+- Added support for parsing ranges.
+- Added support for arbitrary global code generation.
+
+## 0.2.4
+
+- Added file `fast_build.dart`.
+
 ## 0.2.3
 
 - Fixed bugs.

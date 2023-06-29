@@ -6,7 +6,7 @@ class Opt<I, O> extends ParserBuilder<I, O?> {
   const Opt(this.parser);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final r1 = {{p1}};
 if (r1 == null) {
   return const Result(null);
@@ -14,7 +14,7 @@ if (r1 == null) {
 return Result(r1.value);''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'p1': parser,
       };
 }

@@ -6,7 +6,7 @@ class Many0<I, O> extends ParserBuilder<I, List<O>> {
   const Many0(this.parser);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final list = <{{O}}>[];
 while (true) {
   final r1 = {{p1}};
@@ -18,7 +18,7 @@ while (true) {
 return Result(list);''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'O': O,
         'p1': parser,
       };
@@ -30,7 +30,7 @@ class Many1<I, O> extends ParserBuilder<I, List<O>> {
   const Many1(this.parser);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final list = <{{O}}>[];
 while (true) {
   final r1 = {{p1}};
@@ -45,7 +45,7 @@ if (list.isEmpty) {
 return Result(list);''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'O': O,
         'p1': parser,
       };

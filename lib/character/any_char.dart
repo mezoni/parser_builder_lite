@@ -2,7 +2,7 @@ import '../parser_builder.dart';
 
 class AnyChar extends ParserBuilder<String, int> {
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final source = state.source;
 if (pos >= source.length) {

@@ -8,7 +8,7 @@ class Terminated<I, O> extends ParserBuilder<I, O> {
   const Terminated(this.parser, this.terminate);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final r1 = {{p1}};
 if (r1 != null) {
@@ -21,7 +21,7 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'p1': parser,
         'p2': terminate,
       };

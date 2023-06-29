@@ -8,7 +8,7 @@ class Skip2<I> extends ParserBuilder<I, Object?> {
   const Skip2(this.p1, this.p2);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final r1 = {{p1}};
 if (r1 != null) {
@@ -21,7 +21,7 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'p1': p1,
         'p2': p2,
       };
@@ -37,7 +37,7 @@ class Skip3<I> extends ParserBuilder<I, Object?> {
   const Skip3(this.p1, this.p2, this.p3);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final r1 = {{p1}};
 if (r1 != null) {
@@ -53,7 +53,7 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'p1': p1,
         'p2': p2,
         'p3': p3,
@@ -72,7 +72,7 @@ class Skip4<I> extends ParserBuilder<I, Object?> {
   const Skip4(this.p1, this.p2, this.p3, this.p4);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final r1 = {{p1}};
 if (r1 != null) {
@@ -91,7 +91,7 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'p1': p1,
         'p2': p2,
         'p3': p3,
@@ -113,7 +113,7 @@ class Skip5<I> extends ParserBuilder<I, Object?> {
   const Skip5(this.p1, this.p2, this.p3, this.p4, this.p5);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final r1 = {{p1}};
 if (r1 != null) {
@@ -135,7 +135,7 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'p1': p1,
         'p2': p2,
         'p3': p3,
@@ -160,7 +160,7 @@ class Skip6<I> extends ParserBuilder<I, Object?> {
   const Skip6(this.p1, this.p2, this.p3, this.p4, this.p5, this.p6);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final r1 = {{p1}};
 if (r1 != null) {
@@ -185,7 +185,7 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'p1': p1,
         'p2': p2,
         'p3': p3,
@@ -213,7 +213,7 @@ class Skip7<I> extends ParserBuilder<I, Object?> {
   const Skip7(this.p1, this.p2, this.p3, this.p4, this.p5, this.p6, this.p7);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final r1 = {{p1}};
 if (r1 != null) {
@@ -241,7 +241,7 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'p1': p1,
         'p2': p2,
         'p3': p3,

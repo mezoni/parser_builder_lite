@@ -8,7 +8,7 @@ class NoneOf extends ParserBuilder<String, int> {
 
   @override
   // TODO: Add 16 bit version
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final source = state.source;
 if (pos >= source.length) {
@@ -26,7 +26,7 @@ for (var i = 0; i < {{length}}; i++) {
 return Result(ch);''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'chars': helper.getAsCode(chars.runes.toList()),
         'length': helper.getAsCode(chars.runes.toList().length),
       };

@@ -1,9 +1,9 @@
 import '../parser_builder.dart';
 
 class _IdentifierExpression extends ParserBuilder<String, String> {
-  final Func<bool> identCont;
+  final FunctionBuilder<bool> identCont;
 
-  final Func<bool> identStart;
+  final FunctionBuilder<bool> identStart;
 
   final List<String> reservedWords;
 
@@ -11,7 +11,7 @@ class _IdentifierExpression extends ParserBuilder<String, String> {
       this.reservedWords, this.identStart, this.identCont);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final source = state.source;
 if (state.pos >= source.length) {

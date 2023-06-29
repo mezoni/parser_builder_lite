@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:parser_builder_lite/branch/alt.dart';
 import 'package:parser_builder_lite/bytes/skip_while.dart';
@@ -14,43 +12,25 @@ import 'package:parser_builder_lite/combinator/opt.dart';
 import 'package:parser_builder_lite/combinator/recognize.dart';
 import 'package:parser_builder_lite/combinator/value.dart';
 import 'package:parser_builder_lite/error/handle_error.dart';
+import 'package:parser_builder_lite/fast_build.dart';
 import 'package:parser_builder_lite/helper.dart' as helper;
 import 'package:parser_builder_lite/multi/many.dart';
 import 'package:parser_builder_lite/multi/separated_list.dart';
 import 'package:parser_builder_lite/parser_builder.dart';
-import 'package:parser_builder_lite/runtime.dart' as runtime;
 import 'package:parser_builder_lite/sequence/delimited.dart';
 import 'package:parser_builder_lite/sequence/map.dart';
 import 'package:parser_builder_lite/sequence/preceded.dart';
 import 'package:parser_builder_lite/sequence/skip.dart';
 import 'package:parser_builder_lite/sequence/terminated.dart';
 
-void main(List<String> args) async {
-  final output = StringBuffer();
-  final context = BuildContext(
-    allocator: Allocator('_\$g'),
-    output: output,
+Future<void> main(List<String> args) async {
+  await fastBuild(
+    filename: 'example/json_parser.dart',
+    footer: __footer,
+    header: __header,
+    parsers: [json, _value_],
+    prefix: '_\$g',
   );
-
-  output.writeln(__header);
-  output.writeln();
-  final parsers = [json, _value_];
-  for (final parser in parsers) {
-    parser.build(context);
-  }
-
-  output.writeln(__footer);
-  output.writeln(runtime.errorMessageTemplate);
-  output.writeln(runtime.runtimeTemplate);
-  const filename = 'example/json_parser.dart';
-  File(filename).writeAsStringSync('${context.output}');
-  const format = true;
-  if (format) {
-    final process =
-        await Process.start(Platform.executable, ['format', filename]);
-    unawaited(process.stdout.transform(utf8.decoder).forEach(print));
-    unawaited(process.stderr.transform(utf8.decoder).forEach(print));
-  }
 }
 
 const json = Named('json', Delimited(_ws, _value_, Eof()));
@@ -234,7 +214,7 @@ const _value = Ref<String, Object?>('_value');
 
 const _value_ = Named(
     '_value',
-    Alt7(
+    Alt([
       _string,
       _number,
       _true,
@@ -242,7 +222,7 @@ const _value_ = Named(
       _null,
       _array,
       _object,
-    ));
+    ]));
 
 const _values = Named('_values', SeparatedList0(_value, _comma));
 
@@ -272,7 +252,7 @@ return state.fail(pos, const ErrorUnexpectedChar());''';
   const _Switch(this.map);
 
   @override
-  String get template {
+  String getTemplate(BuildContext context) {
     final cases = <String>[];
     for (var kv in map.entries) {
       final element = helper.render(_case, {

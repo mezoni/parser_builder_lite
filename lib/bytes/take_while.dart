@@ -17,15 +17,15 @@ if (state.pos == start) {
 }
 return Result(source.substring(start, state.pos));''';
 
-  final Func<bool> f;
+  final FunctionBuilder<bool> f;
 
   const Take16While0(this.f);
 
   @override
-  String get template => take16While0Template;
+  String getTemplate(BuildContext context) => take16While0Template;
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'f': f,
       };
 }
@@ -50,16 +50,60 @@ if (state.pos == start) {
 }
 return Result(source.substring(start, state.pos));''';
 
-  final Func<bool> f;
+  final FunctionBuilder<bool> f;
 
   const Take16While1(this.f);
 
   @override
-  String get template => take16While1Template;
+  String getTemplate(BuildContext context) => take16While1Template;
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'f': f,
+      };
+}
+
+class Take16WhileMN extends ParserBuilder<String, String> {
+  static const take16WhileMNTemplate = '''
+final source = state.source;
+final start = state.pos;
+var count = 0;
+while (count < {{n}} && state.pos < source.length) {
+  final c = source.codeUnitAt(state.pos);
+  final ok = {{f}}(c);
+  if (!ok) {
+    break;
+  }
+  state.pos++;
+  count++;
+}
+if (count >= {{m}}) {
+  final v = source.substring(start, state.pos);
+  return Result(v);
+}
+final end = state.pos;
+state.pos = start;
+if (end < source.length) {
+  return state.fail(end, const ErrorUnexpectedChar());
+}
+return state.fail(end, const ErrorUnexpectedEof());''';
+
+  final FunctionBuilder<bool> f;
+
+  final int m;
+
+  final int n;
+
+  const Take16WhileMN(this.m, this.n, this.f);
+
+  @override
+  String getTemplate(BuildContext context) => take16WhileMNTemplate;
+
+  @override
+  Map<String, Object?> getValues(BuildContext context) => {
+        'f': f,
+        'm': m,
+        'n': n,
       };
 }
 
@@ -81,15 +125,15 @@ if (state.pos == start) {
 }
 return Result(source.substring(start, state.pos));''';
 
-  final Func<bool> f;
+  final FunctionBuilder<bool> f;
 
   const TakeWhile0(this.f);
 
   @override
-  String get template => takeWhile0Template;
+  String getTemplate(BuildContext context) => takeWhile0Template;
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'f': f,
       };
 }
@@ -115,15 +159,15 @@ if (state.pos == start) {
 }
 return Result(source.substring(start, state.pos));''';
 
-  final Func<bool> f;
+  final FunctionBuilder<bool> f;
 
   const TakeWhile1(this.f);
 
   @override
-  String get template => takeWhile1Template;
+  String getTemplate(BuildContext context) => takeWhile1Template;
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'f': f,
       };
 }
@@ -154,7 +198,7 @@ if (end < source.length) {
 }
 return state.fail(end, const ErrorUnexpectedEof());''';
 
-  final Func<bool> f;
+  final FunctionBuilder<bool> f;
 
   final int m;
 
@@ -163,54 +207,10 @@ return state.fail(end, const ErrorUnexpectedEof());''';
   const TakeWhileMN(this.m, this.n, this.f);
 
   @override
-  String get template => takeWhileMNTemplate;
+  String getTemplate(BuildContext context) => takeWhileMNTemplate;
 
   @override
-  Map<String, Object?> get values => {
-        'f': f,
-        'm': m,
-        'n': n,
-      };
-}
-
-class Take16WhileMN extends ParserBuilder<String, String> {
-  static const take16WhileMNTemplate = '''
-final source = state.source;
-final start = state.pos;
-var count = 0;
-while (count < {{n}} && state.pos < source.length) {
-  final c = source.codeUnitAt(state.pos);
-  final ok = {{f}}(c);
-  if (!ok) {
-    break;
-  }
-  state.pos++;
-  count++;
-}
-if (count >= {{m}}) {
-  final v = source.substring(start, state.pos);
-  return Result(v);
-}
-final end = state.pos;
-state.pos = start;
-if (end < source.length) {
-  return state.fail(end, const ErrorUnexpectedChar());
-}
-return state.fail(end, const ErrorUnexpectedEof());''';
-
-  final Func<bool> f;
-
-  final int m;
-
-  final int n;
-
-  const Take16WhileMN(this.m, this.n, this.f);
-
-  @override
-  String get template => take16WhileMNTemplate;
-
-  @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'f': f,
         'm': m,
         'n': n,

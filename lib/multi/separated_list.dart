@@ -8,7 +8,7 @@ class SeparatedList0<I, O> extends ParserBuilder<I, List<O>> {
   const SeparatedList0(this.p1, this.p2);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 var pos = state.pos;
 final list = <{{O}}>[];
 while (true) {
@@ -27,7 +27,7 @@ while (true) {
 return Result(list);''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'O': '$O',
         'p1': p1,
         'p2': p2,

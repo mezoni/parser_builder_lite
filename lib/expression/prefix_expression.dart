@@ -3,14 +3,14 @@ import '../parser_builder.dart';
 class _PrefixExpression<I, O1, O> extends ParserBuilder<I, O> {
   final ParserBuilder<I, O> expression;
 
-  final Func<O> f;
+  final FunctionBuilder<O> f;
 
   final ParserBuilder<I, O1> operator;
 
   const _PrefixExpression(this.operator, this.expression, this.f);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final r1 = {{p1}};
 final r2 = {{p2}};
@@ -28,7 +28,7 @@ state.pos = pos;
 return null;''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'f': f,
         'p1': operator,
         'p2': expression,

@@ -4,7 +4,7 @@ class Eof extends ParserBuilder<String, Object?> {
   const Eof();
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 if (state.pos >= state.source.length) {
   return const Result(null);
 }

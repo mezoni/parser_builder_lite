@@ -2,12 +2,12 @@
 
 Parser Builder Lite is a lightweight and uncomplicated parser builder.
 
-Version: 0.2.3
+Version: 0.3.0
 
 ## What is it and what is it for?
 
 Parser Builder is designed to quickly write parsers through source code templates.  
-The main feature and advantage is that a very simple (simplest) builder is used to build parsers (less than 4 kb of source code).  
+The main feature and advantage is that a very simple (simplest) builder is used to build parsers (about 4 kb of source code).  
 Static and dynamic templates are supported.  
 Static templates are easier to create and understand.  
 Dynamic templates are more difficult to create, but the generated code can be much more efficient.  
@@ -23,7 +23,7 @@ class Many0<I, O> extends ParserBuilder<I, List<O>> {
   const Many0(this.parser);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final list = <{{O}}>[];
 while (true) {
   final r1 = {{p1}};
@@ -35,7 +35,7 @@ while (true) {
 return Result(list);''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context)  => {
         'O': O,
         'p1': parser,
       };
@@ -119,6 +119,21 @@ void main(List<String> args) async {
     unawaited(process.stdout.transform(utf8.decoder).forEach(print));
     unawaited(process.stderr.transform(utf8.decoder).forEach(print));
   }
+}
+
+```
+
+Or even shorter.
+
+```dart
+Future<void> main(List<String> args) async {
+  await fastBuild(
+    filename: 'example/json_parser.dart',
+    footer: __footer,
+    header: __header,
+    parsers: [json, _value_],
+    prefix: '_\$g',
+  );
 }
 
 ```

@@ -1,6 +1,16 @@
+import '../helper.dart' as helper;
 import '../parser_builder.dart';
 
-class Alt2<I, O> extends ParserBuilder<I, O> {
+class Alt<I, O> extends _Alt<I, O> {
+  final List<ParserBuilder<I, O>> parsers;
+
+  const Alt(this.parsers);
+
+  @override
+  List<ParserBuilder<I, O>> get _parsers => parsers;
+}
+
+class Alt2<I, O> extends _Alt<I, O> {
   final ParserBuilder<I, O> p1;
 
   final ParserBuilder<I, O> p2;
@@ -8,25 +18,10 @@ class Alt2<I, O> extends ParserBuilder<I, O> {
   const Alt2(this.p1, this.p2);
 
   @override
-  String get template => '''
-final r1 = {{p1}};
-if (r1 != null) {
-  return r1;
-}
-final r2 = {{p2}};
-if (r2 != null) {
-  return r2;
-}
-return null;''';
-
-  @override
-  Map<String, Object?> get values => {
-        'p1': p1,
-        'p2': p2,
-      };
+  List<ParserBuilder<I, O>> get _parsers => [p1, p2];
 }
 
-class Alt3<I, O> extends ParserBuilder<I, O> {
+class Alt3<I, O> extends _Alt<I, O> {
   final ParserBuilder<I, O> p1;
 
   final ParserBuilder<I, O> p2;
@@ -36,30 +31,10 @@ class Alt3<I, O> extends ParserBuilder<I, O> {
   const Alt3(this.p1, this.p2, this.p3);
 
   @override
-  String get template => '''
-final r1 = {{p1}};
-if (r1 != null) {
-  return r1;
-}
-final r2 = {{p2}};
-if (r2 != null) {
-  return r2;
-}
-final r3 = {{p3}};
-if (r3 != null) {
-  return r3;
-}
-return null;''';
-
-  @override
-  Map<String, Object?> get values => {
-        'p1': p1,
-        'p2': p2,
-        'p3': p3,
-      };
+  List<ParserBuilder<I, O>> get _parsers => [p1, p2, p3];
 }
 
-class Alt4<I, O> extends ParserBuilder<I, O> {
+class Alt4<I, O> extends _Alt<I, O> {
   final ParserBuilder<I, O> p1;
 
   final ParserBuilder<I, O> p2;
@@ -71,35 +46,10 @@ class Alt4<I, O> extends ParserBuilder<I, O> {
   const Alt4(this.p1, this.p2, this.p3, this.p4);
 
   @override
-  String get template => '''
-final r1 = {{p1}};
-if (r1 != null) {
-  return r1;
-}
-final r2 = {{p2}};
-if (r2 != null) {
-  return r2;
-}
-final r3 = {{p3}};
-if (r3 != null) {
-  return r3;
-}
-final r4 = {{p4}};
-if (r4 != null) {
-  return r4;
-}
-return null;''';
-
-  @override
-  Map<String, Object?> get values => {
-        'p1': p1,
-        'p2': p2,
-        'p3': p3,
-        'p4': p4,
-      };
+  List<ParserBuilder<I, O>> get _parsers => [p1, p2, p3, p4];
 }
 
-class Alt5<I, O> extends ParserBuilder<I, O> {
+class Alt5<I, O> extends _Alt<I, O> {
   final ParserBuilder<I, O> p1;
 
   final ParserBuilder<I, O> p2;
@@ -113,40 +63,10 @@ class Alt5<I, O> extends ParserBuilder<I, O> {
   const Alt5(this.p1, this.p2, this.p3, this.p4, this.p5);
 
   @override
-  String get template => '''
-final r1 = {{p1}};
-if (r1 != null) {
-  return r1;
-}
-final r2 = {{p2}};
-if (r2 != null) {
-  return r2;
-}
-final r3 = {{p3}};
-if (r3 != null) {
-  return r3;
-}
-final r4 = {{p4}};
-if (r4 != null) {
-  return r4;
-}
-final r5 = {{p5}};
-if (r5 != null) {
-  return r5;
-}
-return null;''';
-
-  @override
-  Map<String, Object?> get values => {
-        'p1': p1,
-        'p2': p2,
-        'p3': p3,
-        'p4': p4,
-        'p5': p5,
-      };
+  List<ParserBuilder<I, O>> get _parsers => [p1, p2, p3, p4, p5];
 }
 
-class Alt6<I, O> extends ParserBuilder<I, O> {
+class Alt6<I, O> extends _Alt<I, O> {
   final ParserBuilder<I, O> p1;
 
   final ParserBuilder<I, O> p2;
@@ -162,45 +82,10 @@ class Alt6<I, O> extends ParserBuilder<I, O> {
   const Alt6(this.p1, this.p2, this.p3, this.p4, this.p5, this.p6);
 
   @override
-  String get template => '''
-final r1 = {{p1}};
-if (r1 != null) {
-  return r1;
-}
-final r2 = {{p2}};
-if (r2 != null) {
-  return r2;
-}
-final r3 = {{p3}};
-if (r3 != null) {
-  return r3;
-}
-final r4 = {{p4}};
-if (r4 != null) {
-  return r4;
-}
-final r5 = {{p5}};
-if (r5 != null) {
-  return r5;
-}
-final r6 = {{p6}};
-if (r6 != null) {
-  return r6;
-}
-return null;''';
-
-  @override
-  Map<String, Object?> get values => {
-        'p1': p1,
-        'p2': p2,
-        'p3': p3,
-        'p4': p4,
-        'p5': p5,
-        'p6': p6,
-      };
+  List<ParserBuilder<I, O>> get _parsers => [p1, p2, p3, p4, p5, p6];
 }
 
-class Alt7<I, O> extends ParserBuilder<I, O> {
+class Alt7<I, O> extends _Alt<I, O> {
   final ParserBuilder<I, O> p1;
 
   final ParserBuilder<I, O> p2;
@@ -218,45 +103,38 @@ class Alt7<I, O> extends ParserBuilder<I, O> {
   const Alt7(this.p1, this.p2, this.p3, this.p4, this.p5, this.p6, this.p7);
 
   @override
-  String get template => '''
-final r1 = {{p1}};
-if (r1 != null) {
-  return r1;
+  List<ParserBuilder<I, O>> get _parsers => [p1, p2, p3, p4, p5, p6, p7];
 }
-final r2 = {{p2}};
-if (r2 != null) {
-  return r2;
-}
-final r3 = {{p3}};
-if (r3 != null) {
-  return r3;
-}
-final r4 = {{p4}};
-if (r4 != null) {
-  return r4;
-}
-final r5 = {{p5}};
-if (r5 != null) {
-  return r5;
-}
-final r6 = {{p6}};
-if (r6 != null) {
-  return r6;
-}
-final r7 = {{p7}};
-if (r7 != null) {
-  return r7;
-}
-return null;''';
+
+abstract class _Alt<I, O> extends ParserBuilder<I, O> {
+  const _Alt();
+
+  List<ParserBuilder<I, O>> get _parsers;
 
   @override
-  Map<String, Object?> get values => {
-        'p1': p1,
-        'p2': p2,
-        'p3': p3,
-        'p4': p4,
-        'p5': p5,
-        'p6': p6,
-        'p7': p7,
-      };
+  String getTemplate(BuildContext context) {
+    if (_parsers.isEmpty) {
+      throw StateError('The parser list must not be empty');
+    }
+
+    const template = '''
+final r{{n}} = {{p{{n}}}};
+if (r{{n}} != null) {
+  return r{{n}};
+}''';
+
+    final buffer = StringBuffer();
+    for (var i = 0; i < _parsers.length; i++) {
+      final statements = template.replaceAll('{{n}}', helper.getAsCode(i + 1));
+      buffer.writeln(statements);
+    }
+
+    buffer.writeln('return null;');
+    return buffer.toString();
+  }
+
+  @override
+  Map<String, Object?> getValues(BuildContext context) {
+    return {for (var i = 0; i < _parsers.length; i++) 'p${i + 1}': _parsers[i]};
+  }
 }

@@ -1,7 +1,7 @@
 import '../parser_builder.dart';
 
 class _BinaryExpression<I, O1, O> extends ParserBuilder<I, O> {
-  final Func<O> f;
+  final FunctionBuilder<O> f;
 
   final ParserBuilder<I, O> left;
 
@@ -12,15 +12,7 @@ class _BinaryExpression<I, O1, O> extends ParserBuilder<I, O> {
   const _BinaryExpression(this.left, this.operator, this.right, this.f);
 
   @override
-  Map<String, Object?> get values => {
-        'O': '$O',
-        'p1': left,
-        'p2': operator,
-        'p3': right,
-      };
-
-  @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 {{O}} left;
 final r1 = {{p1}};
 if (r1 != null) {
@@ -45,4 +37,12 @@ if (r1 != null) {
 if (state.ok) {
   {{res0}} = {{left}};
 }''';
+
+  @override
+  Map<String, Object?> getValues(BuildContext context) => {
+        'O': '$O',
+        'p1': left,
+        'p2': operator,
+        'p3': right,
+      };
 }

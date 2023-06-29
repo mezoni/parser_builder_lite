@@ -6,7 +6,7 @@ class And<I> extends ParserBuilder<I, Object?> {
   const And(this.parser);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final r1 = {{p1}};
 if (r1 != null) {
@@ -16,7 +16,7 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'p1': parser,
       };
 }

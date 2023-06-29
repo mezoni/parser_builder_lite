@@ -25,7 +25,7 @@ return const Result(tag);''';
   const Tag(this.tag);
 
   @override
-  String get template {
+  String getTemplate(BuildContext context) {
     if (tag.length == 1) {
       return _template16;
     }
@@ -34,7 +34,7 @@ return const Result(tag);''';
   }
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'char': tag.isNotEmpty
             ? helper.getAsCode(tag.codeUnitAt(0))
             : throw StateError('The tag must not be empty'),

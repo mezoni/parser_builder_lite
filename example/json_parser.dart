@@ -1188,6 +1188,12 @@ class Result<T> {
   const Result(this.value);
 
   @override
+  int get hashCode => value.hashCode;
+
+  @override
+  bool operator ==(other) => other is Result<T> && value == other.value;
+
+  @override
   String toString() {
     return '$value';
   }

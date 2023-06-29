@@ -7,7 +7,7 @@ class Char extends ParserBuilder<String, int> {
 
   @override
   // TODO: Add 16 bit version
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final source = state.source;
 final pos = state.pos;
 if (state.pos >= source.length) {
@@ -20,7 +20,7 @@ if (c == {{char}}) {
 return state.fail(pos, const ErrorExpectedChar({{char}}));''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'char': char,
       };
 }

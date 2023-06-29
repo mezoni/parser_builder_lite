@@ -8,7 +8,7 @@ class OneOf extends ParserBuilder<String, int> {
 
   @override
   // TODO: Add 16 bit version
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final source = state.source;
 if (pos >= source.length) {
@@ -26,7 +26,7 @@ state.pos = pos;
 return state.fail(pos, const ErrorUnexpectedChar());''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'chars': helper.getAsCode(chars.runes.toList()),
         'length': helper.getAsCode(chars.runes.toList().length),
       };

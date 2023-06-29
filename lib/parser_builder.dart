@@ -46,10 +46,7 @@ class BuildResult {
   });
 }
 
-class Func<R> {
-  static const _template = '''
-{{R}} {{name}}{{source}}''';
-
+class Func<R> extends FunctionBuilder<R> {
   final String source;
 
   const Func(this.source);
@@ -62,15 +59,27 @@ class Func<R> {
     return other is Func<R> && source == other.source;
   }
 
+  @override
+  String getSource(BuildContext context) => source;
+}
+
+abstract class FunctionBuilder<R> {
+  static const _template = '''
+{{R}} {{name}}{{source}}''';
+
+  const FunctionBuilder();
+
   BuildResult build(BuildContext context) {
-    final cache = context
-        .initializeCache('parser_builder_lite.func', <Object?, BuildResult>{});
+    final cache = context.initializeCache(
+        'parser_builder_lite.parser_builder.function_builder',
+        <Object?, BuildResult>{});
     final found = cache[this];
     if (found != null) {
       return found;
     }
 
     final name = context.allocator.allocate();
+    final source = getSource(context);
     final newSource = helper.render(_template, {
       'R': '$R',
       'name': name,
@@ -82,6 +91,8 @@ class Func<R> {
     cache[this] = result;
     return result;
   }
+
+  String getSource(BuildContext context);
 }
 
 class Named<I, O> extends ParserBuilder<I, O> {
@@ -93,10 +104,11 @@ class Named<I, O> extends ParserBuilder<I, O> {
   const Named(this.name, this.parser);
 
   @override
-  String get template => parser.template;
+  String getTemplate(BuildContext context) => parser.getTemplate(context);
 
   @override
-  Map<String, Object?> get values => parser.values;
+  Map<String, Object?> getValues(BuildContext context) =>
+      parser.getValues(context);
 }
 
 abstract class ParserBuilder<I, O> {
@@ -109,13 +121,10 @@ Result<{{O}}>? {{name}}(State<{{I}}> state) {
 
   String? get name => null;
 
-  String get template;
-
-  Map<String, Object?> get values => const {};
-
   BuildResult build(BuildContext context) {
-    final cache = context
-        .initializeCache('parser_builder_lite.parsers', <String, String>{});
+    final cache = context.initializeCache(
+        'parser_builder_lite.parser_builder.parser_builder.parsers',
+        <String, String>{});
     var name = this.name;
     if (name != null) {
       final source = cache[name];
@@ -128,7 +137,7 @@ Result<{{O}}>? {{name}}(State<{{I}}> state) {
     }
 
     name ??= context.allocator.allocate();
-    final values = this.values;
+    final values = getValues(context);
     final newValues = <String, String>{};
     for (var key in values.keys) {
       String? newValue;
@@ -136,7 +145,7 @@ Result<{{O}}>? {{name}}(State<{{I}}> state) {
       if (value is ParserBuilder) {
         final result = value.build(context);
         newValue = '${result.name}(state)';
-      } else if (value is Func) {
+      } else if (value is FunctionBuilder) {
         final result = value.build(context);
         newValue = result.name;
       } else {
@@ -146,6 +155,7 @@ Result<{{O}}>? {{name}}(State<{{I}}> state) {
       newValues[key] = newValue;
     }
 
+    final template = getTemplate(context);
     final body = helper.render(template, newValues);
     final source = helper.render(_template, {
       'I': '$I',
@@ -159,6 +169,10 @@ Result<{{O}}>? {{name}}(State<{{I}}> state) {
     cache[name] = source;
     return BuildResult(name: name, source: source);
   }
+
+  String getTemplate(BuildContext context);
+
+  Map<String, Object?> getValues(BuildContext context) => const {};
 }
 
 class Ref<I, O> extends ParserBuilder<I, O> {
@@ -168,13 +182,13 @@ class Ref<I, O> extends ParserBuilder<I, O> {
   const Ref(this.name);
 
   @override
-  String get template => name;
-
-  @override
-  Map<String, Object?> get values => const {};
-
-  @override
   BuildResult build(BuildContext context) {
     return BuildResult(name: name, source: '');
   }
+
+  @override
+  String getTemplate(BuildContext context) => name;
+
+  @override
+  Map<String, Object?> getValues(BuildContext context) => const {};
 }

@@ -1,20 +1,14 @@
 import '../parser_builder.dart';
 
 class HandleError<I, O> extends ParserBuilder<I, O> {
-  final Func<Object?> f;
+  final FunctionBuilder<Object?> f;
 
   final ParserBuilder<I, O> parser;
 
   const HandleError(this.parser, this.f);
 
   @override
-  Map<String, Object?> get values => {
-        'f': f,
-        'p1': parser,
-      };
-
-  @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final failPos = state.failPos;
 final errors = state.errors;
@@ -39,4 +33,10 @@ if (failPos2 < pos) {
 
 final error = {{f}}(pos, failPos2) as ParseError;
 return state.fail(failPos2, error);''';
+
+  @override
+  Map<String, Object?> getValues(BuildContext context) => {
+        'f': f,
+        'p1': parser,
+      };
 }

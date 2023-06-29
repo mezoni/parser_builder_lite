@@ -7,7 +7,7 @@ class Tags extends ParserBuilder<String, String> {
   const Tags(this.tags);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 const tags = {{tags}};
 final source = state.source;
 final pos = state.pos;
@@ -21,7 +21,7 @@ for (var i = 0; i < {{length}}; i++) {
 return state.fail(pos, const ErrorExpectedTags(tags));''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'length': helper.getAsCode(tags.length),
         'tags': helper.getAsCode(tags),
       };

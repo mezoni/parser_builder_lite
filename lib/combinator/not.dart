@@ -6,7 +6,7 @@ class Not<I> extends ParserBuilder<I, Object?> {
   const Not(this.parser);
 
   @override
-  String get template => '''
+  String getTemplate(BuildContext context) => '''
 final pos = state.pos;
 final r1 = {{p1}};
 if (r1 == null) {
@@ -17,7 +17,7 @@ state.pos = pos;
 return state.fail(end, ErrorUnexpectedInput(pos));''';
 
   @override
-  Map<String, Object?> get values => {
+  Map<String, Object?> getValues(BuildContext context) => {
         'p1': parser,
       };
 }

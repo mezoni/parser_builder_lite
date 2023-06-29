@@ -28,7 +28,6 @@ Result<Object?>? _ws(State<String> state) {
   return const Result(null);
 }
 
-@pragma('vm:prefer-inline')
 Result<String>? _$g1(State<String> state) {
   const tag = '"';
   final source = state.source;
@@ -69,7 +68,6 @@ Result<String>? _normalChars(State<String> state) {
   return Result(source.substring(start, state.pos));
 }
 
-@pragma('vm:prefer-inline')
 Result<String>? _$g6(State<String> state) {
   const tag = '\\';
   final source = state.source;
@@ -123,7 +121,6 @@ Result<String>? _escape(State<String> state) {
   return null;
 }
 
-@pragma('vm:prefer-inline')
 Result<String>? _$g7(State<String> state) {
   const tag = '\\u';
   if (!state.source.startsWith(tag, state.pos)) {
@@ -253,7 +250,6 @@ Result<String>? _$g2(State<String> state) {
   return Result(v);
 }
 
-@pragma('vm:prefer-inline')
 Result<String>? _$g12(State<String> state) {
   const tag = '"';
   final source = state.source;
@@ -296,7 +292,6 @@ Result<String>? _string(State<String> state) {
 
 num _$g13(String a) => num.parse(a);
 
-@pragma('vm:prefer-inline')
 Result<String>? _$g16(State<String> state) {
   const tag = '-';
   final source = state.source;
@@ -316,7 +311,6 @@ Result<String?>? _minus(State<String> state) {
   return Result(r1.value);
 }
 
-@pragma('vm:prefer-inline')
 Result<String>? _$g17(State<String> state) {
   const tag = '0';
   final source = state.source;
@@ -385,7 +379,6 @@ Result<Object?>? _integer(State<String> state) {
   return null;
 }
 
-@pragma('vm:prefer-inline')
 Result<String>? _$g23(State<String> state) {
   const tag = '.';
   final source = state.source;
@@ -551,7 +544,6 @@ Result<num>? _number(State<String> state) {
   return null;
 }
 
-@pragma('vm:prefer-inline')
 Result<String>? _$g29(State<String> state) {
   const tag = 'true';
   if (!state.source.startsWith(tag, state.pos)) {
@@ -582,7 +574,6 @@ Result<bool>? _true(State<String> state) {
   return null;
 }
 
-@pragma('vm:prefer-inline')
 Result<String>? _$g31(State<String> state) {
   const tag = 'false';
   if (!state.source.startsWith(tag, state.pos)) {
@@ -613,7 +604,6 @@ Result<bool>? _false(State<String> state) {
   return null;
 }
 
-@pragma('vm:prefer-inline')
 Result<String>? _$g33(State<String> state) {
   const tag = 'null';
   if (!state.source.startsWith(tag, state.pos)) {
@@ -644,7 +634,6 @@ Result<Object?>? _null(State<String> state) {
   return null;
 }
 
-@pragma('vm:prefer-inline')
 Result<String>? _$g34(State<String> state) {
   const tag = '[';
   final source = state.source;
@@ -669,7 +658,6 @@ Result<String>? _openBracket(State<String> state) {
   return null;
 }
 
-@pragma('vm:prefer-inline')
 Result<String>? _$g35(State<String> state) {
   const tag = ',';
   final source = state.source;
@@ -713,7 +701,6 @@ Result<List<Object?>>? _values(State<String> state) {
   return Result(list);
 }
 
-@pragma('vm:prefer-inline')
 Result<String>? _$g36(State<String> state) {
   const tag = ']';
   final source = state.source;
@@ -758,7 +745,6 @@ Map<String, Object?> _$g37(
         (Object?, List<MapEntry<String, Object?>>, Object?) e) =>
     Map.fromEntries(e.$2);
 
-@pragma('vm:prefer-inline')
 Result<String>? _$g38(State<String> state) {
   const tag = '{';
   final source = state.source;
@@ -786,7 +772,6 @@ Result<String>? _openBrace(State<String> state) {
 MapEntry<String, Object?> _$g39((String, Object?, Object?) kv) =>
     MapEntry(kv.$1, kv.$3);
 
-@pragma('vm:prefer-inline')
 Result<String>? _$g40(State<String> state) {
   const tag = ':';
   final source = state.source;
@@ -847,7 +832,6 @@ Result<List<MapEntry<String, Object?>>>? _keyValues(State<String> state) {
   return Result(list);
 }
 
-@pragma('vm:prefer-inline')
 Result<String>? _$g41(State<String> state) {
   const tag = '}';
   final source = state.source;

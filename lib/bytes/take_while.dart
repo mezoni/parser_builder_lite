@@ -1,5 +1,68 @@
 import '../parser_builder.dart';
 
+class Take16While0 extends ParserBuilder<String, String> {
+  static const take16While0Template = '''
+final source = state.source;
+final start = state.pos;
+while (state.pos < source.length) {
+  final c = source.codeUnitAt(state.pos);
+  final v = {{f}}(c);
+  if (!v) {
+    break;
+  }
+  state.pos++;
+}
+if (state.pos == start) {
+  return const Result('');
+}
+return Result(source.substring(start, state.pos));''';
+
+  final Func<bool> f;
+
+  const Take16While0(this.f);
+
+  @override
+  String get template => take16While0Template;
+
+  @override
+  Map<String, Object?> get values => {
+        'f': f,
+      };
+}
+
+class Take16While1 extends ParserBuilder<String, String> {
+  static const take16While1Template = '''
+final source = state.source;
+final start = state.pos;
+if (start >= source.length) {
+  return state.fail(start, const ErrorUnexpectedEof());
+}
+while (state.pos < source.length) {
+  final c = source.codeUnitAt(state.pos);
+  final v = {{f}}(c);
+  if (!v) {
+    break;
+  }
+  state.pos++;
+}
+if (state.pos == start) {
+  return state.fail(start, const ErrorUnexpectedChar());
+}
+return Result(source.substring(start, state.pos));''';
+
+  final Func<bool> f;
+
+  const Take16While1(this.f);
+
+  @override
+  String get template => take16While1Template;
+
+  @override
+  Map<String, Object?> get values => {
+        'f': f,
+      };
+}
+
 class TakeWhile0 extends ParserBuilder<String, String> {
   static const takeWhile0Template = '''
 final source = state.source;
@@ -101,6 +164,50 @@ return state.fail(end, const ErrorUnexpectedEof());''';
 
   @override
   String get template => takeWhileMNTemplate;
+
+  @override
+  Map<String, Object?> get values => {
+        'f': f,
+        'm': m,
+        'n': n,
+      };
+}
+
+class Take16WhileMN extends ParserBuilder<String, String> {
+  static const take16WhileMNTemplate = '''
+final source = state.source;
+final start = state.pos;
+var count = 0;
+while (count < {{n}} && state.pos < source.length) {
+  final c = source.codeUnitAt(state.pos);
+  final ok = {{f}}(c);
+  if (!ok) {
+    break;
+  }
+  state.pos++;
+  count++;
+}
+if (count >= {{m}}) {
+  final v = source.substring(start, state.pos);
+  return Result(v);
+}
+final end = state.pos;
+state.pos = start;
+if (end < source.length) {
+  return state.fail(end, const ErrorUnexpectedChar());
+}
+return state.fail(end, const ErrorUnexpectedEof());''';
+
+  final Func<bool> f;
+
+  final int m;
+
+  final int n;
+
+  const Take16WhileMN(this.m, this.n, this.f);
+
+  @override
+  String get template => take16WhileMNTemplate;
 
   @override
   Map<String, Object?> get values => {

@@ -5,6 +5,12 @@
             "type": "dart",
             "request": "launch",
             "program": "example/example.dart"
+        },
+        {
+            "name": "example/json_parser.dart",
+            "type": "dart",
+            "request": "launch",
+            "program": "example/json_parser.dart"
         }
     ]
 }

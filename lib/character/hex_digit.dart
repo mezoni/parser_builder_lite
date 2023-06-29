@@ -5,7 +5,7 @@ class HexDigit0 extends ParserBuilder<String, int> {
   const HexDigit0();
 
   @override
-  String get template => TakeWhile0.takeWhile0Template;
+  String get template => Take16While0.take16While0Template;
 
   @override
   Map<String, Object?> get values => {
@@ -18,7 +18,7 @@ class HexDigit1 extends ParserBuilder<String, int> {
   const HexDigit1();
 
   @override
-  String get template => TakeWhile0.takeWhile0Template;
+  String get template => Take16While1.take16While1Template;
 
   @override
   Map<String, Object?> get values => {

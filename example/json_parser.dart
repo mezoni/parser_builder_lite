@@ -18,23 +18,25 @@ bool _$g0(int a) => a == 9 || a == 10 || a == 13 || a == 32;
 Result<Object?>? _ws(State<String> state) {
   final source = state.source;
   while (state.pos < source.length) {
-    final pos = state.pos;
-    final c = source.readRune(state);
+    final c = source.codeUnitAt(state.pos);
     final v = _$g0(c);
     if (!v) {
-      state.pos = pos;
       break;
     }
+    state.pos++;
   }
   return const Result(null);
 }
 
+@pragma('vm:prefer-inline')
 Result<String>? _$g1(State<String> state) {
   const tag = '"';
-  if (!state.source.startsWith(tag, state.pos)) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  final source = state.source;
+  final pos = state.pos;
+  if (pos >= source.length || source.codeUnitAt(pos) != 34) {
+    return state.fail(pos, const ErrorExpectedTags([tag]));
   }
-  state.pos += 1;
+  state.pos++;
   return const Result(tag);
 }
 
@@ -67,12 +69,15 @@ Result<String>? _normalChars(State<String> state) {
   return Result(source.substring(start, state.pos));
 }
 
+@pragma('vm:prefer-inline')
 Result<String>? _$g6(State<String> state) {
   const tag = '\\';
-  if (!state.source.startsWith(tag, state.pos)) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  final source = state.source;
+  final pos = state.pos;
+  if (pos >= source.length || source.codeUnitAt(pos) != 92) {
+    return state.fail(pos, const ErrorExpectedTags([tag]));
   }
-  state.pos += 1;
+  state.pos++;
   return const Result(tag);
 }
 
@@ -118,6 +123,7 @@ Result<String>? _escape(State<String> state) {
   return null;
 }
 
+@pragma('vm:prefer-inline')
 Result<String>? _$g7(State<String> state) {
   const tag = '\\u';
   if (!state.source.startsWith(tag, state.pos)) {
@@ -141,13 +147,12 @@ Result<String>? _$g10(State<String> state) {
   final start = state.pos;
   var count = 0;
   while (count < 4 && state.pos < source.length) {
-    final pos = state.pos;
-    final c = source.readRune(state);
+    final c = source.codeUnitAt(state.pos);
     final ok = _$g11(c);
     if (!ok) {
-      state.pos = pos;
       break;
     }
+    state.pos++;
     count++;
   }
   if (count >= 4) {
@@ -248,12 +253,15 @@ Result<String>? _$g2(State<String> state) {
   return Result(v);
 }
 
+@pragma('vm:prefer-inline')
 Result<String>? _$g12(State<String> state) {
   const tag = '"';
-  if (!state.source.startsWith(tag, state.pos)) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  final source = state.source;
+  final pos = state.pos;
+  if (pos >= source.length || source.codeUnitAt(pos) != 34) {
+    return state.fail(pos, const ErrorExpectedTags([tag]));
   }
-  state.pos += 1;
+  state.pos++;
   return const Result(tag);
 }
 
@@ -288,12 +296,15 @@ Result<String>? _string(State<String> state) {
 
 num _$g13(String a) => num.parse(a);
 
+@pragma('vm:prefer-inline')
 Result<String>? _$g16(State<String> state) {
   const tag = '-';
-  if (!state.source.startsWith(tag, state.pos)) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  final source = state.source;
+  final pos = state.pos;
+  if (pos >= source.length || source.codeUnitAt(pos) != 45) {
+    return state.fail(pos, const ErrorExpectedTags([tag]));
   }
-  state.pos += 1;
+  state.pos++;
   return const Result(tag);
 }
 
@@ -305,12 +316,15 @@ Result<String?>? _minus(State<String> state) {
   return Result(r1.value);
 }
 
+@pragma('vm:prefer-inline')
 Result<String>? _$g17(State<String> state) {
   const tag = '0';
-  if (!state.source.startsWith(tag, state.pos)) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  final source = state.source;
+  final pos = state.pos;
+  if (pos >= source.length || source.codeUnitAt(pos) != 48) {
+    return state.fail(pos, const ErrorExpectedTags([tag]));
   }
-  state.pos += 1;
+  state.pos++;
   return const Result(tag);
 }
 
@@ -336,13 +350,12 @@ bool _$g21(int a) => a >= 48 && a <= 57;
 Result<Object?>? _digit0(State<String> state) {
   final source = state.source;
   while (state.pos < source.length) {
-    final pos = state.pos;
-    final c = source.readRune(state);
+    final c = source.codeUnitAt(state.pos);
     final v = _$g21(c);
     if (!v) {
-      state.pos = pos;
       break;
     }
+    state.pos++;
   }
   return const Result(null);
 }
@@ -372,12 +385,15 @@ Result<Object?>? _integer(State<String> state) {
   return null;
 }
 
+@pragma('vm:prefer-inline')
 Result<String>? _$g23(State<String> state) {
   const tag = '.';
-  if (!state.source.startsWith(tag, state.pos)) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  final source = state.source;
+  final pos = state.pos;
+  if (pos >= source.length || source.codeUnitAt(pos) != 46) {
+    return state.fail(pos, const ErrorExpectedTags([tag]));
   }
-  state.pos += 1;
+  state.pos++;
   return const Result(tag);
 }
 
@@ -388,13 +404,12 @@ Result<Object?>? _digit1(State<String> state) {
     return state.fail(start, const ErrorUnexpectedEof());
   }
   while (state.pos < source.length) {
-    final pos = state.pos;
-    final c = source.readRune(state);
-    final ok = _$g21(c);
-    if (!ok) {
-      state.pos = pos;
+    final c = source.codeUnitAt(state.pos);
+    final v = _$g21(c);
+    if (!v) {
       break;
     }
+    state.pos++;
   }
   if (state.pos == start) {
     return state.fail(start, const ErrorUnexpectedChar());
@@ -536,6 +551,7 @@ Result<num>? _number(State<String> state) {
   return null;
 }
 
+@pragma('vm:prefer-inline')
 Result<String>? _$g29(State<String> state) {
   const tag = 'true';
   if (!state.source.startsWith(tag, state.pos)) {
@@ -566,6 +582,7 @@ Result<bool>? _true(State<String> state) {
   return null;
 }
 
+@pragma('vm:prefer-inline')
 Result<String>? _$g31(State<String> state) {
   const tag = 'false';
   if (!state.source.startsWith(tag, state.pos)) {
@@ -596,6 +613,7 @@ Result<bool>? _false(State<String> state) {
   return null;
 }
 
+@pragma('vm:prefer-inline')
 Result<String>? _$g33(State<String> state) {
   const tag = 'null';
   if (!state.source.startsWith(tag, state.pos)) {
@@ -626,12 +644,15 @@ Result<Object?>? _null(State<String> state) {
   return null;
 }
 
+@pragma('vm:prefer-inline')
 Result<String>? _$g34(State<String> state) {
   const tag = '[';
-  if (!state.source.startsWith(tag, state.pos)) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  final source = state.source;
+  final pos = state.pos;
+  if (pos >= source.length || source.codeUnitAt(pos) != 91) {
+    return state.fail(pos, const ErrorExpectedTags([tag]));
   }
-  state.pos += 1;
+  state.pos++;
   return const Result(tag);
 }
 
@@ -648,12 +669,15 @@ Result<String>? _openBracket(State<String> state) {
   return null;
 }
 
+@pragma('vm:prefer-inline')
 Result<String>? _$g35(State<String> state) {
   const tag = ',';
-  if (!state.source.startsWith(tag, state.pos)) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  final source = state.source;
+  final pos = state.pos;
+  if (pos >= source.length || source.codeUnitAt(pos) != 44) {
+    return state.fail(pos, const ErrorExpectedTags([tag]));
   }
-  state.pos += 1;
+  state.pos++;
   return const Result(tag);
 }
 
@@ -689,12 +713,15 @@ Result<List<Object?>>? _values(State<String> state) {
   return Result(list);
 }
 
+@pragma('vm:prefer-inline')
 Result<String>? _$g36(State<String> state) {
   const tag = ']';
-  if (!state.source.startsWith(tag, state.pos)) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  final source = state.source;
+  final pos = state.pos;
+  if (pos >= source.length || source.codeUnitAt(pos) != 93) {
+    return state.fail(pos, const ErrorExpectedTags([tag]));
   }
-  state.pos += 1;
+  state.pos++;
   return const Result(tag);
 }
 
@@ -731,12 +758,15 @@ Map<String, Object?> _$g37(
         (Object?, List<MapEntry<String, Object?>>, Object?) e) =>
     Map.fromEntries(e.$2);
 
+@pragma('vm:prefer-inline')
 Result<String>? _$g38(State<String> state) {
   const tag = '{';
-  if (!state.source.startsWith(tag, state.pos)) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  final source = state.source;
+  final pos = state.pos;
+  if (pos >= source.length || source.codeUnitAt(pos) != 123) {
+    return state.fail(pos, const ErrorExpectedTags([tag]));
   }
-  state.pos += 1;
+  state.pos++;
   return const Result(tag);
 }
 
@@ -756,12 +786,15 @@ Result<String>? _openBrace(State<String> state) {
 MapEntry<String, Object?> _$g39((String, Object?, Object?) kv) =>
     MapEntry(kv.$1, kv.$3);
 
+@pragma('vm:prefer-inline')
 Result<String>? _$g40(State<String> state) {
   const tag = ':';
-  if (!state.source.startsWith(tag, state.pos)) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  final source = state.source;
+  final pos = state.pos;
+  if (pos >= source.length || source.codeUnitAt(pos) != 58) {
+    return state.fail(pos, const ErrorExpectedTags([tag]));
   }
-  state.pos += 1;
+  state.pos++;
   return const Result(tag);
 }
 
@@ -814,12 +847,15 @@ Result<List<MapEntry<String, Object?>>>? _keyValues(State<String> state) {
   return Result(list);
 }
 
+@pragma('vm:prefer-inline')
 Result<String>? _$g41(State<String> state) {
   const tag = '}';
-  if (!state.source.startsWith(tag, state.pos)) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  final source = state.source;
+  final pos = state.pos;
+  if (pos >= source.length || source.codeUnitAt(pos) != 125) {
+    return state.fail(pos, const ErrorExpectedTags([tag]));
   }
-  state.pos += 1;
+  state.pos++;
   return const Result(tag);
 }
 

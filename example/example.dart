@@ -104,10 +104,10 @@ const _closeBracket = Named('_closeBracket', Terminated(Tag(']'), _ws));
 const _comma = Named('_comma', Terminated(Tag(','), _ws));
 
 const _digit0 =
-    Named('_digit0', SkipWhile0(Func('(int a) => a >= 48 && a <= 57;')));
+    Named('_digit0', Skip16While0(Func('(int a) => a >= 48 && a <= 57;')));
 
 const _digit1 =
-    Named('_digit1', SkipWhile1(Func('(int a) => a >= 48 && a <= 57;')));
+    Named('_digit1', Skip16While1(Func('(int a) => a >= 48 && a <= 57;')));
 
 const _doubleQuote = Named('_doubleQuote', Terminated(Tag('"'), _ws));
 
@@ -141,7 +141,7 @@ const _hexChar = Named('_hexChar', Preceded(Tag(r'\u'), _hexValueChecked));
 const _hexValue = Named(
     '_hexValue',
     Map1(
-        TakeWhileMN(
+        Take16WhileMN(
             4,
             4,
             Func(
@@ -247,7 +247,7 @@ const _value_ = Named(
 const _values = Named('_values', SeparatedList0(_value, _comma));
 
 const _ws = Named('_ws',
-    SkipWhile0(Func('(int a) => a == 9 ||a == 10 || a == 13 || a == 32;')));
+    Skip16While0(Func('(int a) => a == 9 ||a == 10 || a == 13 || a == 32;')));
 
 class _Switch extends ParserBuilder<String, String> {
   static const _case = '''

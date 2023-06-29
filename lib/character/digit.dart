@@ -5,7 +5,7 @@ class Digit0 extends ParserBuilder<String, int> {
   const Digit0();
 
   @override
-  String get template => TakeWhile0.takeWhile0Template;
+  String get template => Take16While0.take16While0Template;
 
   @override
   Map<String, Object?> get values =>
@@ -16,7 +16,7 @@ class Digit1 extends ParserBuilder<String, int> {
   const Digit1();
 
   @override
-  String get template => TakeWhile0.takeWhile0Template;
+  String get template => Take16While1.take16While1Template;
 
   @override
   Map<String, Object?> get values =>

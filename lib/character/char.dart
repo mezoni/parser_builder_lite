@@ -6,6 +6,7 @@ class Char extends ParserBuilder<String, int> {
   const Char(this.char);
 
   @override
+  // TODO: Add 16 bit version
   String get template => '''
 final source = state.source;
 final pos = state.pos;

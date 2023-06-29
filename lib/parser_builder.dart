@@ -153,6 +153,7 @@ Result<{{O}}>? {{name}}(State<{{I}}> state) {
       'body': body,
       'name': name,
     });
+
     context.output.writeln(source);
     context.output.writeln();
     cache[name] = source;

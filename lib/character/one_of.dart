@@ -7,6 +7,7 @@ class OneOf extends ParserBuilder<String, int> {
   const OneOf(this.chars);
 
   @override
+  // TODO: Add 16 bit version
   String get template => '''
 final pos = state.pos;
 final source = state.source;

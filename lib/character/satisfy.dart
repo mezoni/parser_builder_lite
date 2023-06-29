@@ -1,6 +1,7 @@
 import '../parser_builder.dart';
 
 class Satisfy extends ParserBuilder<String, int> {
+  // TODO: Add 16 bit version
   static const satisfyTemplate = '''
 final pos = state.pos;
 final source = state.source;

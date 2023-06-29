@@ -3,9 +3,7 @@ description: Parser Builder Lite is a lightweight and uncomplicated parser combi
 version: 0.2.3
 homepage: https://github.com/mezoni/parser_builder_lite
 topics:
-  - parser
-  - parser_combinator
-  - parser_generator
+  - parser  
   - peg
 environment:
   sdk: '>=3.0.0 <4.0.0'

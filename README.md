@@ -1,13 +1,13 @@
 # parser_builder_lite
 
-Parser Builder Lite is a lightweight and uncomplicated parser builder.
+Parser Builder Lite is a lightweight and uncomplicated parser combinator builder (source code generator).
 
 Version: 0.4.0
 
 ## What is it and what is it for?
 
-Parser Builder is designed to quickly write parsers through source code templates.  
-The main feature and advantage is that a very simple (simplest) builder is used to build parsers (about 3 kb of source code).  
+Parser Builder is designed to quickly implement parsers through source code templates.  
+The main feature and advantage is that a very simplest builder is used to build parsers (about 3 kb of source code).  
 Static and dynamic templates are supported.  
 Static templates are easier to create and understand.  
 Dynamic templates are more difficult to create, but the generated code can be much more efficient.  

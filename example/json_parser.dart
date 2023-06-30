@@ -351,8 +351,8 @@ Result<Object?>? _$g17(State<String> state) {
     if (r2 != null) {
       return const Result(null);
     }
-    state.pos = pos;
   }
+  state.pos = pos;
   return null;
 }
 
@@ -406,8 +406,8 @@ Result<Object?>? _$g21(State<String> state) {
     if (r2 != null) {
       return const Result(null);
     }
-    state.pos = pos;
   }
+  state.pos = pos;
   return null;
 }
 
@@ -470,8 +470,8 @@ Result<Object?>? _$g23(State<String> state) {
         return const Result(null);
       }
     }
-    state.pos = pos;
   }
+  state.pos = pos;
   return null;
 }
 
@@ -497,8 +497,8 @@ Result<Object?>? _$g14(State<String> state) {
         }
       }
     }
-    state.pos = pos;
   }
+  state.pos = pos;
   return null;
 }
 

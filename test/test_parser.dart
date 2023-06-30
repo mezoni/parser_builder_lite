@@ -1,4 +1,50 @@
-int? _$g1(int value, List<int> list) {
+Result<String>? _$g0(State<String> state) {
+  const tag = '1';
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 49) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  }
+  state.pos++;
+  return const Result(tag);
+}
+
+Result<String>? _$g1(State<String> state) {
+  const tag = '2';
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 50) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  }
+  state.pos++;
+  return const Result(tag);
+}
+
+Result<String>? _$g2(State<String> state) {
+  const tag = '3';
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 51) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  }
+  state.pos++;
+  return const Result(tag);
+}
+
+Result<String>? delimited(State<String> state) {
+  final pos = state.pos;
+  final r1 = _$g0(state);
+  if (r1 != null) {
+    final r2 = _$g1(state);
+    if (r2 != null) {
+      final r3 = _$g2(state);
+      if (r3 != null) {
+        return Result(r2.value);
+      }
+    }
+    state.pos = pos;
+  }
+  return null;
+}
+
+int? _$g4(int value, List<int> list) {
   if (list.isEmpty) {
     return null;
   }
@@ -30,7 +76,7 @@ int? _$g1(int value, List<int> list) {
   return result;
 }
 
-bool _$g0(int c) => _$g1(c, const [48, 57, 65, 90, 97, 122]) != null;
+bool _$g3(int c) => _$g4(c, const [48, 57, 65, 90, 97, 122]) != null;
 
 Result<int>? inAlphanumericRange(State<String> state) {
   final pos = state.pos;
@@ -38,7 +84,7 @@ Result<int>? inAlphanumericRange(State<String> state) {
     return state.fail(pos, const ErrorUnexpectedEof());
   }
   final c = state.source.readRune(state);
-  final ok = _$g0(c);
+  final ok = _$g3(c);
   if (ok) {
     return Result(c);
   }
@@ -46,7 +92,7 @@ Result<int>? inAlphanumericRange(State<String> state) {
   return state.fail(pos, const ErrorUnexpectedChar());
 }
 
-bool _$g2(int c) => _$g1(c, const [48, 57, 65, 90, 97, 122]) == null;
+bool _$g5(int c) => _$g4(c, const [48, 57, 65, 90, 97, 122]) == null;
 
 Result<int>? notInAlphanumericRange(State<String> state) {
   final pos = state.pos;
@@ -54,12 +100,64 @@ Result<int>? notInAlphanumericRange(State<String> state) {
     return state.fail(pos, const ErrorUnexpectedEof());
   }
   final c = state.source.readRune(state);
-  final ok = _$g2(c);
+  final ok = _$g5(c);
   if (ok) {
     return Result(c);
   }
   state.pos = pos;
   return state.fail(pos, const ErrorUnexpectedChar());
+}
+
+Result<String>? preceded(State<String> state) {
+  final pos = state.pos;
+  final r1 = _$g0(state);
+  if (r1 != null) {
+    final r2 = _$g1(state);
+    if (r2 != null) {
+      return r2;
+    }
+    state.pos = pos;
+  }
+  return null;
+}
+
+Result<Object?>? skip1(State<String> state) {
+  final pos = state.pos;
+  final r1 = _$g0(state);
+  if (r1 != null) {
+    return const Result(null);
+  }
+  state.pos = pos;
+  return null;
+}
+
+Result<Object?>? skip2(State<String> state) {
+  final pos = state.pos;
+  final r1 = _$g0(state);
+  if (r1 != null) {
+    final r2 = _$g1(state);
+    if (r2 != null) {
+      return const Result(null);
+    }
+  }
+  state.pos = pos;
+  return null;
+}
+
+Result<Object?>? skip3(State<String> state) {
+  final pos = state.pos;
+  final r1 = _$g0(state);
+  if (r1 != null) {
+    final r2 = _$g1(state);
+    if (r2 != null) {
+      final r3 = _$g2(state);
+      if (r3 != null) {
+        return const Result(null);
+      }
+    }
+  }
+  state.pos = pos;
+  return null;
 }
 
 Result<String>? switchTag(State<String> state) {
@@ -89,6 +187,193 @@ Result<String>? switchTag(State<String> state) {
     }
   }
   return state.fail(pos, const ErrorMessage(1, 'error'));
+}
+
+Result<String>? terminated(State<String> state) {
+  final pos = state.pos;
+  final r1 = _$g0(state);
+  if (r1 != null) {
+    final r2 = _$g1(state);
+    if (r2 != null) {
+      return r1;
+    }
+    state.pos = pos;
+  }
+  return null;
+}
+
+Result<(String, String)>? tuple2(State<String> state) {
+  final pos = state.pos;
+  final r1 = _$g0(state);
+  if (r1 != null) {
+    final r2 = _$g1(state);
+    if (r2 != null) {
+      return Result((r1.value, r2.value));
+    }
+  }
+  state.pos = pos;
+  return null;
+}
+
+Result<(String, String, String)>? tuple3(State<String> state) {
+  final pos = state.pos;
+  final r1 = _$g0(state);
+  if (r1 != null) {
+    final r2 = _$g1(state);
+    if (r2 != null) {
+      final r3 = _$g2(state);
+      if (r3 != null) {
+        return Result((r1.value, r2.value, r3.value));
+      }
+    }
+  }
+  state.pos = pos;
+  return null;
+}
+
+Result<String>? _$g6(State<String> state) {
+  const tag = '4';
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 52) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  }
+  state.pos++;
+  return const Result(tag);
+}
+
+Result<(String, String, String, String)>? tuple4(State<String> state) {
+  final pos = state.pos;
+  final r1 = _$g0(state);
+  if (r1 != null) {
+    final r2 = _$g1(state);
+    if (r2 != null) {
+      final r3 = _$g2(state);
+      if (r3 != null) {
+        final r4 = _$g6(state);
+        if (r4 != null) {
+          return Result((r1.value, r2.value, r3.value, r4.value));
+        }
+      }
+    }
+  }
+  state.pos = pos;
+  return null;
+}
+
+Result<String>? _$g7(State<String> state) {
+  const tag = '5';
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 53) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  }
+  state.pos++;
+  return const Result(tag);
+}
+
+Result<(String, String, String, String, String)>? tuple5(State<String> state) {
+  final pos = state.pos;
+  final r1 = _$g0(state);
+  if (r1 != null) {
+    final r2 = _$g1(state);
+    if (r2 != null) {
+      final r3 = _$g2(state);
+      if (r3 != null) {
+        final r4 = _$g6(state);
+        if (r4 != null) {
+          final r5 = _$g7(state);
+          if (r5 != null) {
+            return Result((r1.value, r2.value, r3.value, r4.value, r5.value));
+          }
+        }
+      }
+    }
+  }
+  state.pos = pos;
+  return null;
+}
+
+Result<String>? _$g8(State<String> state) {
+  const tag = '6';
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 54) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  }
+  state.pos++;
+  return const Result(tag);
+}
+
+Result<(String, String, String, String, String, String)>? tuple6(
+    State<String> state) {
+  final pos = state.pos;
+  final r1 = _$g0(state);
+  if (r1 != null) {
+    final r2 = _$g1(state);
+    if (r2 != null) {
+      final r3 = _$g2(state);
+      if (r3 != null) {
+        final r4 = _$g6(state);
+        if (r4 != null) {
+          final r5 = _$g7(state);
+          if (r5 != null) {
+            final r6 = _$g8(state);
+            if (r6 != null) {
+              return Result(
+                  (r1.value, r2.value, r3.value, r4.value, r5.value, r6.value));
+            }
+          }
+        }
+      }
+    }
+  }
+  state.pos = pos;
+  return null;
+}
+
+Result<String>? _$g9(State<String> state) {
+  const tag = '7';
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 55) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  }
+  state.pos++;
+  return const Result(tag);
+}
+
+Result<(String, String, String, String, String, String, String)>? tuple7(
+    State<String> state) {
+  final pos = state.pos;
+  final r1 = _$g0(state);
+  if (r1 != null) {
+    final r2 = _$g1(state);
+    if (r2 != null) {
+      final r3 = _$g2(state);
+      if (r3 != null) {
+        final r4 = _$g6(state);
+        if (r4 != null) {
+          final r5 = _$g7(state);
+          if (r5 != null) {
+            final r6 = _$g8(state);
+            if (r6 != null) {
+              final r7 = _$g9(state);
+              if (r7 != null) {
+                return Result((
+                  r1.value,
+                  r2.value,
+                  r3.value,
+                  r4.value,
+                  r5.value,
+                  r6.value,
+                  r7.value
+                ));
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  state.pos = pos;
+  return null;
 }
 
 class ErrorExpectedChar extends ParseError {

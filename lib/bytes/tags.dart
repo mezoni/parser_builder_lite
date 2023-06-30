@@ -1,5 +1,6 @@
 import '../helper.dart' as helper;
 import '../parser_builder.dart';
+import 'switch_tags.dart';
 
 class Tags extends ParserBuilder<String, String> {
   final List<String> tags;
@@ -7,35 +8,21 @@ class Tags extends ParserBuilder<String, String> {
   const Tags(this.tags);
 
   @override
-  String getTemplate(BuildContext context) => '''
-const tags = {{tags}};
-final source = state.source;
-final pos = state.pos;
-if (pos >= source.length) {
-  return state.fail(pos, const ErrorExpectedTags(tags));
-}
-final c = source.codeUnitAt(pos);
-for (var i = 0; i < {{length}}; i++) {
-  final tag = tags[i];
-  if (c == tag.codeUnitAt(0)) {
-    final ok = tag.length == 1 ? true : source.startsWith(tag, pos);
-    if (ok) {
-      state.pos += tag.length;
-      return Result(tag); 
-    }
-  }  
-}
-return state.fail(pos, const ErrorExpectedTags(tags));''';
+  String getTemplate(BuildContext context) {
+    final switchTags = _getSwitchTags();
+    return switchTags.getTemplate(context);
+  }
 
   @override
-  Map<String, Object?> getValues(BuildContext context) {
-    if (tags.where((e) => e.isEmpty).isNotEmpty) {
-      throw StateError('The list of tags must not contain empty tags');
-    }
+  Map<String, String> getValues(BuildContext context) {
+    final switchTags = _getSwitchTags();
+    return switchTags.getValues(context);
+  }
 
-    return {
-      'length': helper.getAsCode(tags.length),
-      'tags': helper.getAsCode(tags),
-    };
+  SwitchTags<String> _getSwitchTags() {
+    final errors = tags.map(helper.escapeString).join(', ');
+    return SwitchTags({
+      for (final tag in tags) tag: 'const Result(${helper.escapeString(tag)})'
+    }, 'const ErrorExpectedTags([$errors])');
   }
 }

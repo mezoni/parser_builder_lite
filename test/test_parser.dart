@@ -34,11 +34,10 @@ bool _$g0(int c) => _$g1(c, const [48, 57, 65, 90, 97, 122]) != null;
 
 Result<int>? inAlphanumericRange(State<String> state) {
   final pos = state.pos;
-  final source = state.source;
-  if (pos >= source.length) {
+  if (pos >= state.source.length) {
     return state.fail(pos, const ErrorUnexpectedEof());
   }
-  final c = source.readRune(state);
+  final c = state.source.readRune(state);
   final ok = _$g0(c);
   if (ok) {
     return Result(c);
@@ -47,88 +46,49 @@ Result<int>? inAlphanumericRange(State<String> state) {
   return state.fail(pos, const ErrorUnexpectedChar());
 }
 
-String _errorMessage(String source, int offset, List<ParseError> errors) {
-  final sb = StringBuffer();
-  final errorList = errors.toList();
-  final expectedTags = errorList.whereType<ErrorExpectedTags>().toList();
-  if (expectedTags.isNotEmpty) {
-    errorList.removeWhere((e) => e is ErrorExpectedTags);
-    final tags = <String>[];
-    for (final error in expectedTags) {
-      tags.addAll(error.tags);
-    }
-    final error = ErrorExpectedTags(tags);
-    errorList.add(error);
+bool _$g2(int c) => _$g1(c, const [48, 57, 65, 90, 97, 122]) == null;
+
+Result<int>? notInAlphanumericRange(State<String> state) {
+  final pos = state.pos;
+  if (pos >= state.source.length) {
+    return state.fail(pos, const ErrorUnexpectedEof());
   }
+  final c = state.source.readRune(state);
+  final ok = _$g2(c);
+  if (ok) {
+    return Result(c);
+  }
+  state.pos = pos;
+  return state.fail(pos, const ErrorUnexpectedChar());
+}
 
-  final errorInfoList = errorList
-      .map((e) => (
-            message: e.getMessage(offset: offset, source: source),
-            start: offset - e.length,
-          ))
-      .toSet()
-      .toList();
-  for (var i = 0; i < errorInfoList.length; i++) {
-    if (sb.isNotEmpty) {
-      sb.writeln();
-      sb.writeln();
-    }
-    final errorInfo = errorInfoList[i];
-    final message = errorInfo.message;
-    final end = offset;
-    final start = errorInfo.start;
-    RangeError.checkValidRange(start, end, source.length);
-    var row = 1;
-    var lineStart = 0, next = 0, pos = 0;
-    while (pos < source.length) {
-      final c = source.codeUnitAt(pos++);
-      if (c == 0xa || c == 0xd) {
-        next = c == 0xa ? 0xd : 0xa;
-        if (pos < source.length && source.codeUnitAt(pos) == next) {
-          pos++;
-        }
-
-        if (pos - 1 >= start) {
-          break;
-        }
-
-        row++;
-        lineStart = pos;
+Result<String>? switchTag(State<String> state) {
+  final pos = state.pos;
+  final source = state.source;
+  if (pos < source.length) {
+    final c = source.codeUnitAt(pos);
+    if (c == 97) {
+      if (source.startsWith('abc', pos)) {
+        state.pos += 3;
+        return const Result('abc');
+      } else if (source.startsWith('ab', pos)) {
+        state.pos += 2;
+        return const Result('ab');
+      } else {
+        state.pos += 1;
+        return const Result('a');
+      }
+    } else if (c == 98) {
+      state.pos += 1;
+      return const Result('b');
+    } else if (c == 99) {
+      if (source.startsWith('cde', pos)) {
+        state.pos += 3;
+        return const Result('cde');
       }
     }
-    int max(int x, int y) => x > y ? x : y;
-    int min(int x, int y) => x < y ? x : y;
-    final sourceLen = source.length;
-    final lineLimit = min(80, sourceLen);
-    final start2 = start;
-    final end2 = min(start2 + lineLimit, end);
-    final errorLen = end2 - start;
-    final extraLen = lineLimit - errorLen;
-    final rightLen = min(sourceLen - end2, extraLen - (extraLen >> 1));
-    final leftLen = min(start, max(0, lineLimit - errorLen - rightLen));
-    final list = <int>[];
-    final iterator = RuneIterator.at(source, start2);
-    for (var i = 0; i < leftLen; i++) {
-      if (!iterator.movePrevious()) {
-        break;
-      }
-
-      list.add(iterator.current);
-    }
-    final column = start - lineStart + 1;
-    final left = String.fromCharCodes(list.reversed);
-    final end3 = min(sourceLen, start2 + (lineLimit - leftLen));
-    final indicatorLen = max(1, errorLen);
-    final right = source.substring(start2, end3);
-    var text = left + right;
-    text = text.replaceAll('\n', ' ');
-    text = text.replaceAll('\r', ' ');
-    text = text.replaceAll('\t', ' ');
-    sb.writeln('line $row, column $column: $message');
-    sb.writeln(text);
-    sb.write(' ' * leftLen + '^' * indicatorLen);
   }
-  return sb.toString();
+  return state.fail(pos, const ErrorMessage(1, 'error'));
 }
 
 class ErrorExpectedChar extends ParseError {

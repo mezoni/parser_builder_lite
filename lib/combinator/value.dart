@@ -9,15 +9,15 @@ class Value<I, O> extends ParserBuilder<I, O> {
 
   @override
   String getTemplate(BuildContext context) => '''
-final r1 = {{p1}};
+final r1 = {{p1}}(state);
 if (r1 != null) {
   return Result({{value}});
 }
 return null;''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'p1': parser,
+  Map<String, String> getValues(BuildContext context) => {
+        'p1': parser.build(context).name,
         'value': value,
       };
 }

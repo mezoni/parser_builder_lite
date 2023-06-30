@@ -12,10 +12,8 @@ return const Result(tag);''';
 
   static const _template16 = '''
 const tag = {{tag}};
-final source = state.source;
-final pos = state.pos;
-if (pos >= source.length || source.codeUnitAt(pos) != {{char}}) {
-  return state.fail(pos, const ErrorExpectedTags([tag]));
+if (state.pos >= state.source.length || state.source.codeUnitAt(state.pos) != {{char}}) {
+  return state.fail(state.pos, const ErrorExpectedTags([tag]));
 }
 state.pos++;
 return const Result(tag);''';
@@ -34,11 +32,11 @@ return const Result(tag);''';
   }
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
+  Map<String, String> getValues(BuildContext context) => {
         'char': tag.isNotEmpty
             ? helper.getAsCode(tag.codeUnitAt(0))
             : throw StateError('The tag must not be empty'),
-        'length': tag.length,
+        'length': helper.getAsCode(tag.length),
         'tag': helper.escapeString(tag),
       };
 }

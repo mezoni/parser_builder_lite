@@ -1,3 +1,4 @@
+import '../helper.dart' as helper;
 import '../parser_builder.dart';
 
 class Take16While0 extends ParserBuilder<String, String> {
@@ -25,8 +26,8 @@ return Result(source.substring(start, state.pos));''';
   String getTemplate(BuildContext context) => take16While0Template;
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'f': f,
+  Map<String, String> getValues(BuildContext context) => {
+        'f': f.build(context).name,
       };
 }
 
@@ -58,8 +59,8 @@ return Result(source.substring(start, state.pos));''';
   String getTemplate(BuildContext context) => take16While1Template;
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'f': f,
+  Map<String, String> getValues(BuildContext context) => {
+        'f': f.build(context).name,
       };
 }
 
@@ -100,10 +101,10 @@ return state.fail(end, const ErrorUnexpectedEof());''';
   String getTemplate(BuildContext context) => take16WhileMNTemplate;
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'f': f,
-        'm': m,
-        'n': n,
+  Map<String, String> getValues(BuildContext context) => {
+        'f': f.build(context).name,
+        'm': helper.getAsCode(m),
+        'n': helper.getAsCode(n),
       };
 }
 
@@ -133,8 +134,8 @@ return Result(source.substring(start, state.pos));''';
   String getTemplate(BuildContext context) => takeWhile0Template;
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'f': f,
+  Map<String, String> getValues(BuildContext context) => {
+        'f': f.build(context).name,
       };
 }
 
@@ -167,8 +168,8 @@ return Result(source.substring(start, state.pos));''';
   String getTemplate(BuildContext context) => takeWhile1Template;
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'f': f,
+  Map<String, String> getValues(BuildContext context) => {
+        'f': f.build(context).name,
       };
 }
 
@@ -210,9 +211,9 @@ return state.fail(end, const ErrorUnexpectedEof());''';
   String getTemplate(BuildContext context) => takeWhileMNTemplate;
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'f': f,
-        'm': m,
-        'n': n,
+  Map<String, String> getValues(BuildContext context) => {
+        'f': f.build(context).name,
+        'm': helper.getAsCode(m),
+        'n': helper.getAsCode(n),
       };
 }

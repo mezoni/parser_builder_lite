@@ -2,12 +2,12 @@
 
 Parser Builder Lite is a lightweight and uncomplicated parser builder.
 
-Version: 0.3.1
+Version: 0.4.0
 
 ## What is it and what is it for?
 
 Parser Builder is designed to quickly write parsers through source code templates.  
-The main feature and advantage is that a very simple (simplest) builder is used to build parsers (about 4 kb of source code).  
+The main feature and advantage is that a very simple (simplest) builder is used to build parsers (about 3 kb of source code).  
 Static and dynamic templates are supported.  
 Static templates are easier to create and understand.  
 Dynamic templates are more difficult to create, but the generated code can be much more efficient.  
@@ -17,6 +17,8 @@ You can always implement your own parser builders to suit your needs.
 A typical example of a parser builder (with static template).
 
 ```dart
+import '../parser_builder.dart';
+
 class Many0<I, O> extends ParserBuilder<I, List<O>> {
   final ParserBuilder<I, O> parser;
 
@@ -26,7 +28,7 @@ class Many0<I, O> extends ParserBuilder<I, List<O>> {
   String getTemplate(BuildContext context) => '''
 final list = <{{O}}>[];
 while (true) {
-  final r1 = {{p1}};
+  final r1 = {{p1}}(state);
   if (r1 == null) {
     break;
   }
@@ -35,11 +37,39 @@ while (true) {
 return Result(list);''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context)  => {
-        'O': O,
-        'p1': parser,
+  Map<String, String> getValues(BuildContext context) => {
+        'O': '$O',
+        'p1': parser.build(context).name,
       };
 }
+
+class Many1<I, O> extends ParserBuilder<I, List<O>> {
+  final ParserBuilder<I, O> parser;
+
+  const Many1(this.parser);
+
+  @override
+  String getTemplate(BuildContext context) => '''
+final list = <{{O}}>[];
+while (true) {
+  final r1 = {{p1}}(state);
+  if (r1 == null) {
+    break;
+  }
+  list.add(r1.value);
+}
+if (list.isEmpty) {
+  return nul;;
+}
+return Result(list);''';
+
+  @override
+  Map<String, String> getValues(BuildContext context) => {
+        'O': '$O',
+        'p1': parser.build(context).name,
+      };
+}
+
 
 ```
 

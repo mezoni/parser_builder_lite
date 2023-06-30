@@ -12,8 +12,8 @@ class _PrefixExpression<I, O1, O> extends ParserBuilder<I, O> {
   @override
   String getTemplate(BuildContext context) => '''
 final pos = state.pos;
-final r1 = {{p1}};
-final r2 = {{p2}};
+final r1 = {{p1}}(state);
+final r2 = {{p2}}(state);
 if (r2 != null) {
   if (r1 != null) {
     final v1 = {{val1}};
@@ -28,9 +28,9 @@ state.pos = pos;
 return null;''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'f': f,
-        'p1': operator,
-        'p2': expression,
+  Map<String, String> getValues(BuildContext context) => {
+        'f': f.build(context).name,
+        'p1': operator.build(context).name,
+        'p2': expression.build(context).name,
       };
 }

@@ -8,8 +8,11 @@ class Digit0 extends ParserBuilder<String, int> {
   String getTemplate(BuildContext context) => Take16While0.take16While0Template;
 
   @override
-  Map<String, Object?> getValues(BuildContext context) =>
-      {'f': const Func<bool>('(int a) => (a => 48 && a <= 57);')};
+  Map<String, String> getValues(BuildContext context) => {
+        'f': const Func<bool>('(int a) => (a => 48 && a <= 57);')
+            .build(context)
+            .name,
+      };
 }
 
 class Digit1 extends ParserBuilder<String, int> {
@@ -19,6 +22,9 @@ class Digit1 extends ParserBuilder<String, int> {
   String getTemplate(BuildContext context) => Take16While1.take16While1Template;
 
   @override
-  Map<String, Object?> getValues(BuildContext context) =>
-      {'f': const Func<bool>('(int a) => (a => 48 && a <= 57);')};
+  Map<String, String> getValues(BuildContext context) => {
+        'f': const Func<bool>('(int a) => (a => 48 && a <= 57);')
+            .build(context)
+            .name,
+      };
 }

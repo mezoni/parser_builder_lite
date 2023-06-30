@@ -19,8 +19,8 @@ while (state.pos < source.length) {
 return const Result(null);''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'f': f,
+  Map<String, String> getValues(BuildContext context) => {
+        'f': f.build(context).name,
       };
 }
 
@@ -50,8 +50,8 @@ if (state.pos == start) {
 return const Result(null);''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'f': f,
+  Map<String, String> getValues(BuildContext context) => {
+        'f': f.build(context).name,
       };
 }
 
@@ -75,8 +75,8 @@ while (state.pos < source.length) {
 return const Result(null);''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'f': f,
+  Map<String, String> getValues(BuildContext context) => {
+        'f': f.build(context).name,
       };
 }
 
@@ -107,7 +107,7 @@ if (state.pos == start) {
 return const Result(null);''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'f': f,
+  Map<String, String> getValues(BuildContext context) => {
+        'f': f.build(context).name,
       };
 }

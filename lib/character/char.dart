@@ -1,3 +1,4 @@
+import '../helper.dart' as helper;
 import '../parser_builder.dart';
 
 class Char extends ParserBuilder<String, int> {
@@ -20,7 +21,7 @@ if (c == {{char}}) {
 return state.fail(pos, const ErrorExpectedChar({{char}}));''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'char': char,
+  Map<String, String> getValues(BuildContext context) => {
+        'char': helper.getAsCode(char),
       };
 }

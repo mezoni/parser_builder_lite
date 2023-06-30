@@ -12,14 +12,14 @@ class SeparatedList0<I, O> extends ParserBuilder<I, List<O>> {
 var pos = state.pos;
 final list = <{{O}}>[];
 while (true) {
-  final r1 = {{p1}};
+  final r1 = {{p1}}(state);
   if (r1 == null) {
     state.pos = pos;
     break;
   }
   list.add(r1.value);
   pos = state.pos;
-  final r2 = {{p2}};
+  final r2 = {{p2}}(state);
   if (r2 == null) {
     break;
   }
@@ -27,9 +27,9 @@ while (true) {
 return Result(list);''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
+  Map<String, String> getValues(BuildContext context) => {
         'O': '$O',
-        'p1': p1,
-        'p2': p2,
+        'p1': p1.build(context).name,
+        'p2': p2.build(context).name,
       };
 }

@@ -7,14 +7,14 @@ class Opt<I, O> extends ParserBuilder<I, O?> {
 
   @override
   String getTemplate(BuildContext context) => '''
-final r1 = {{p1}};
+final r1 = {{p1}}(state);
 if (r1 == null) {
   return const Result(null);
 }
 return Result(r1.value);''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'p1': parser,
+  Map<String, String> getValues(BuildContext context) => {
+        'p1': parser.build(context).name,
       };
 }

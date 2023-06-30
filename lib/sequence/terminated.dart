@@ -10,9 +10,9 @@ class Terminated<I, O> extends ParserBuilder<I, O> {
   @override
   String getTemplate(BuildContext context) => '''
 final pos = state.pos;
-final r1 = {{p1}};
+final r1 = {{p1}}(state);
 if (r1 != null) {
-  final r2 = {{p2}};
+  final r2 = {{p2}}(state);
   if (r2 != null) {
     return r1;
   }
@@ -21,8 +21,8 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'p1': parser,
-        'p2': terminate,
+  Map<String, String> getValues(BuildContext context) => {
+        'p1': parser.build(context).name,
+        'p2': terminate.build(context).name,
       };
 }

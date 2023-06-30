@@ -10,9 +10,9 @@ class Tuple2<I, O1, O2> extends ParserBuilder<I, (O1, O2)> {
   @override
   String getTemplate(BuildContext context) => r'''
 final pos = state.pos;
-final r1 = {{p1}};
+final r1 = {{p1}}(state);
 if (r1 != null) {
-  final r2 = {{p2}};
+  final r2 = {{p2}}(state);
   if (r2 != null) {
      return Result((r1.value, r2.value));
   }
@@ -21,9 +21,9 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'p1': p1,
-        'p2': p2,
+  Map<String, String> getValues(BuildContext context) => {
+        'p1': p1.build(context).name,
+        'p2': p2.build(context).name,
       };
 }
 
@@ -39,11 +39,11 @@ class Tuple3<I, O1, O2, O3> extends ParserBuilder<I, (O1, O2, O3)> {
   @override
   String getTemplate(BuildContext context) => r'''
 final pos = state.pos;
-final r1 = {{p1}};
+final r1 = {{p1}}(state);
 if (r1 != null) {
-  final r2 = {{p2}};
+  final r2 = {{p2}}(state);
   if (r2 != null) {
-    final r3 = {{p3}};
+    final r3 = {{p3}}(state);
     if (r3 != null) {
       return Result((r1.value, r2.value, r3.value));
     }
@@ -53,10 +53,10 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'p1': p1,
-        'p2': p2,
-        'p3': p3,
+  Map<String, String> getValues(BuildContext context) => {
+        'p1': p1.build(context).name,
+        'p2': p2.build(context).name,
+        'p3': p3.build(context).name,
       };
 }
 
@@ -74,13 +74,13 @@ class Tuple4<I, O1, O2, O3, O4> extends ParserBuilder<I, (O1, O2, O3, O4)> {
   @override
   String getTemplate(BuildContext context) => '''
 final pos = state.pos;
-final r1 = {{p1}};
+final r1 = {{p1}}(state);
 if (r1 != null) {
-  final r2 = {{p2}};
+  final r2 = {{p2}}(state);
   if (r2 != null) {
-    final r3 = {{p3}};
+    final r3 = {{p3}}(state);
     if (r3 != null) {
-      final r4 = {{p4}};
+      final r4 = {{p4}}v
       if (r4 != null) {
         return Result((r1.value, r2.value, r3.value, r4.value));
       }
@@ -91,11 +91,11 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'p1': p1,
-        'p2': p2,
-        'p3': p3,
-        'p4': p4,
+  Map<String, String> getValues(BuildContext context) => {
+        'p1': p1.build(context).name,
+        'p2': p2.build(context).name,
+        'p3': p3.build(context).name,
+        'p4': p4.build(context).name,
       };
 }
 
@@ -116,15 +116,15 @@ class Tuple5<I, O1, O2, O3, O4, O5>
   @override
   String getTemplate(BuildContext context) => '''
 final pos = state.pos;
-final r1 = {{p1}};
+final r1 = {{p1}}(state);
 if (r1 != null) {
-  final r2 = {{p2}};
+  final r2 = {{p2}}(state);
   if (r2 != null) {
-    final r3 = {{p3}};
+    final r3 = {{p3}}(state);
     if (r3 != null) {
-      final r4 = {{p4}};
+      final r4 = {{p4}}(state);
       if (r4 != null) {
-        final r5 = {{p5}};
+        final r5 = {{p5}}(state);
         if (r5 != null) {
           return Result((r1.value, r2.value, r3.value, r4.value, r5.value));
         }
@@ -136,12 +136,12 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'p1': p1,
-        'p2': p2,
-        'p3': p3,
-        'p4': p4,
-        'p5': p5,
+  Map<String, String> getValues(BuildContext context) => {
+        'p1': p1.build(context).name,
+        'p2': p2.build(context).name,
+        'p3': p3.build(context).name,
+        'p4': p4.build(context).name,
+        'p5': p5.build(context).name,
       };
 }
 
@@ -164,17 +164,17 @@ class Tuple6<I, O1, O2, O3, O4, O5, O6>
   @override
   String getTemplate(BuildContext context) => '''
 final pos = state.pos;
-final r1 = {{p1}};
+final r1 = {{p1}}(state);
 if (r1 != null) {
-  final r2 = {{p2}};
+  final r2 = {{p2}}(state);
   if (r2 != null) {
-    final r3 = {{p3}};
+    final r3 = {{p3}}(state);
     if (r3 != null) {
-      final r4 = {{p4}};
+      final r4 = {{p4}}(state);
       if (r4 != null) {
-        final r5 = {{p5}};
+        final r5 = {{p5}}(state);
         if (r5 != null) {
-          final r6 = {{p6}};
+          final r6 = {{p6}}(state);
           if (r6 != null) {
            return Result((r1.value, r2.value, r3.value, r4.value, r5.value, r6.value));
           }
@@ -187,13 +187,13 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'p1': p1,
-        'p2': p2,
-        'p3': p3,
-        'p4': p4,
-        'p5': p5,
-        'p6': p6,
+  Map<String, String> getValues(BuildContext context) => {
+        'p1': p1.build(context).name,
+        'p2': p2.build(context).name,
+        'p3': p3.build(context).name,
+        'p4': p4.build(context).name,
+        'p5': p5.build(context).name,
+        'p6': p6.build(context).name,
       };
 }
 
@@ -218,19 +218,19 @@ class Tuple7<I, O1, O2, O3, O4, O5, O6, O7>
   @override
   String getTemplate(BuildContext context) => '''
 final pos = state.pos;
-final r1 = {{p1}};
+final r1 = {{p1}}(state);
 if (r1 != null) {
-  final r2 = {{p2}};
+  final r2 = {{p2}}(state);
   if (r2 != null) {
-    final r3 = {{p3}};
+    final r3 = {{p3}}(state);
     if (r3 != null) {
-      final r4 = {{p4}};
+      final r4 = {{p4}}(state);
       if (r4 != null) {
-        final r5 = {{p5}};
+        final r5 = {{p5}}(state);
         if (r5 != null) {
-          final r6 = {{p6}};
+          final r6 = {{p6}}v
           if (r6 != null) {
-            final r7 = {{p7}};
+            final r7 = {{p7}}(state);
             if (r7 != null) {
               return Result((r1.value, r2.value, r3.value, r4.value, r5.value, r6.value, r7.value));
             }
@@ -244,13 +244,13 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'p1': p1,
-        'p2': p2,
-        'p3': p3,
-        'p4': p4,
-        'p5': p5,
-        'p6': p6,
-        'p7': p7,
+  Map<String, String> getValues(BuildContext context) => {
+        'p1': p1.build(context).name,
+        'p2': p2.build(context).name,
+        'p3': p3.build(context).name,
+        'p4': p4.build(context).name,
+        'p5': p5.build(context).name,
+        'p6': p6.build(context).name,
+        'p7': p7.build(context).name,
       };
 }

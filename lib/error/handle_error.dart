@@ -14,7 +14,7 @@ final failPos = state.failPos;
 final errors = state.errors;
 state.errors = [];
 state.failPos = -1;
-final r1 = {{p1}};
+final r1 = {{p1}}(state);
 var failPos2 = state.failPos;
 if (failPos2 < failPos) {
   state.failPos = failPos;
@@ -35,8 +35,8 @@ final error = {{f}}(pos, failPos2) as ParseError;
 return state.fail(failPos2, error);''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'f': f,
-        'p1': parser,
+  Map<String, String> getValues(BuildContext context) => {
+        'f': f.build(context).name,
+        'p1': parser.build(context).name,
       };
 }

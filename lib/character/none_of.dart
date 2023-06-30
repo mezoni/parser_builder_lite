@@ -26,7 +26,7 @@ for (var i = 0; i < {{length}}; i++) {
 return Result(ch);''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
+  Map<String, String> getValues(BuildContext context) => {
         'chars': helper.getAsCode(chars.runes.toList()),
         'length': helper.getAsCode(chars.runes.toList().length),
       };

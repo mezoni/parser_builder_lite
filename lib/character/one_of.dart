@@ -26,7 +26,7 @@ state.pos = pos;
 return state.fail(pos, const ErrorUnexpectedChar());''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
+  Map<String, String> getValues(BuildContext context) => {
         'chars': helper.getAsCode(chars.runes.toList()),
         'length': helper.getAsCode(chars.runes.toList().length),
       };

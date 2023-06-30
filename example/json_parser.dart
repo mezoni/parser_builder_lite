@@ -1,5 +1,5 @@
 void main() {
-  final r = parse('10E5');
+  final r = parse('{"rocket": "🚀 flies to the stars"}');
   print(r);
 }
 
@@ -30,10 +30,9 @@ Result<Object?>? _ws(State<String> state) {
 
 Result<String>? _$g1(State<String> state) {
   const tag = '"';
-  final source = state.source;
-  final pos = state.pos;
-  if (pos >= source.length || source.codeUnitAt(pos) != 34) {
-    return state.fail(pos, const ErrorExpectedTags([tag]));
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 34) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
@@ -70,41 +69,45 @@ Result<String>? _normalChars(State<String> state) {
 
 Result<String>? _$g6(State<String> state) {
   const tag = '\\';
-  final source = state.source;
-  final pos = state.pos;
-  if (pos >= source.length || source.codeUnitAt(pos) != 92) {
-    return state.fail(pos, const ErrorExpectedTags([tag]));
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 92) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
 }
 
 Result<String>? _escapeChar(State<String> state) {
-  final source = state.source;
   final pos = state.pos;
-  if (pos >= source.length) {
-    return state.fail(pos, const ErrorUnexpectedEof());
-  }
-  final c = source.readRune(state);
-  switch (c) {
-    case 34:
+  final source = state.source;
+  if (pos < source.length) {
+    final c = source.codeUnitAt(pos);
+    if (c == 34) {
+      state.pos += 1;
       return const Result('"');
-    case 47:
+    } else if (c == 47) {
+      state.pos += 1;
       return const Result('/');
-    case 92:
+    } else if (c == 92) {
+      state.pos += 1;
       return const Result('\\');
-    case 98:
+    } else if (c == 98) {
+      state.pos += 1;
       return const Result('\b');
-    case 102:
+    } else if (c == 102) {
+      state.pos += 1;
       return const Result('\f');
-    case 110:
+    } else if (c == 110) {
+      state.pos += 1;
       return const Result('\n');
-    case 114:
+    } else if (c == 114) {
+      state.pos += 1;
       return const Result('\r');
-    case 116:
+    } else if (c == 116) {
+      state.pos += 1;
       return const Result('\t');
+    }
   }
-  state.pos = pos;
   return state.fail(pos, const ErrorUnexpectedChar());
 }
 
@@ -250,20 +253,9 @@ Result<String>? _$g2(State<String> state) {
   return Result(v);
 }
 
-Result<String>? _$g12(State<String> state) {
-  const tag = '"';
-  final source = state.source;
-  final pos = state.pos;
-  if (pos >= source.length || source.codeUnitAt(pos) != 34) {
-    return state.fail(pos, const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
-}
-
 Result<String>? _doubleQuote(State<String> state) {
   final pos = state.pos;
-  final r1 = _$g12(state);
+  final r1 = _$g1(state);
   if (r1 != null) {
     final r2 = _ws(state);
     if (r2 != null) {
@@ -290,48 +282,45 @@ Result<String>? _string(State<String> state) {
   return null;
 }
 
-num _$g13(String a) => num.parse(a);
+num _$g12(String a) => num.parse(a);
 
-Result<String>? _$g16(State<String> state) {
+Result<String>? _$g15(State<String> state) {
   const tag = '-';
-  final source = state.source;
-  final pos = state.pos;
-  if (pos >= source.length || source.codeUnitAt(pos) != 45) {
-    return state.fail(pos, const ErrorExpectedTags([tag]));
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 45) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
 }
 
 Result<String?>? _minus(State<String> state) {
-  final r1 = _$g16(state);
+  final r1 = _$g15(state);
   if (r1 == null) {
     return const Result(null);
   }
   return Result(r1.value);
 }
 
-Result<String>? _$g17(State<String> state) {
+Result<String>? _$g16(State<String> state) {
   const tag = '0';
-  final source = state.source;
-  final pos = state.pos;
-  if (pos >= source.length || source.codeUnitAt(pos) != 48) {
-    return state.fail(pos, const ErrorExpectedTags([tag]));
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 48) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
 }
 
-bool _$g20(int a) => a >= 49 && a <= 57;
+bool _$g19(int a) => a >= 49 && a <= 57;
 
-Result<int>? _$g19(State<String> state) {
+Result<int>? _$g18(State<String> state) {
   final pos = state.pos;
-  final source = state.source;
-  if (pos >= source.length) {
+  if (pos >= state.source.length) {
     return state.fail(pos, const ErrorUnexpectedEof());
   }
-  final c = source.readRune(state);
-  final ok = _$g20(c);
+  final c = state.source.readRune(state);
+  final ok = _$g19(c);
   if (ok) {
     return Result(c);
   }
@@ -339,13 +328,13 @@ Result<int>? _$g19(State<String> state) {
   return state.fail(pos, const ErrorUnexpectedChar());
 }
 
-bool _$g21(int a) => a >= 48 && a <= 57;
+bool _$g20(int a) => a >= 48 && a <= 57;
 
 Result<Object?>? _digit0(State<String> state) {
   final source = state.source;
   while (state.pos < source.length) {
     final c = source.codeUnitAt(state.pos);
-    final v = _$g21(c);
+    final v = _$g20(c);
     if (!v) {
       break;
     }
@@ -354,9 +343,9 @@ Result<Object?>? _digit0(State<String> state) {
   return const Result(null);
 }
 
-Result<Object?>? _$g18(State<String> state) {
+Result<Object?>? _$g17(State<String> state) {
   final pos = state.pos;
-  final r1 = _$g19(state);
+  final r1 = _$g18(state);
   if (r1 != null) {
     final r2 = _digit0(state);
     if (r2 != null) {
@@ -368,23 +357,22 @@ Result<Object?>? _$g18(State<String> state) {
 }
 
 Result<Object?>? _integer(State<String> state) {
-  final r1 = _$g17(state);
+  final r1 = _$g16(state);
   if (r1 != null) {
     return r1;
   }
-  final r2 = _$g18(state);
+  final r2 = _$g17(state);
   if (r2 != null) {
     return r2;
   }
   return null;
 }
 
-Result<String>? _$g23(State<String> state) {
+Result<String>? _$g22(State<String> state) {
   const tag = '.';
-  final source = state.source;
-  final pos = state.pos;
-  if (pos >= source.length || source.codeUnitAt(pos) != 46) {
-    return state.fail(pos, const ErrorExpectedTags([tag]));
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 46) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
@@ -398,7 +386,7 @@ Result<Object?>? _digit1(State<String> state) {
   }
   while (state.pos < source.length) {
     final c = source.codeUnitAt(state.pos);
-    final v = _$g21(c);
+    final v = _$g20(c);
     if (!v) {
       break;
     }
@@ -410,9 +398,9 @@ Result<Object?>? _digit1(State<String> state) {
   return const Result(null);
 }
 
-Result<Object?>? _$g22(State<String> state) {
+Result<Object?>? _$g21(State<String> state) {
   final pos = state.pos;
-  final r1 = _$g23(state);
+  final r1 = _$g22(state);
   if (r1 != null) {
     final r2 = _digit1(state);
     if (r2 != null) {
@@ -424,68 +412,58 @@ Result<Object?>? _$g22(State<String> state) {
 }
 
 Result<Object?>? _frac(State<String> state) {
-  final r1 = _$g22(state);
+  final r1 = _$g21(state);
   if (r1 == null) {
     return const Result(null);
   }
   return Result(r1.value);
 }
 
-Result<String>? _$g25(State<String> state) {
-  const tags = ['e', 'E'];
-  final source = state.source;
+Result<String>? _$g24(State<String> state) {
   final pos = state.pos;
-  if (pos >= source.length) {
-    return state.fail(pos, const ErrorExpectedTags(tags));
-  }
-  final c = source.codeUnitAt(pos);
-  for (var i = 0; i < 2; i++) {
-    final tag = tags[i];
-    if (c == tag.codeUnitAt(0)) {
-      final ok = tag.length == 1 ? true : source.startsWith(tag, pos);
-      if (ok) {
-        state.pos += tag.length;
-        return Result(tag);
-      }
+  final source = state.source;
+  if (pos < source.length) {
+    final c = source.codeUnitAt(pos);
+    if (c == 101) {
+      state.pos += 1;
+      return const Result('e');
+    } else if (c == 69) {
+      state.pos += 1;
+      return const Result('E');
     }
   }
-  return state.fail(pos, const ErrorExpectedTags(tags));
+  return state.fail(pos, const ErrorExpectedTags(['e', 'E']));
 }
 
-Result<String>? _$g27(State<String> state) {
-  const tags = ['+', '-'];
-  final source = state.source;
+Result<String>? _$g26(State<String> state) {
   final pos = state.pos;
-  if (pos >= source.length) {
-    return state.fail(pos, const ErrorExpectedTags(tags));
-  }
-  final c = source.codeUnitAt(pos);
-  for (var i = 0; i < 2; i++) {
-    final tag = tags[i];
-    if (c == tag.codeUnitAt(0)) {
-      final ok = tag.length == 1 ? true : source.startsWith(tag, pos);
-      if (ok) {
-        state.pos += tag.length;
-        return Result(tag);
-      }
+  final source = state.source;
+  if (pos < source.length) {
+    final c = source.codeUnitAt(pos);
+    if (c == 43) {
+      state.pos += 1;
+      return const Result('+');
+    } else if (c == 45) {
+      state.pos += 1;
+      return const Result('-');
     }
   }
-  return state.fail(pos, const ErrorExpectedTags(tags));
+  return state.fail(pos, const ErrorExpectedTags(['+', '-']));
 }
 
-Result<Object?>? _$g26(State<String> state) {
-  final r1 = _$g27(state);
+Result<Object?>? _$g25(State<String> state) {
+  final r1 = _$g26(state);
   if (r1 == null) {
     return const Result(null);
   }
   return Result(r1.value);
 }
 
-Result<Object?>? _$g24(State<String> state) {
+Result<Object?>? _$g23(State<String> state) {
   final pos = state.pos;
-  final r1 = _$g25(state);
+  final r1 = _$g24(state);
   if (r1 != null) {
-    final r2 = _$g26(state);
+    final r2 = _$g25(state);
     if (r2 != null) {
       final r3 = _digit1(state);
       if (r3 != null) {
@@ -498,14 +476,14 @@ Result<Object?>? _$g24(State<String> state) {
 }
 
 Result<Object?>? _exp(State<String> state) {
-  final r1 = _$g24(state);
+  final r1 = _$g23(state);
   if (r1 == null) {
     return const Result(null);
   }
   return Result(r1.value);
 }
 
-Result<Object?>? _$g15(State<String> state) {
+Result<Object?>? _$g14(State<String> state) {
   final pos = state.pos;
   final r1 = _minus(state);
   if (r1 != null) {
@@ -524,9 +502,9 @@ Result<Object?>? _$g15(State<String> state) {
   return null;
 }
 
-Result<String>? _$g14(State<String> state) {
+Result<String>? _$g13(State<String> state) {
   final start = state.pos;
-  final r1 = _$g15(state);
+  final r1 = _$g14(state);
   if (r1 == null) {
     return null;
   }
@@ -537,11 +515,11 @@ Result<String>? _$g14(State<String> state) {
 }
 
 Result<num>? _num(State<String> state) {
-  final r1 = _$g14(state);
+  final r1 = _$g13(state);
   if (r1 == null) {
     return null;
   }
-  final v = _$g13(r1.value);
+  final v = _$g12(r1.value);
   return Result(v);
 }
 
@@ -558,7 +536,7 @@ Result<num>? _number(State<String> state) {
   return null;
 }
 
-Result<String>? _$g29(State<String> state) {
+Result<String>? _$g28(State<String> state) {
   const tag = 'true';
   if (!state.source.startsWith(tag, state.pos)) {
     return state.fail(state.pos, const ErrorExpectedTags([tag]));
@@ -567,9 +545,9 @@ Result<String>? _$g29(State<String> state) {
   return const Result(tag);
 }
 
-Result<Object?>? _$g28(State<String> state) {
+Result<Object?>? _$g27(State<String> state) {
   final pos = state.pos;
-  final r1 = _$g29(state);
+  final r1 = _$g28(state);
   if (r1 != null) {
     final r2 = _ws(state);
     if (r2 != null) {
@@ -581,14 +559,14 @@ Result<Object?>? _$g28(State<String> state) {
 }
 
 Result<bool>? _true(State<String> state) {
-  final r1 = _$g28(state);
+  final r1 = _$g27(state);
   if (r1 != null) {
     return Result(true);
   }
   return null;
 }
 
-Result<String>? _$g31(State<String> state) {
+Result<String>? _$g30(State<String> state) {
   const tag = 'false';
   if (!state.source.startsWith(tag, state.pos)) {
     return state.fail(state.pos, const ErrorExpectedTags([tag]));
@@ -597,9 +575,9 @@ Result<String>? _$g31(State<String> state) {
   return const Result(tag);
 }
 
-Result<Object?>? _$g30(State<String> state) {
+Result<Object?>? _$g29(State<String> state) {
   final pos = state.pos;
-  final r1 = _$g31(state);
+  final r1 = _$g30(state);
   if (r1 != null) {
     final r2 = _ws(state);
     if (r2 != null) {
@@ -611,14 +589,14 @@ Result<Object?>? _$g30(State<String> state) {
 }
 
 Result<bool>? _false(State<String> state) {
-  final r1 = _$g30(state);
+  final r1 = _$g29(state);
   if (r1 != null) {
     return Result(false);
   }
   return null;
 }
 
-Result<String>? _$g33(State<String> state) {
+Result<String>? _$g32(State<String> state) {
   const tag = 'null';
   if (!state.source.startsWith(tag, state.pos)) {
     return state.fail(state.pos, const ErrorExpectedTags([tag]));
@@ -627,7 +605,38 @@ Result<String>? _$g33(State<String> state) {
   return const Result(tag);
 }
 
-Result<Object?>? _$g32(State<String> state) {
+Result<Object?>? _$g31(State<String> state) {
+  final pos = state.pos;
+  final r1 = _$g32(state);
+  if (r1 != null) {
+    final r2 = _ws(state);
+    if (r2 != null) {
+      return r1;
+    }
+    state.pos = pos;
+  }
+  return null;
+}
+
+Result<Object?>? _null(State<String> state) {
+  final r1 = _$g31(state);
+  if (r1 != null) {
+    return Result(null);
+  }
+  return null;
+}
+
+Result<String>? _$g33(State<String> state) {
+  const tag = '[';
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 91) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  }
+  state.pos++;
+  return const Result(tag);
+}
+
+Result<String>? _openBracket(State<String> state) {
   final pos = state.pos;
   final r1 = _$g33(state);
   if (r1 != null) {
@@ -640,44 +649,11 @@ Result<Object?>? _$g32(State<String> state) {
   return null;
 }
 
-Result<Object?>? _null(State<String> state) {
-  final r1 = _$g32(state);
-  if (r1 != null) {
-    return Result(null);
-  }
-  return null;
-}
-
 Result<String>? _$g34(State<String> state) {
-  const tag = '[';
-  final source = state.source;
-  final pos = state.pos;
-  if (pos >= source.length || source.codeUnitAt(pos) != 91) {
-    return state.fail(pos, const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
-}
-
-Result<String>? _openBracket(State<String> state) {
-  final pos = state.pos;
-  final r1 = _$g34(state);
-  if (r1 != null) {
-    final r2 = _ws(state);
-    if (r2 != null) {
-      return r1;
-    }
-    state.pos = pos;
-  }
-  return null;
-}
-
-Result<String>? _$g35(State<String> state) {
   const tag = ',';
-  final source = state.source;
-  final pos = state.pos;
-  if (pos >= source.length || source.codeUnitAt(pos) != 44) {
-    return state.fail(pos, const ErrorExpectedTags([tag]));
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 44) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
@@ -685,7 +661,7 @@ Result<String>? _$g35(State<String> state) {
 
 Result<String>? _comma(State<String> state) {
   final pos = state.pos;
-  final r1 = _$g35(state);
+  final r1 = _$g34(state);
   if (r1 != null) {
     final r2 = _ws(state);
     if (r2 != null) {
@@ -715,12 +691,11 @@ Result<List<Object?>>? _values(State<String> state) {
   return Result(list);
 }
 
-Result<String>? _$g36(State<String> state) {
+Result<String>? _$g35(State<String> state) {
   const tag = ']';
-  final source = state.source;
-  final pos = state.pos;
-  if (pos >= source.length || source.codeUnitAt(pos) != 93) {
-    return state.fail(pos, const ErrorExpectedTags([tag]));
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 93) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
@@ -728,7 +703,7 @@ Result<String>? _$g36(State<String> state) {
 
 Result<String>? _closeBracket(State<String> state) {
   final pos = state.pos;
-  final r1 = _$g36(state);
+  final r1 = _$g35(state);
   if (r1 != null) {
     final r2 = _ws(state);
     if (r2 != null) {
@@ -755,16 +730,15 @@ Result<List<Object?>>? _array(State<String> state) {
   return null;
 }
 
-Map<String, Object?> _$g37(
+Map<String, Object?> _$g36(
         (Object?, List<MapEntry<String, Object?>>, Object?) e) =>
     Map.fromEntries(e.$2);
 
-Result<String>? _$g38(State<String> state) {
+Result<String>? _$g37(State<String> state) {
   const tag = '{';
-  final source = state.source;
-  final pos = state.pos;
-  if (pos >= source.length || source.codeUnitAt(pos) != 123) {
-    return state.fail(pos, const ErrorExpectedTags([tag]));
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 123) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
@@ -772,7 +746,7 @@ Result<String>? _$g38(State<String> state) {
 
 Result<String>? _openBrace(State<String> state) {
   final pos = state.pos;
-  final r1 = _$g38(state);
+  final r1 = _$g37(state);
   if (r1 != null) {
     final r2 = _ws(state);
     if (r2 != null) {
@@ -783,15 +757,14 @@ Result<String>? _openBrace(State<String> state) {
   return null;
 }
 
-MapEntry<String, Object?> _$g39((String, Object?, Object?) kv) =>
+MapEntry<String, Object?> _$g38((String, Object?, Object?) kv) =>
     MapEntry(kv.$1, kv.$3);
 
-Result<String>? _$g40(State<String> state) {
+Result<String>? _$g39(State<String> state) {
   const tag = ':';
-  final source = state.source;
-  final pos = state.pos;
-  if (pos >= source.length || source.codeUnitAt(pos) != 58) {
-    return state.fail(pos, const ErrorExpectedTags([tag]));
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 58) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
@@ -799,7 +772,7 @@ Result<String>? _$g40(State<String> state) {
 
 Result<String>? _semicolon(State<String> state) {
   final pos = state.pos;
-  final r1 = _$g40(state);
+  final r1 = _$g39(state);
   if (r1 != null) {
     final r2 = _ws(state);
     if (r2 != null) {
@@ -818,7 +791,7 @@ Result<MapEntry<String, Object?>>? _keyValue(State<String> state) {
     if (r2 != null) {
       final r3 = _value(state);
       if (r3 != null) {
-        final v = _$g39((r1.value, r2.value, r3.value));
+        final v = _$g38((r1.value, r2.value, r3.value));
         return Result(v);
       }
     }
@@ -846,12 +819,11 @@ Result<List<MapEntry<String, Object?>>>? _keyValues(State<String> state) {
   return Result(list);
 }
 
-Result<String>? _$g41(State<String> state) {
+Result<String>? _$g40(State<String> state) {
   const tag = '}';
-  final source = state.source;
-  final pos = state.pos;
-  if (pos >= source.length || source.codeUnitAt(pos) != 125) {
-    return state.fail(pos, const ErrorExpectedTags([tag]));
+  if (state.pos >= state.source.length ||
+      state.source.codeUnitAt(state.pos) != 125) {
+    return state.fail(state.pos, const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
@@ -859,7 +831,7 @@ Result<String>? _$g41(State<String> state) {
 
 Result<String>? _closeBrace(State<String> state) {
   final pos = state.pos;
-  final r1 = _$g41(state);
+  final r1 = _$g40(state);
   if (r1 != null) {
     final r2 = _ws(state);
     if (r2 != null) {
@@ -878,7 +850,7 @@ Result<Map<String, Object?>>? _object(State<String> state) {
     if (r2 != null) {
       final r3 = _closeBrace(state);
       if (r3 != null) {
-        final v = _$g37((r1.value, r2.value, r3.value));
+        final v = _$g36((r1.value, r2.value, r3.value));
         return Result(v);
       }
     }
@@ -919,7 +891,7 @@ Result<Object?>? _value(State<String> state) {
   return null;
 }
 
-Result<Object?>? _$g42(State<String> state) {
+Result<Object?>? _$g41(State<String> state) {
   if (state.pos >= state.source.length) {
     return const Result(null);
   }
@@ -932,7 +904,7 @@ Result<Object?>? json(State<String> state) {
   if (r1 != null) {
     final r2 = _value(state);
     if (r2 != null) {
-      final r3 = _$g42(state);
+      final r3 = _$g41(state);
       if (r3 != null) {
         return Result(r2.value);
       }

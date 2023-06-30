@@ -118,7 +118,7 @@ abstract class _Alt<I, O> extends ParserBuilder<I, O> {
     }
 
     const template = '''
-final r{{n}} = {{p{{n}}}};
+final r{{n}} = {{p{{n}}}}(state);
 if (r{{n}} != null) {
   return r{{n}};
 }''';
@@ -134,7 +134,10 @@ if (r{{n}} != null) {
   }
 
   @override
-  Map<String, Object?> getValues(BuildContext context) {
-    return {for (var i = 0; i < _parsers.length; i++) 'p${i + 1}': _parsers[i]};
+  Map<String, String> getValues(BuildContext context) {
+    return {
+      for (var i = 0; i < _parsers.length; i++)
+        'p${i + 1}': _parsers[i].build(context).name
+    };
   }
 }

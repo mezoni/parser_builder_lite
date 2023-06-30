@@ -12,11 +12,11 @@ class Delimited<I, O> extends ParserBuilder<I, O> {
   @override
   String getTemplate(BuildContext context) => '''
 final pos = state.pos;
-final r1 = {{p1}};
+final r1 = {{p1}}(state);
 if (r1 != null) {
-  final r2 = {{p2}};
+  final r2 = {{p2}}(state);
   if (r2 != null) {
-    final r3 = {{p3}};
+    final r3 = {{p3}}(state);
     if (r3 != null) {
       return Result(r2.value);
     }
@@ -26,9 +26,9 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'p1': before,
-        'p2': parser,
-        'p3': after,
+  Map<String, String> getValues(BuildContext context) => {
+        'p1': before.build(context).name,
+        'p2': parser.build(context).name,
+        'p3': after.build(context).name,
       };
 }

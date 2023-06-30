@@ -27,7 +27,7 @@ class NotInRangeFunc extends _RangeFunc {
 
   @override
   bool operator ==(other) {
-    return other is InRangeFunc && ranges == other.ranges;
+    return other is NotInRangeFunc && ranges == other.ranges;
   }
 }
 

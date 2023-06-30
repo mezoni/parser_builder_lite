@@ -12,9 +12,9 @@ class Map2<I, O, O1, O2> extends ParserBuilder<I, O> {
   @override
   String getTemplate(BuildContext context) => '''
 final pos = state.pos;
-final r1 = {{p1}};
+final r1 = {{p1}}(state);
 if (r1 != null) {
-  final r2 = {{p2}};
+  final r2 = {{p2}}(state);
   if (r2 != null) {
     final v = {{f}}((r1.value, r2.value));
     return Result(v);
@@ -24,10 +24,10 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'f': f,
-        'p1': p1,
-        'p2': p2,
+  Map<String, String> getValues(BuildContext context) => {
+        'f': f.build(context).name,
+        'p1': p1.build(context).name,
+        'p2': p2.build(context).name,
       };
 }
 
@@ -45,11 +45,11 @@ class Map3<I, O, O1, O2, O3> extends ParserBuilder<I, O> {
   @override
   String getTemplate(BuildContext context) => '''
 final pos = state.pos;
-final r1 = {{p1}};
+final r1 = {{p1}}(state);
 if (r1 != null) {
-  final r2 = {{p2}};
+  final r2 = {{p2}}(state);
   if (r2 != null) {
-    final r3 = {{p3}};
+    final r3 = {{p3}}(state);
     if (r3 != null) {
       final v = {{f}}((r1.value, r2.value, r3.value));
       return Result(v);
@@ -60,10 +60,10 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'f': f,
-        'p1': p1,
-        'p2': p2,
-        'p3': p3,
+  Map<String, String> getValues(BuildContext context) => {
+        'f': f.build(context).name,
+        'p1': p1.build(context).name,
+        'p2': p2.build(context).name,
+        'p3': p3.build(context).name,
       };
 }

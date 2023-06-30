@@ -4,11 +4,10 @@ class Satisfy extends ParserBuilder<String, int> {
   // TODO: Add 16 bit version
   static const satisfyTemplate = '''
 final pos = state.pos;
-final source = state.source;
-if (pos >= source.length) {
+if (pos >= state.source.length) {
   return state.fail(pos, const ErrorUnexpectedEof());
 }
-final c = source.readRune(state);
+final c = state.source.readRune(state);
 final ok = {{f}}(c);
 if (ok) {
   return Result(c);
@@ -24,7 +23,7 @@ return state.fail(pos, const ErrorUnexpectedChar());''';
   String getTemplate(BuildContext context) => satisfyTemplate;
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'f': f,
+  Map<String, String> getValues(BuildContext context) => {
+        'f': f.build(context).name,
       };
 }

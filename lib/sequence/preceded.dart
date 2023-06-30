@@ -10,9 +10,9 @@ class Preceded<I, O> extends ParserBuilder<I, O> {
   @override
   String getTemplate(BuildContext context) => '''
 final pos = state.pos;
-final r1 = {{p1}};
+final r1 = {{p1}}(state);
 if (r1 != null) {
-  final r2 = {{p2}};
+  final r2 = {{p2}}(state);
   if (r2 != null) {
     return r2;
   }
@@ -21,8 +21,8 @@ if (r1 != null) {
 return null;''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'p1': precede,
-        'p2': parser,
+  Map<String, String> getValues(BuildContext context) => {
+        'p1': precede.build(context).name,
+        'p2': parser.build(context).name,
       };
 }

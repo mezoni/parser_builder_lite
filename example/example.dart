@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:parser_builder_lite/branch/alt.dart';
 import 'package:parser_builder_lite/bytes/skip_while.dart';
+import 'package:parser_builder_lite/bytes/switch_tags.dart';
 import 'package:parser_builder_lite/bytes/tag.dart';
 import 'package:parser_builder_lite/bytes/tags.dart';
 import 'package:parser_builder_lite/bytes/take_while.dart';
@@ -13,7 +14,6 @@ import 'package:parser_builder_lite/combinator/recognize.dart';
 import 'package:parser_builder_lite/combinator/value.dart';
 import 'package:parser_builder_lite/error/handle_error.dart';
 import 'package:parser_builder_lite/fast_build.dart';
-import 'package:parser_builder_lite/helper.dart' as helper;
 import 'package:parser_builder_lite/multi/many.dart';
 import 'package:parser_builder_lite/multi/separated_list.dart';
 import 'package:parser_builder_lite/parser_builder.dart';
@@ -95,16 +95,16 @@ const _escape = Named('_escape', Preceded(Tag('\\'), _escapeChar));
 
 const _escapeChar = Named(
     '_escapeChar',
-    _Switch({
-      34: '"',
-      47: '/',
-      92: '\\',
-      98: '\b',
-      102: '\f',
-      110: '\n',
-      114: '\r',
-      116: '\t',
-    }));
+    SwitchTags<String>({
+      '"': "const Result('\"')",
+      '/': "const Result('/')",
+      '\\': r"const Result('\\')",
+      'b': r"const Result('\b')",
+      'f': r"const Result('\f')",
+      'n': r"const Result('\n')",
+      'r': r"const Result('\r')",
+      't': r"const Result('\t')",
+    }, 'const ErrorUnexpectedChar()'));
 
 const _exp = Named(
     '_exp',
@@ -228,40 +228,3 @@ const _values = Named('_values', SeparatedList0(_value, _comma));
 
 const _ws = Named('_ws',
     Skip16While0(Func('(int a) => a == 9 ||a == 10 || a == 13 || a == 32;')));
-
-class _Switch extends ParserBuilder<String, String> {
-  static const _case = '''
-case {{key}}:
-  return const Result({{value}});''';
-
-  static const _template = '''
-final source = state.source;
-final pos = state.pos;
-if (pos >= source.length) {
-  return state.fail(pos, const ErrorUnexpectedEof());
-}
-final c = source.readRune(state);
-switch (c) {
-  {{cases}}
-}
-state.pos = pos;
-return state.fail(pos, const ErrorUnexpectedChar());''';
-
-  final Map<int, String> map;
-
-  const _Switch(this.map);
-
-  @override
-  String getTemplate(BuildContext context) {
-    final cases = <String>[];
-    for (var kv in map.entries) {
-      final element = helper.render(_case, {
-        'key': helper.getAsCode(kv.key),
-        'value': helper.getAsCode(kv.value),
-      });
-      cases.add(element);
-    }
-
-    return helper.render(_template, {'cases': cases.join('\n')});
-  }
-}

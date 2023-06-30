@@ -11,18 +11,31 @@ class Tags extends ParserBuilder<String, String> {
 const tags = {{tags}};
 final source = state.source;
 final pos = state.pos;
+if (pos >= source.length) {
+  return state.fail(pos, const ErrorExpectedTags(tags));
+}
+final c = source.codeUnitAt(pos);
 for (var i = 0; i < {{length}}; i++) {
   final tag = tags[i];
-  if (source.startsWith(tag, pos)) {
-    state.pos += tag.length;
-    return Result(tag);
-  }
+  if (c == tag.codeUnitAt(0)) {
+    final ok = tag.length == 1 ? true : source.startsWith(tag, pos);
+    if (ok) {
+      state.pos += tag.length;
+      return Result(tag); 
+    }
+  }  
 }
 return state.fail(pos, const ErrorExpectedTags(tags));''';
 
   @override
-  Map<String, Object?> getValues(BuildContext context) => {
-        'length': helper.getAsCode(tags.length),
-        'tags': helper.getAsCode(tags),
-      };
+  Map<String, Object?> getValues(BuildContext context) {
+    if (tags.where((e) => e.isEmpty).isNotEmpty) {
+      throw StateError('The list of tags must not contain empty tags');
+    }
+
+    return {
+      'length': helper.getAsCode(tags.length),
+      'tags': helper.getAsCode(tags),
+    };
+  }
 }

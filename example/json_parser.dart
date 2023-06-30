@@ -1,5 +1,5 @@
 void main() {
-  final r = parse('{"rocket": "🚀 flies to the stars"}');
+  final r = parse('10E5');
   print(r);
 }
 
@@ -435,11 +435,18 @@ Result<String>? _$g25(State<String> state) {
   const tags = ['e', 'E'];
   final source = state.source;
   final pos = state.pos;
+  if (pos >= source.length) {
+    return state.fail(pos, const ErrorExpectedTags(tags));
+  }
+  final c = source.codeUnitAt(pos);
   for (var i = 0; i < 2; i++) {
     final tag = tags[i];
-    if (source.startsWith(tag, pos)) {
-      state.pos += tag.length;
-      return Result(tag);
+    if (c == tag.codeUnitAt(0)) {
+      final ok = tag.length == 1 ? true : source.startsWith(tag, pos);
+      if (ok) {
+        state.pos += tag.length;
+        return Result(tag);
+      }
     }
   }
   return state.fail(pos, const ErrorExpectedTags(tags));
@@ -449,11 +456,18 @@ Result<String>? _$g27(State<String> state) {
   const tags = ['+', '-'];
   final source = state.source;
   final pos = state.pos;
+  if (pos >= source.length) {
+    return state.fail(pos, const ErrorExpectedTags(tags));
+  }
+  final c = source.codeUnitAt(pos);
   for (var i = 0; i < 2; i++) {
     final tag = tags[i];
-    if (source.startsWith(tag, pos)) {
-      state.pos += tag.length;
-      return Result(tag);
+    if (c == tag.codeUnitAt(0)) {
+      final ok = tag.length == 1 ? true : source.startsWith(tag, pos);
+      if (ok) {
+        state.pos += tag.length;
+        return Result(tag);
+      }
     }
   }
   return state.fail(pos, const ErrorExpectedTags(tags));

@@ -2,7 +2,7 @@ Result<String>? _$g0(State<String> state) {
   const tag = '1';
   if (state.pos >= state.source.length ||
       state.source.codeUnitAt(state.pos) != 49) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+    return state.fail(const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
@@ -12,7 +12,7 @@ Result<String>? _$g1(State<String> state) {
   const tag = '2';
   if (state.pos >= state.source.length ||
       state.source.codeUnitAt(state.pos) != 50) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+    return state.fail(const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
@@ -22,7 +22,7 @@ Result<String>? _$g2(State<String> state) {
   const tag = '3';
   if (state.pos >= state.source.length ||
       state.source.codeUnitAt(state.pos) != 51) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+    return state.fail(const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
@@ -81,7 +81,7 @@ bool _$g3(int c) => _$g4(c, const [48, 57, 65, 90, 97, 122]) != null;
 Result<int>? inAlphanumericRange(State<String> state) {
   final pos = state.pos;
   if (pos >= state.source.length) {
-    return state.fail(pos, const ErrorUnexpectedEof());
+    return state.fail(const ErrorUnexpectedEof());
   }
   final c = state.source.readRune(state);
   final ok = _$g3(c);
@@ -89,7 +89,7 @@ Result<int>? inAlphanumericRange(State<String> state) {
     return Result(c);
   }
   state.pos = pos;
-  return state.fail(pos, const ErrorUnexpectedChar());
+  return state.fail(const ErrorUnexpectedChar());
 }
 
 bool _$g5(int c) => _$g4(c, const [48, 57, 65, 90, 97, 122]) == null;
@@ -97,7 +97,7 @@ bool _$g5(int c) => _$g4(c, const [48, 57, 65, 90, 97, 122]) == null;
 Result<int>? notInAlphanumericRange(State<String> state) {
   final pos = state.pos;
   if (pos >= state.source.length) {
-    return state.fail(pos, const ErrorUnexpectedEof());
+    return state.fail(const ErrorUnexpectedEof());
   }
   final c = state.source.readRune(state);
   final ok = _$g5(c);
@@ -105,7 +105,7 @@ Result<int>? notInAlphanumericRange(State<String> state) {
     return Result(c);
   }
   state.pos = pos;
-  return state.fail(pos, const ErrorUnexpectedChar());
+  return state.fail(const ErrorUnexpectedChar());
 }
 
 Result<String>? preceded(State<String> state) {
@@ -186,7 +186,7 @@ Result<String>? switchTag(State<String> state) {
       }
     }
   }
-  return state.fail(pos, const ErrorMessage(1, 'error'));
+  return state.fail(const ErrorMessage(1, 'error'));
 }
 
 Result<String>? terminated(State<String> state) {
@@ -235,7 +235,7 @@ Result<String>? _$g6(State<String> state) {
   const tag = '4';
   if (state.pos >= state.source.length ||
       state.source.codeUnitAt(state.pos) != 52) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+    return state.fail(const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
@@ -264,7 +264,7 @@ Result<String>? _$g7(State<String> state) {
   const tag = '5';
   if (state.pos >= state.source.length ||
       state.source.codeUnitAt(state.pos) != 53) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+    return state.fail(const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
@@ -296,7 +296,7 @@ Result<String>? _$g8(State<String> state) {
   const tag = '6';
   if (state.pos >= state.source.length ||
       state.source.codeUnitAt(state.pos) != 54) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+    return state.fail(const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
@@ -333,7 +333,7 @@ Result<String>? _$g9(State<String> state) {
   const tag = '7';
   if (state.pos >= state.source.length ||
       state.source.codeUnitAt(state.pos) != 55) {
-    return state.fail(state.pos, const ErrorExpectedTags([tag]));
+    return state.fail(const ErrorExpectedTags([tag]));
   }
   state.pos++;
   return const Result(tag);
@@ -553,7 +553,19 @@ class State<T> {
   State(this.source);
 
   @pragma('vm:prefer-inline')
-  Result<R>? fail<R>(int offset, ParseError error) {
+  Result<R>? fail<R>(ParseError error) {
+    if (pos < failPos) {
+      return null;
+    } else if (failPos < pos) {
+      failPos = pos;
+      errors = [];
+    }
+    errors.add(error);
+    return null;
+  }
+
+  @pragma('vm:prefer-inline')
+  Result<R>? failAt<R>(int offset, ParseError error) {
     if (offset < failPos) {
       return null;
     } else if (failPos < offset) {

@@ -32,7 +32,7 @@ if (failPos2 < pos) {
 }
 
 final error = {{f}}(pos, failPos2) as ParseError;
-return state.fail(failPos2, error);''';
+return state.failAt(failPos2, error);''';
 
   @override
   Map<String, String> getValues(BuildContext context) => {

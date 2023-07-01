@@ -9,16 +9,16 @@ class Char extends ParserBuilder<String, int> {
   @override
   // TODO: Add 16 bit version
   String getTemplate(BuildContext context) => '''
-final source = state.source;
 final pos = state.pos;
-if (state.pos >= source.length) {
-  return state.fail(state.pos, const UnexpectedEof());
+if (pos >= state.source.length) {
+  return state.fail(const UnexpectedEof());
 }
-final c = source.readRune(state);
+final c = state.source.readRune(state);
 if (c == {{char}}) {
   return const Result({{char}});
 }
-return state.fail(pos, const ErrorExpectedChar({{char}}));''';
+state.pos = pos;
+return state.fail(const ErrorExpectedChar({{char}}));''';
 
   @override
   Map<String, String> getValues(BuildContext context) => {

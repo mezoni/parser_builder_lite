@@ -12,7 +12,7 @@ class NoneOf extends ParserBuilder<String, int> {
 final pos = state.pos;
 final source = state.source;
 if (pos >= source.length) {
-  return state.fail(pos, const ErrorUnexpectedEof());
+  return state.fail(const ErrorUnexpectedEof());
 }
 final ch = source.readRune(state);
 final chars = const {{chars}};
@@ -20,7 +20,7 @@ for (var i = 0; i < {{length}}; i++) {
   final c = chars[i];
   if (ch == c) {
     state.pos = pos;
-    return state.fail(pos, const ErrorUnexpectedChar());
+    return state.fail(const ErrorUnexpectedChar());
   }
 }
 return Result(ch);''';

@@ -1,9 +1,7 @@
 import '../parser_builder.dart';
 
-class Skip16While0 extends ParserBuilder<String, Object?> {
-  final FunctionBuilder<bool> f;
-
-  const Skip16While0(this.f);
+class Skip16While0 extends _SkipWhile {
+  const Skip16While0(super.f);
 
   @override
   String getTemplate(BuildContext context) => '''
@@ -17,24 +15,17 @@ while (state.pos < source.length) {
   state.pos++;
 }
 return const Result(null);''';
-
-  @override
-  Map<String, String> getValues(BuildContext context) => {
-        'f': f.build(context).name,
-      };
 }
 
-class Skip16While1 extends ParserBuilder<String, Object?> {
-  final FunctionBuilder<bool> f;
-
-  const Skip16While1(this.f);
+class Skip16While1 extends _SkipWhile {
+  const Skip16While1(super.f);
 
   @override
   String getTemplate(BuildContext context) => '''
 final source = state.source;
 final start = state.pos;
 if (start >= source.length) {
-  return state.fail(start, const ErrorUnexpectedEof());
+  return state.fail(const ErrorUnexpectedEof());
 }
 while (state.pos < source.length) {
   final c = source.codeUnitAt(state.pos);
@@ -45,20 +36,13 @@ while (state.pos < source.length) {
   state.pos++;
 }
 if (state.pos == start) {
-  return state.fail(start, const ErrorUnexpectedChar());
+  return state.fail(const ErrorUnexpectedChar());
 }
 return const Result(null);''';
-
-  @override
-  Map<String, String> getValues(BuildContext context) => {
-        'f': f.build(context).name,
-      };
 }
 
-class SkipWhile0 extends ParserBuilder<String, Object?> {
-  final FunctionBuilder<bool> f;
-
-  const SkipWhile0(this.f);
+class SkipWhile0 extends _SkipWhile {
+  const SkipWhile0(super.f);
 
   @override
   String getTemplate(BuildContext context) => '''
@@ -73,24 +57,17 @@ while (state.pos < source.length) {
   }
 }
 return const Result(null);''';
-
-  @override
-  Map<String, String> getValues(BuildContext context) => {
-        'f': f.build(context).name,
-      };
 }
 
-class SkipWhile1 extends ParserBuilder<String, Object?> {
-  final FunctionBuilder<bool> f;
-
-  const SkipWhile1(this.f);
+class SkipWhile1 extends _SkipWhile {
+  const SkipWhile1(super.f);
 
   @override
   String getTemplate(BuildContext context) => '''
 final source = state.source;
 final start = state.pos;
 if (start >= source.length) {
-  return state.fail(start, const ErrorUnexpectedEof());
+  return state.fail(const ErrorUnexpectedEof());
 }
 while (state.pos < source.length) {
   final pos = state.pos;
@@ -102,9 +79,15 @@ while (state.pos < source.length) {
   }
 }
 if (state.pos == start) {
-  return state.fail(start, const ErrorUnexpectedChar());
+  return state.fail(const ErrorUnexpectedChar());
 }
 return const Result(null);''';
+}
+
+abstract class _SkipWhile extends ParserBuilder<String, Object?> {
+  final FunctionBuilder<bool> f;
+
+  const _SkipWhile(this.f);
 
   @override
   Map<String, String> getValues(BuildContext context) => {

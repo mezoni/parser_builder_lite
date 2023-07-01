@@ -15,7 +15,7 @@ class _IdentifierExpression extends ParserBuilder<String, String> {
 final pos = state.pos;
 final source = state.source;
 if (state.pos >= source.length) {
-  return state.fail(state.pos, const ErrorUnexpectedEof());
+  return state.failt(const ErrorUnexpectedEof());
 }
 final c = source.readRune(state);
 var ok = {{identStart}}(c);
@@ -38,6 +38,6 @@ if (ok) {
 }
 if (!ok) {
   state.pos = pos;
-  state.fail(pos, const ErrorExpectedTags(pos, ['identifier']));
+  state.failAt(pos, const ErrorExpectedTags(pos, ['identifier']));
 }''';
 }

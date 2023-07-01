@@ -8,5 +8,5 @@ class Eof extends ParserBuilder<String, Object?> {
 if (state.pos >= state.source.length) {
   return const Result(null);
 }
-return state.fail(state.pos, const ErrorExpectedEof());''';
+return state.fail(const ErrorExpectedEof());''';
 }

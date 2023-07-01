@@ -36,7 +36,7 @@ class Take16While1 extends ParserBuilder<String, String> {
 final source = state.source;
 final start = state.pos;
 if (start >= source.length) {
-  return state.fail(start, const ErrorUnexpectedEof());
+  return state.fail(const ErrorUnexpectedEof());
 }
 while (state.pos < source.length) {
   final c = source.codeUnitAt(state.pos);
@@ -47,7 +47,7 @@ while (state.pos < source.length) {
   state.pos++;
 }
 if (state.pos == start) {
-  return state.fail(start, const ErrorUnexpectedChar());
+  return state.fail(const ErrorUnexpectedChar());
 }
 return Result(source.substring(start, state.pos));''';
 
@@ -85,9 +85,9 @@ if (count >= {{m}}) {
 final end = state.pos;
 state.pos = start;
 if (end < source.length) {
-  return state.fail(end, const ErrorUnexpectedChar());
+  return state.failAt(end, const ErrorUnexpectedChar());
 }
-return state.fail(end, const ErrorUnexpectedEof());''';
+return state.failAt(end, const ErrorUnexpectedEof());''';
 
   final FunctionBuilder<bool> f;
 
@@ -144,7 +144,7 @@ class TakeWhile1 extends ParserBuilder<String, String> {
 final source = state.source;
 final start = state.pos;
 if (start >= source.length) {
-  return state.fail(start, const ErrorUnexpectedEof());
+  return state.fail(const ErrorUnexpectedEof());
 }
 while (state.pos < source.length) {
   final pos = state.pos;
@@ -156,7 +156,7 @@ while (state.pos < source.length) {
   }
 }
 if (state.pos == start) {
-  return state.fail(start, const ErrorUnexpectedChar());
+  return state.fail(const ErrorUnexpectedChar());
 }
 return Result(source.substring(start, state.pos));''';
 
@@ -195,9 +195,9 @@ if (count >= {{m}}) {
 final end = state.pos;
 state.pos = start;
 if (end < source.length) {
-  return state.fail(end, const ErrorUnexpectedChar());
+  return state.failAt(end, const ErrorUnexpectedChar());
 }
-return state.fail(end, const ErrorUnexpectedEof());''';
+return state.failAt(end, const ErrorUnexpectedEof());''';
 
   final FunctionBuilder<bool> f;
 

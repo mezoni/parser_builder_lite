@@ -9,7 +9,7 @@ if (pos < source.length) {
   final c = source.codeUnitAt(pos);
   {{tests}}
 }
-return state.fail(pos, {{error}});''';
+return state.fail({{error}});''';
 
   final String error;
 

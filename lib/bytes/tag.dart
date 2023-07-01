@@ -5,7 +5,7 @@ class Tag extends ParserBuilder<String, String> {
   static const _template = '''
 const tag = {{tag}};
 if (!state.source.startsWith(tag, state.pos)) {
-  return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  return state.fail( const ErrorExpectedTags([tag]));
 }
 state.pos += {{length}};
 return const Result(tag);''';
@@ -13,7 +13,7 @@ return const Result(tag);''';
   static const _template16 = '''
 const tag = {{tag}};
 if (state.pos >= state.source.length || state.source.codeUnitAt(state.pos) != {{char}}) {
-  return state.fail(state.pos, const ErrorExpectedTags([tag]));
+  return state.fail( const ErrorExpectedTags([tag]));
 }
 state.pos++;
 return const Result(tag);''';

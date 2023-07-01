@@ -12,7 +12,7 @@ class OneOf extends ParserBuilder<String, int> {
 final pos = state.pos;
 final source = state.source;
 if (pos >= source.length) {
-  return state.fail(pos, const ErrorUnexpectedEof());
+  return state.fail(const ErrorUnexpectedEof());
 }
 final ch = source.readRune(state);
 final chars = const {{chars}};
@@ -23,7 +23,7 @@ for (var i = 0; i < {{length}}; i++) {
   }
 }
 state.pos = pos;
-return state.fail(pos, const ErrorUnexpectedChar());''';
+return state.fail(const ErrorUnexpectedChar());''';
 
   @override
   Map<String, String> getValues(BuildContext context) => {

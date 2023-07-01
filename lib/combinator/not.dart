@@ -14,7 +14,7 @@ if (r1 == null) {
 }
 final end = state.pos;
 state.pos = pos;
-return state.fail(end, ErrorUnexpectedInput(pos));''';
+return state.failAt(end, ErrorUnexpectedInput(pos));''';
 
   @override
   Map<String, String> getValues(BuildContext context) => {

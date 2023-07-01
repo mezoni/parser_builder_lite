@@ -130,9 +130,7 @@ const _hexValue = Named(
 
 const _hexValueChecked =
     Named('_hexValueChecked', HandleError(_hexValue, Func('''
-(int start, int end) {
-  return ErrorMessage(end - start, 'Expected 4 digit hexadecimal number');
-}''')));
+(int start, int end) => ErrorMessage(end - start, 'Expected 4 digit hexadecimal number');''')));
 
 const _integer = Named(
     '_integer',

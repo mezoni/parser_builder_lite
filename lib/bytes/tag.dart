@@ -12,11 +12,10 @@ return const Result(tag);''';
 
   static const _template16 = '''
 const tag = {{tag}};
-if (state.pos >= state.source.length || state.source.codeUnitAt(state.pos) != {{char}}) {
-  return state.fail( const ErrorExpectedTags([tag]));
-}
-state.pos++;
-return const Result(tag);''';
+return switch (state.consumeCodeUnit({{char}})) {
+  true => const Result(tag),
+  _ => state.fail(const ErrorExpectedTags([tag])),
+};''';
 
   final String tag;
 

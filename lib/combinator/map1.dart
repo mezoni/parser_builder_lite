@@ -9,12 +9,10 @@ class Map1<I, O, O1> extends ParserBuilder<I, O> {
 
   @override
   String getTemplate(BuildContext context) => '''
-final r1 = {{p1}}(state);
-if (r1 == null) {
-  return null;
-}
-final v = {{f}}(r1.value);
-return Result(v);''';
+return switch ({{p1}}(state)) {
+  null => null,
+  final r1 => Result({{f}}(r1.value)),
+};''';
 
   @override
   Map<String, String> getValues(BuildContext context) => {

@@ -1,31 +1,25 @@
 Result<String>? _$g0(State<String> state) {
   const tag = '1';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 49) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(49)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 Result<String>? _$g1(State<String> state) {
   const tag = '2';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 50) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(50)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 Result<String>? _$g2(State<String> state) {
   const tag = '3';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 51) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(51)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 Result<String>? delimited(State<String> state) {
@@ -233,12 +227,10 @@ Result<(String, String, String)>? tuple3(State<String> state) {
 
 Result<String>? _$g6(State<String> state) {
   const tag = '4';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 52) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(52)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 Result<(String, String, String, String)>? tuple4(State<String> state) {
@@ -262,12 +254,10 @@ Result<(String, String, String, String)>? tuple4(State<String> state) {
 
 Result<String>? _$g7(State<String> state) {
   const tag = '5';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 53) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(53)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 Result<(String, String, String, String, String)>? tuple5(State<String> state) {
@@ -294,12 +284,10 @@ Result<(String, String, String, String, String)>? tuple5(State<String> state) {
 
 Result<String>? _$g8(State<String> state) {
   const tag = '6';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 54) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(54)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 Result<(String, String, String, String, String, String)>? tuple6(
@@ -331,12 +319,10 @@ Result<(String, String, String, String, String, String)>? tuple6(
 
 Result<String>? _$g9(State<String> state) {
   const tag = '7';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 55) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(55)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 Result<(String, String, String, String, String, String, String)>? tuple7(
@@ -625,5 +611,17 @@ extension on String {
       throw FormatException('Invalid UTF-16 character', this, index - 1);
     }
     return w1;
+  }
+}
+
+extension on State<String> {
+  @pragma('vm:prefer-inline')
+  // ignore: unused_element
+  bool consumeCodeUnit(int c) {
+    if (pos >= source.length || source.codeUnitAt(pos) != c) {
+      return false;
+    }
+    pos++;
+    return true;
   }
 }

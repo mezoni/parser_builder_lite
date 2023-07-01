@@ -338,4 +338,16 @@ extension on String {
   }
 }
 
+extension on State<String> {
+  @pragma('vm:prefer-inline')
+  // ignore: unused_element
+  bool consumeCodeUnit(int c) {
+    if (pos >= source.length || source.codeUnitAt(pos) != c) {
+      return false;
+    }
+    pos++;
+    return true;
+  }
+}
+
 ''';

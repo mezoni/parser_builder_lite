@@ -8,14 +8,13 @@ class Recognize extends ParserBuilder<String, String> {
   @override
   String getTemplate(BuildContext context) => '''
 final start = state.pos;
-final r1 = {{p1}}(state);
-if (r1 == null) {
-  return null;
-}
-if (state.pos == start) {
-  return const Result('');
-}
-return Result(state.source.substring(start, state.pos));''';
+return switch ({{p1}}(state)) {
+  null => null,
+  _ => switch (state.pos != start) {
+    true => Result(state.source.substring(start, state.pos)),
+    _ => const Result(''),
+  }
+};''';
 
   @override
   Map<String, String> getValues(BuildContext context) => {

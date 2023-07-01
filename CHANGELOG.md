@@ -1,3 +1,7 @@
+## 0.4.1
+
+- Added method `State.failAt()`
+
 ## 0.4.0
 
 - Breaking changes. Reduced `parser_builder.dart` file size to 3 kb. This is the main, and only, build and type declaration file for building parsers. The building process has been simplified, and at the same time, the building process has been improved. It will now take a few minutes to understand how the build process works.

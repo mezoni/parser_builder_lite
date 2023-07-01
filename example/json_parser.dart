@@ -30,12 +30,10 @@ Result<Object?>? _ws(State<String> state) {
 
 Result<String>? _$g1(State<String> state) {
   const tag = '"';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 34) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(34)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 String _$g3(List<String> a) => a.join();
@@ -69,12 +67,10 @@ Result<String>? _normalChars(State<String> state) {
 
 Result<String>? _$g6(State<String> state) {
   const tag = '\\';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 92) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(92)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 Result<String>? _escapeChar(State<String> state) {
@@ -133,9 +129,8 @@ Result<String>? _$g7(State<String> state) {
   return const Result(tag);
 }
 
-Object? _$g8(int start, int end) {
-  return ErrorMessage(end - start, 'Expected 4 digit hexadecimal number');
-}
+Object? _$g8(int start, int end) =>
+    ErrorMessage(end - start, 'Expected 4 digit hexadecimal number');
 
 String _$g9(String a) => String.fromCharCode(_toHexValue(a));
 
@@ -168,12 +163,10 @@ Result<String>? _$g10(State<String> state) {
 }
 
 Result<String>? _hexValue(State<String> state) {
-  final r1 = _$g10(state);
-  if (r1 == null) {
-    return null;
-  }
-  final v = _$g9(r1.value);
-  return Result(v);
+  return switch (_$g10(state)) {
+    null => null,
+    final r1 => Result(_$g9(r1.value)),
+  };
 }
 
 Result<String>? _hexValueChecked(State<String> state) {
@@ -245,12 +238,10 @@ Result<List<String>>? _stringChars(State<String> state) {
 }
 
 Result<String>? _$g2(State<String> state) {
-  final r1 = _stringChars(state);
-  if (r1 == null) {
-    return null;
-  }
-  final v = _$g3(r1.value);
-  return Result(v);
+  return switch (_stringChars(state)) {
+    null => null,
+    final r1 => Result(_$g3(r1.value)),
+  };
 }
 
 Result<String>? _doubleQuote(State<String> state) {
@@ -286,30 +277,25 @@ num _$g12(String a) => num.parse(a);
 
 Result<String>? _$g15(State<String> state) {
   const tag = '-';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 45) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(45)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 Result<String?>? _minus(State<String> state) {
-  final r1 = _$g15(state);
-  if (r1 == null) {
-    return const Result(null);
-  }
-  return Result(r1.value);
+  return switch (_$g15(state)) {
+    null => const Result(null),
+    final r1 => Result(r1.value),
+  };
 }
 
 Result<String>? _$g16(State<String> state) {
   const tag = '0';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 48) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(48)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 bool _$g19(int a) => a >= 49 && a <= 57;
@@ -370,12 +356,10 @@ Result<Object?>? _integer(State<String> state) {
 
 Result<String>? _$g22(State<String> state) {
   const tag = '.';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 46) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(46)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 Result<Object?>? _digit1(State<String> state) {
@@ -412,11 +396,10 @@ Result<Object?>? _$g21(State<String> state) {
 }
 
 Result<Object?>? _frac(State<String> state) {
-  final r1 = _$g21(state);
-  if (r1 == null) {
-    return const Result(null);
-  }
-  return Result(r1.value);
+  return switch (_$g21(state)) {
+    null => const Result(null),
+    final r1 => Result(r1.value),
+  };
 }
 
 Result<String>? _$g24(State<String> state) {
@@ -452,11 +435,10 @@ Result<String>? _$g26(State<String> state) {
 }
 
 Result<Object?>? _$g25(State<String> state) {
-  final r1 = _$g26(state);
-  if (r1 == null) {
-    return const Result(null);
-  }
-  return Result(r1.value);
+  return switch (_$g26(state)) {
+    null => const Result(null),
+    final r1 => Result(r1.value),
+  };
 }
 
 Result<Object?>? _$g23(State<String> state) {
@@ -476,11 +458,10 @@ Result<Object?>? _$g23(State<String> state) {
 }
 
 Result<Object?>? _exp(State<String> state) {
-  final r1 = _$g23(state);
-  if (r1 == null) {
-    return const Result(null);
-  }
-  return Result(r1.value);
+  return switch (_$g23(state)) {
+    null => const Result(null),
+    final r1 => Result(r1.value),
+  };
 }
 
 Result<Object?>? _$g14(State<String> state) {
@@ -504,23 +485,20 @@ Result<Object?>? _$g14(State<String> state) {
 
 Result<String>? _$g13(State<String> state) {
   final start = state.pos;
-  final r1 = _$g14(state);
-  if (r1 == null) {
-    return null;
-  }
-  if (state.pos == start) {
-    return const Result('');
-  }
-  return Result(state.source.substring(start, state.pos));
+  return switch (_$g14(state)) {
+    null => null,
+    _ => switch (state.pos != start) {
+        true => Result(state.source.substring(start, state.pos)),
+        _ => const Result(''),
+      }
+  };
 }
 
 Result<num>? _num(State<String> state) {
-  final r1 = _$g13(state);
-  if (r1 == null) {
-    return null;
-  }
-  final v = _$g12(r1.value);
-  return Result(v);
+  return switch (_$g13(state)) {
+    null => null,
+    final r1 => Result(_$g12(r1.value)),
+  };
 }
 
 Result<num>? _number(State<String> state) {
@@ -628,12 +606,10 @@ Result<Object?>? _null(State<String> state) {
 
 Result<String>? _$g33(State<String> state) {
   const tag = '[';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 91) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(91)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 Result<String>? _openBracket(State<String> state) {
@@ -651,12 +627,10 @@ Result<String>? _openBracket(State<String> state) {
 
 Result<String>? _$g34(State<String> state) {
   const tag = ',';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 44) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(44)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 Result<String>? _comma(State<String> state) {
@@ -693,12 +667,10 @@ Result<List<Object?>>? _values(State<String> state) {
 
 Result<String>? _$g35(State<String> state) {
   const tag = ']';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 93) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(93)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 Result<String>? _closeBracket(State<String> state) {
@@ -736,12 +708,10 @@ Map<String, Object?> _$g36(
 
 Result<String>? _$g37(State<String> state) {
   const tag = '{';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 123) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(123)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 Result<String>? _openBrace(State<String> state) {
@@ -762,12 +732,10 @@ MapEntry<String, Object?> _$g38((String, Object?, Object?) kv) =>
 
 Result<String>? _$g39(State<String> state) {
   const tag = ':';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 58) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(58)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 Result<String>? _semicolon(State<String> state) {
@@ -821,12 +789,10 @@ Result<List<MapEntry<String, Object?>>>? _keyValues(State<String> state) {
 
 Result<String>? _$g40(State<String> state) {
   const tag = '}';
-  if (state.pos >= state.source.length ||
-      state.source.codeUnitAt(state.pos) != 125) {
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  state.pos++;
-  return const Result(tag);
+  return switch (state.consumeCodeUnit(125)) {
+    true => const Result(tag),
+    _ => state.fail(const ErrorExpectedTags([tag])),
+  };
 }
 
 Result<String>? _closeBrace(State<String> state) {
@@ -1269,5 +1235,17 @@ extension on String {
       throw FormatException('Invalid UTF-16 character', this, index - 1);
     }
     return w1;
+  }
+}
+
+extension on State<String> {
+  @pragma('vm:prefer-inline')
+  // ignore: unused_element
+  bool consumeCodeUnit(int c) {
+    if (pos >= source.length || source.codeUnitAt(pos) != c) {
+      return false;
+    }
+    pos++;
+    return true;
   }
 }

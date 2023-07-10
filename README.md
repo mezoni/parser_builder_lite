@@ -125,7 +125,9 @@ const _hexValueChecked = Named(
 
 Data source (JSON):  
 
-```"abc\u123  "```
+```
+"abc\u123  "
+```
 
 Error report:  
 
@@ -137,19 +139,7 @@ line 1, column 7: Expected 4 digit hexadecimal number
 
 Data source (JSON):  
 
-```json
-"abc\u123  "
 ```
-
-Error report:  
-
-```
-line 1, column 7: Expected 4 digit hexadecimal number
-"abc\u123  "
-      ^^^
-```
-
-```json
 {"rocket": "🚀 flies to the stars}
 ```
 

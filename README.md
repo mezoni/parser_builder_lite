@@ -6,11 +6,11 @@ Version: 0.5.0
 
 ## What is it and what is it for?
 
-Parser Builder is designed to quickly implement (and test) parsers through source code templates.
-The main feature and advantage is that a very simple builder is used to build parsers.
-Availability of tools for quick generation of tests of parsers.
-Parsing is supported not only for text data, but also for binary data.
-The error reporting algorithm is quite informative.
+Parser Builder is designed to quickly implement (and test) parsers through source code templates.  
+The main feature and advantage is that a very simple builder is used to build parsers.  
+Availability of tools for quick generation of tests of parsers.  
+Parsing is supported not only for text data, but also for binary data.  
+The error reporting algorithm is quite informative.  
 
 A typical example of a parser builder (with static template).
 

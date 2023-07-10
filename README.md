@@ -2,30 +2,24 @@
 
 Parser Builder Lite is a lightweight and uncomplicated parser combinator builder (source code generator).
 
-Version: 0.4.1
+Version: 0.5.0
 
 ## What is it and what is it for?
 
-Parser Builder is designed to quickly implement parsers through source code templates.  
-The main feature and advantage is that a very simplest builder is used to build parsers (about 3 kb of source code).  
-Static and dynamic templates are supported.  
-Static templates are easier to create and understand.  
-Dynamic templates are more difficult to create, but the generated code can be much more efficient.  
-The included templates are mostly static templates, for reliability, not performance.  
-You can always implement your own parser builders to suit your needs.
+Parser Builder is designed to quickly implement (and test) parsers through source code templates.
+The main feature and advantage is that a very simple builder is used to build parsers.
+Availability of tools for quick generation of tests of parsers.
+Parsing is supported not only for text data, but also for binary data.
+The error reporting algorithm is quite informative.
 
 A typical example of a parser builder (with static template).
 
 ```dart
+import '../helper.dart';
 import '../parser_builder.dart';
 
-class Many0<I, O> extends ParserBuilder<I, List<O>> {
-  final ParserBuilder<I, O> parser;
-
-  const Many0(this.parser);
-
-  @override
-  String getTemplate(BuildContext context) => '''
+class Many<I, O> extends ParserBuilder<I, List<O>> {
+  static const _template = '''
 final list = <{{O}}>[];
 while (true) {
   final r1 = {{p1}}(state);
@@ -36,40 +30,18 @@ while (true) {
 }
 return Result(list);''';
 
-  @override
-  Map<String, String> getValues(BuildContext context) => {
-        'O': '$O',
-        'p1': parser.build(context).name,
-      };
-}
-
-class Many1<I, O> extends ParserBuilder<I, List<O>> {
   final ParserBuilder<I, O> parser;
 
-  const Many1(this.parser);
+  const Many(this.parser);
 
   @override
-  String getTemplate(BuildContext context) => '''
-final list = <{{O}}>[];
-while (true) {
-  final r1 = {{p1}}(state);
-  if (r1 == null) {
-    break;
+  String buildBody(BuildContext context) {
+    return render(_template, {
+      'O': '$O',
+      'p1': parser.build(context).name,
+    });
   }
-  list.add(r1.value);
 }
-if (list.isEmpty) {
-  return nul;;
-}
-return Result(list);''';
-
-  @override
-  Map<String, String> getValues(BuildContext context) => {
-        'O': '$O',
-        'p1': parser.build(context).name,
-      };
-}
-
 
 ```
 
@@ -78,7 +50,7 @@ A typical example of using a parser builder.
 ```dart
 const _stringChars = Named(
     '_stringChars',
-    Many0(Alt3(
+    Many(Choice3(
       _normalChars,
       _escape,
       _hexChar,
@@ -90,7 +62,7 @@ An example of the generated source code.
 As you can see, there is not a lot of source code, just as much as is generated from the template.
 
 ```dart
-Result<String>? _$g4(State<String> state) {
+Result<String>? _p5(State<String> state) {
   final r1 = _normalChars(state);
   if (r1 != null) {
     return r1;
@@ -103,13 +75,14 @@ Result<String>? _$g4(State<String> state) {
   if (r3 != null) {
     return r3;
   }
+
   return null;
 }
 
 Result<List<String>>? _stringChars(State<String> state) {
   final list = <String>[];
   while (true) {
-    final r1 = _$g4(state);
+    final r1 = _p5(state);
     if (r1 == null) {
       break;
     }
@@ -123,47 +96,75 @@ Result<List<String>>? _stringChars(State<String> state) {
 A typical example of a source code builder.
 
 ```dart
-void main(List<String> args) async {
-  final output = StringBuffer();
-  final context = BuildContext(
-    allocator: Allocator('_\$g'),
-    output: output,
-  );
-
-  output.writeln(__header);
-  output.writeln();
-  final parsers = [json, _value_];
-  for (final parser in parsers) {
-    parser.build(context);
-  }
-
-  output.writeln(__footer);
-  output.writeln(runtime.errorMessageTemplate);
-  output.writeln(runtime.runtimeTemplate);
-  const filename = 'example/json_parser.dart';
-  File(filename).writeAsStringSync('${context.output}');
-  const format = true;
-  if (format) {
-    final process =
-        await Process.start(Platform.executable, ['format', filename]);
-    unawaited(process.stdout.transform(utf8.decoder).forEach(print));
-    unawaited(process.stderr.transform(utf8.decoder).forEach(print));
-  }
-}
-
-```
-
-Or even shorter.
-
-```dart
 Future<void> main(List<String> args) async {
   await fastBuild(
+    context: BuildContext(
+      allocator: Allocator('_p'),
+      output: StringBuffer(),
+    ),
     filename: 'example/json_parser.dart',
     footer: __footer,
     header: __header,
     parsers: [json, _value_],
-    prefix: '_\$g',
   );
 }
 
 ```
+
+Error reporting example.  
+
+```dart
+const _hexValueChecked = Named(
+    '_hexValueChecked',
+    ReplaceErrors(
+      _hexValue,
+      Expr<Object?>(
+          '''ErrorMessage({{1}} - {{0}}, 'Expected 4 digit hexadecimal number')'''),
+    ));
+```
+
+Data source (JSON):  
+
+```"abc\u123  "```
+
+Error report:  
+
+```
+line 1, column 7: Expected 4 digit hexadecimal number
+"abc\u123  "
+      ^^^
+```
+
+Data source (JSON):  
+
+```json
+"abc\u123  "
+```
+
+Error report:  
+
+```
+line 1, column 7: Expected 4 digit hexadecimal number
+"abc\u123  "
+      ^^^
+```
+
+```json
+{"rocket": "🚀 flies to the stars}
+```
+
+Error report:  
+
+```
+Unhandled exception:
+line 1, column 35: Unexpected end of file
+{"rocket": "🚀 flies to the stars}
+                                  ^
+
+line 1, column 35: Expected '\', '\u', '"'
+{"rocket": "🚀 flies to the stars}
+                                  ^
+```
+
+Testing
+

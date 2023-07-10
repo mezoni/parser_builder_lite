@@ -12,7 +12,6 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
     final error = ErrorExpectedTags(tags);
     errorList.add(error);
   }
-
   final errorInfoList = errorList
       .map((e) => (
             message: e.getMessage(offset: offset, source: source),
@@ -21,15 +20,16 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
       .toSet()
       .toList();
   for (var i = 0; i < errorInfoList.length; i++) {
+    int max(int x, int y) => x > y ? x : y;
+    int min(int x, int y) => x < y ? x : y;
     if (sb.isNotEmpty) {
       sb.writeln();
       sb.writeln();
     }
     final errorInfo = errorInfoList[i];
     final message = errorInfo.message;
-    final end = offset;
-    final start = errorInfo.start;
-    RangeError.checkValidRange(start, end, source.length);
+    final start = min(errorInfo.start, offset);
+    final end = max(errorInfo.start, offset);
     var row = 1;
     var lineStart = 0, next = 0, pos = 0;
     while (pos < source.length) {
@@ -39,17 +39,13 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
         if (pos < source.length && source.codeUnitAt(pos) == next) {
           pos++;
         }
-
         if (pos - 1 >= start) {
           break;
         }
-
         row++;
         lineStart = pos;
       }
     }
-    int max(int x, int y) => x > y ? x : y;
-    int min(int x, int y) => x < y ? x : y;
     final sourceLen = source.length;
     final lineLimit = min(80, sourceLen);
     final start2 = start;
@@ -64,7 +60,6 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
       if (!iterator.movePrevious()) {
         break;
       }
-
       list.add(iterator.current);
     }
     final column = start - lineStart + 1;
@@ -180,9 +175,10 @@ class ErrorUnexpectedEof extends ParseError {
 }
 
 class ErrorUnexpectedInput extends ParseError {
-  final int start;
+  @override
+  final int length;
 
-  const ErrorUnexpectedInput(this.start);
+  const ErrorUnexpectedInput(this.length);
 
   @override
   String getMessage({
@@ -190,6 +186,18 @@ class ErrorUnexpectedInput extends ParseError {
     required Object source,
   }) {
     return 'Unexpected input';
+  }
+}
+
+class ErrorUnknown extends ParseError {
+  const ErrorUnknown();
+
+  @override
+  String getMessage({
+    required int offset,
+    required Object source,
+  }) {
+    return 'Unknown error';
   }
 }
 
@@ -254,7 +262,7 @@ class Result<T> {
 class State<T> {
   List<ParseError> errors = [];
 
-  int failPos = -1;
+  int failPos = 0;
 
   int pos = 0;
 
@@ -306,23 +314,6 @@ class State<T> {
 extension on String {
   @pragma('vm:prefer-inline')
   // ignore: unused_element
-  int readRune(State<String> state) {
-    final w1 = codeUnitAt(state.pos++);
-    if (w1 > 0xd7ff && w1 < 0xe000) {
-      if (state.pos < length) {
-        final w2 = codeUnitAt(state.pos++);
-        if ((w2 & 0xfc00) == 0xdc00) {
-          return 0x10000 + ((w1 & 0x3ff) << 10) + (w2 & 0x3ff);
-        }
-        state.pos--;
-      }
-      throw FormatException('Invalid UTF-16 character', this, state.pos - 1);
-    }
-    return w1;
-  }
-
-  @pragma('vm:prefer-inline')
-  // ignore: unused_element
   int runeAt(int index) {
     final w1 = codeUnitAt(index++);
     if (w1 > 0xd7ff && w1 < 0xe000) {
@@ -335,18 +326,6 @@ extension on String {
       throw FormatException('Invalid UTF-16 character', this, index - 1);
     }
     return w1;
-  }
-}
-
-extension on State<String> {
-  @pragma('vm:prefer-inline')
-  // ignore: unused_element
-  bool consumeCodeUnit(int c) {
-    if (pos >= source.length || source.codeUnitAt(pos) != c) {
-      return false;
-    }
-    pos++;
-    return true;
   }
 }
 

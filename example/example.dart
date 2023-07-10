@@ -1,35 +1,45 @@
 import 'dart:async';
 
-import 'package:parser_builder_lite/branch/alt.dart';
-import 'package:parser_builder_lite/bytes/skip_while.dart';
-import 'package:parser_builder_lite/bytes/switch_tags.dart';
-import 'package:parser_builder_lite/bytes/tag.dart';
-import 'package:parser_builder_lite/bytes/tags.dart';
-import 'package:parser_builder_lite/bytes/take_while.dart';
-import 'package:parser_builder_lite/character/satisfy.dart';
-import 'package:parser_builder_lite/combinator/eof.dart';
-import 'package:parser_builder_lite/combinator/map1.dart';
-import 'package:parser_builder_lite/combinator/opt.dart';
-import 'package:parser_builder_lite/combinator/recognize.dart';
-import 'package:parser_builder_lite/combinator/value.dart';
-import 'package:parser_builder_lite/error/handle_error.dart';
+import 'package:parser_builder_lite/allocator.dart';
+import 'package:parser_builder_lite/expr.dart';
 import 'package:parser_builder_lite/fast_build.dart';
-import 'package:parser_builder_lite/multi/many.dart';
-import 'package:parser_builder_lite/multi/separated_list.dart';
+import 'package:parser_builder_lite/parser/choice.dart';
+import 'package:parser_builder_lite/parser/delimited.dart';
+import 'package:parser_builder_lite/parser/eof.dart';
+import 'package:parser_builder_lite/parser/fast_satisfy16.dart';
+import 'package:parser_builder_lite/parser/many.dart';
+import 'package:parser_builder_lite/parser/mapped.dart';
+import 'package:parser_builder_lite/parser/named.dart';
+import 'package:parser_builder_lite/parser/opt.dart';
+import 'package:parser_builder_lite/parser/preceded.dart';
+import 'package:parser_builder_lite/parser/predicate.dart';
+import 'package:parser_builder_lite/parser/recognize.dart';
+import 'package:parser_builder_lite/parser/ref.dart';
+import 'package:parser_builder_lite/parser/replace_errors.dart';
+import 'package:parser_builder_lite/parser/separated_list.dart';
+import 'package:parser_builder_lite/parser/skip.dart';
+import 'package:parser_builder_lite/parser/skip16_while.dart';
+import 'package:parser_builder_lite/parser/skip16_while1.dart';
+import 'package:parser_builder_lite/parser/switch_tags.dart';
+import 'package:parser_builder_lite/parser/tag.dart';
+import 'package:parser_builder_lite/parser/tags.dart';
+import 'package:parser_builder_lite/parser/take16_while_m_n.dart';
+import 'package:parser_builder_lite/parser/take_while1.dart';
+import 'package:parser_builder_lite/parser/terminated.dart';
+import 'package:parser_builder_lite/parser/tuple.dart';
+import 'package:parser_builder_lite/parser/value.dart';
 import 'package:parser_builder_lite/parser_builder.dart';
-import 'package:parser_builder_lite/sequence/delimited.dart';
-import 'package:parser_builder_lite/sequence/map.dart';
-import 'package:parser_builder_lite/sequence/preceded.dart';
-import 'package:parser_builder_lite/sequence/skip.dart';
-import 'package:parser_builder_lite/sequence/terminated.dart';
 
 Future<void> main(List<String> args) async {
   await fastBuild(
+    context: BuildContext(
+      allocator: Allocator('_p'),
+      output: StringBuffer(),
+    ),
     filename: 'example/json_parser.dart',
     footer: __footer,
     header: __header,
     parsers: [json, _value_],
-    prefix: '_\$g',
   );
 }
 
@@ -63,7 +73,6 @@ void main() {
   final r = parse( '{"rocket": "🚀 flies to the stars"}');
   print(r);
 }
-
 Object? parse(String source) {
   final state = State(source);
   final result = json(state);
@@ -83,11 +92,10 @@ const _closeBracket = Named('_closeBracket', Terminated(Tag(']'), _ws));
 
 const _comma = Named('_comma', Terminated(Tag(','), _ws));
 
-const _digit0 =
-    Named('_digit0', Skip16While0(Func('(int a) => a >= 48 && a <= 57;')));
+const _digit0 = Named('_digit0', Skip16While(isDigit));
 
 const _digit1 =
-    Named('_digit1', Skip16While1(Func('(int a) => a >= 48 && a <= 57;')));
+    Named('_digit1', Skip16While1(Expr('{{0}} >= 48 && {{0}} <= 57')));
 
 const _doubleQuote = Named('_doubleQuote', Terminated(Tag('"'), _ws));
 
@@ -120,42 +128,44 @@ const _hexChar = Named('_hexChar', Preceded(Tag(r'\u'), _hexValueChecked));
 
 const _hexValue = Named(
     '_hexValue',
-    Map1(
+    Mapped(
         Take16WhileMN(
             4,
             4,
-            Func(
-                '(int a) => (a >= 48 && a <= 57) || (a >= 65 && a <= 70) || (a >= 97 && a <= 102);')),
-        Func<String>('(String a) => String.fromCharCode(_toHexValue(a));')));
+            Expr(
+                '({{0}} >= 48 && {{0}} <= 57) || ({{0}} >= 65 && {{0}} <= 70) || ({{0}} >= 97 && {{0}} <= 102)')),
+        Expr<String>('String.fromCharCode(_toHexValue({{0}}))')));
 
-const _hexValueChecked =
-    Named('_hexValueChecked', HandleError(_hexValue, Func('''
-(int start, int end) => ErrorMessage(end - start, 'Expected 4 digit hexadecimal number');''')));
+const _hexValueChecked = Named(
+    '_hexValueChecked',
+    ReplaceErrors(
+      _hexValue,
+      Expr<Object?>(
+          '''ErrorMessage({{1}} - {{0}}, 'Expected 4 digit hexadecimal number')'''),
+    ));
 
 const _integer = Named(
     '_integer',
-    Alt2(
+    Choice2(
       Tag('0'),
-      Skip2(Satisfy(Func('(int a) => a >= 49 && a <= 57;')), _digit0),
+      Skip2(FastSatisfy16(Expr('{{0}} >= 49 && {{0}} <= 57')), _digit0),
     ));
 
 const _keyValue = Named(
     '_keyValue',
-    Map3(
-        _string,
-        _semicolon,
-        _value,
-        Func<MapEntry<String, Object?>>(
-            r'((String, Object?, Object?) kv) => MapEntry(kv.$1, kv.$3);')));
+    Mapped(
+      Tuple3(_string, _semicolon, _value),
+      Expr<MapEntry<String, Object?>>(r'MapEntry({{0}}.$1, {{0}}.$3)'),
+    ));
 
-const _keyValues = Named('_keyValues', SeparatedList0(_keyValue, _comma));
+const _keyValues = Named('_keyValues', SeparatedList(_keyValue, _comma));
 
 const _minus = Named('_minus', Opt(Tag('-')));
 
 const _normalChars = Named(
     '_normalChars',
-    TakeWhile1(Func(
-        '(int a) => a <= 91 ? a <= 33 ? a >= 32 : a >= 35 : a <= 1114111 && a >= 93;')));
+    TakeWhile1(Expr(
+        '{{0}} <= 91 ? {{0}} <= 33 ? {{0}} >= 32 : {{0}} >= 35 : {{0}} <= 1114111 && {{0}} >= 93')));
 
 const _null = Named(
     '_null', Value<String, Object?>('null', Terminated(Tag('null'), _ws)));
@@ -163,26 +173,28 @@ const _null = Named(
 /// '-'?('0'|[1-9][0-9]*)('.'[0-9]+)?([eE][+-]?[0-9]+)?
 const _num = Named(
     '_num',
-    Map1(
+    Mapped(
       Recognize(Skip4(
         _minus,
         _integer,
         _frac,
         _exp,
       )),
-      Func<num>('(String a) => num.parse(a);'),
+      Expr<num>('num.parse({{0}})'),
     ));
 
 const _number = Named('_number', Terminated(_num, _ws));
 
 const _object = Named(
     '_object',
-    Map3(
+    Mapped(
+      Tuple3(
         _openBrace,
         _keyValues,
         _closeBrace,
-        Func<Map<String, Object?>>(
-            r'((Object?, List<MapEntry<String, Object?>>, Object?) e) => Map.fromEntries(e.$2);')));
+      ),
+      Expr<Map<String, Object?>>(r'Map.fromEntries({{0}}.$2)'),
+    ));
 
 const _openBrace = Named('_openBrace', Terminated(Tag('{'), _ws));
 
@@ -194,12 +206,15 @@ const _string = Named(
     '_string',
     Delimited(
         Tag('"'),
-        Map1(_stringChars, Func<String>('(List<String> a) => a.join();')),
+        Mapped(
+          _stringChars,
+          Expr<String>('{{0}}.join()'),
+        ),
         _doubleQuote));
 
 const _stringChars = Named(
     '_stringChars',
-    Many0(Alt3(
+    Many(Choice3(
       _normalChars,
       _escape,
       _hexChar,
@@ -212,17 +227,19 @@ const _value = Ref<String, Object?>('_value');
 
 const _value_ = Named(
     '_value',
-    Alt([
+    Choice7(
+      _object,
+      _array,
       _string,
       _number,
       _true,
       _false,
       _null,
-      _array,
-      _object,
-    ]));
+    ));
 
-const _values = Named('_values', SeparatedList0(_value, _comma));
+const _values = Named('_values', SeparatedList(_value, _comma));
 
-const _ws = Named('_ws',
-    Skip16While0(Func('(int a) => a == 9 ||a == 10 || a == 13 || a == 32;')));
+const _ws = Named(
+    '_ws',
+    Skip16While(
+        Expr('{{0}} == 9 || {{0}} == 10 || {{0}} == 13 || {{0}} == 32')));

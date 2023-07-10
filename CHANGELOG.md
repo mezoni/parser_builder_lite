@@ -1,3 +1,9 @@
+## 0.5.0
+
+- Breaking changes. Simplified and improved algorithms and structures used for building parsers.
+- Added the initial version of the parser tester generator.
+- The process of testing parsers has begun (using the new parser tester generator.).
+
 ## 0.4.1
 
 - Added method `State.failAt()`

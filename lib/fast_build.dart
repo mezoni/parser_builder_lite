@@ -8,19 +8,14 @@ import 'runtime.dart' as runtime;
 Future<void> fastBuild({
   bool addErrorMessageCode = true,
   bool addRuntimeCode = true,
+  required BuildContext context,
   required String filename,
   String? footer,
   bool format = true,
   String? header,
   required List<ParserBuilder<Object?, Object?>> parsers,
-  required String prefix,
 }) async {
   final output = StringBuffer();
-  final context = BuildContext(
-    allocator: Allocator(prefix),
-    output: output,
-  );
-
   if (header != null) {
     output.writeln(header);
     output.writeln();
@@ -30,6 +25,7 @@ Future<void> fastBuild({
     parser.build(context);
   }
 
+  output.writeln(context.output);
   if (footer != null) {
     output.writeln(footer);
     output.writeln();
@@ -43,7 +39,7 @@ Future<void> fastBuild({
     output.writeln(runtime.runtimeTemplate);
   }
 
-  File(filename).writeAsStringSync('${context.output}');
+  File(filename).writeAsStringSync(output.toString());
   if (format) {
     final process =
         await Process.start(Platform.executable, ['format', filename]);

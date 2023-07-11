@@ -3,7 +3,7 @@ import '../parser_builder.dart';
 
 class Eof extends ParserBuilder<String, Object?> {
   static const _template = '''
-if (state.pos >= state.source.length) {
+if (state.pos >= state.input.length) {
   return const Result(null);
 }
 return state.fail(const ErrorExpectedEof());''';

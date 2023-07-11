@@ -185,6 +185,5 @@ String? tryGetAsCode(Object? value) {
       }
     }
   }
-
   return null;
 }

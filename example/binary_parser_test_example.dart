@@ -1,8 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:parser_builder_lite/allocator.dart';
+import 'package:parser_builder_lite/expr.dart';
 import 'package:parser_builder_lite/fast_build.dart';
-import 'package:parser_builder_lite/parser/char.dart';
+import 'package:parser_builder_lite/parser/uint_be.dart';
 import 'package:parser_builder_lite/parser/many.dart';
-import 'package:parser_builder_lite/parser/preceded.dart';
 import 'package:parser_builder_lite/parser_builder.dart';
 import 'package:parser_builder_lite/parser_tester.dart';
 
@@ -17,6 +19,7 @@ const _header = '''
 // ignore_for_file: non_constant_identifier_names
 // ignore_for_file: inference_failure_on_collection_literal
 // ignore_for_file: unnecessary_cast
+import 'dart:typed_data';
 
 import 'package:test/test.dart' hide escape;
 ''';
@@ -28,77 +31,88 @@ Future<void> _generate() async {
     allocator: Allocator('_'),
     output: StringBuffer(),
   );
-  final tester = ParserTester<String>(
+  final tester = ParserTester<ByteData>(
     context: context,
     localOutput: StringBuffer(),
   );
-  tester.addTest('Many', const Many(Char(0x31)), (parserName, parser) {
+  tester.addTest('Many', const Many(UintBE(16, 1)), (parserName, parser) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
+      inputAsCode: (input) =>
+          'Uint8List.fromList([${List.generate(input.lengthInBytes, input.getUint8).join(', ')}]).buffer.asByteData()',
+      inputAsString: (input) =>
+          '[${List.generate(input.lengthInBytes, input.getUint8).join(', ')}',
       output: buffer,
       parser: parser,
       parserName: parserName,
     );
+
     t1.testSuccess(
-      input: '1112',
-      result: [0x31, 0x31, 0x31],
-      pos: 3,
+      input: Uint8List.fromList([0, 1, 0, 1, 0, 2]).buffer.asByteData(),
+      result: [1, 1],
+      pos: 4,
     );
     t1.testSuccess(
-      input: '',
+      input: Uint8List.fromList([]).buffer.asByteData(),
       result: [],
       pos: 0,
     );
     t1.testSuccess(
-      input: '2',
+      input: Uint16List.fromList([0, 2, 0, 1]).buffer.asByteData(),
       result: [],
       pos: 0,
     );
     return buffer.toString();
   });
 
-  tester.addTest('Preceded', const Preceded(Char(0x31), Char(0x32)),
-      (parserName, parser) {
+  tester.addTest('UintBE', const UintBE(16, 0x30), (parserName, parser) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
+      inputAsCode: (input) =>
+          'Uint8List.fromList([${List.generate(input.lengthInBytes, input.getUint8).join(', ')}]).buffer.asByteData()',
+      inputAsString: (input) =>
+          '[${List.generate(input.lengthInBytes, input.getUint8).join(', ')}',
       output: buffer,
       parser: parser,
       parserName: parserName,
     );
+
     t1.testSuccess(
-      input: '123',
-      result: 0x32,
+      input: Uint8List.fromList([0, 0x30, 0, 0x30]).buffer.asByteData(),
+      result: 0x30,
       pos: 2,
     );
     t1.testFailure(
-      input: '',
+      input: Uint8List.fromList([]).buffer.asByteData(),
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      input: '1',
-      failPos: 1,
-      pos: 0,
-      errors: [errorUnexpectedEof],
-    );
-    t1.testFailure(
-      input: '2',
-      failPos: 0,
-      pos: 0,
-      errors: [errorExpectedChar],
-    );
+        input: Uint8List.fromList([0, 0x31]).buffer.asByteData(),
+        failPos: 0,
+        pos: 0,
+        errors: [
+          errorExpectedInt
+        ],
+        errorTests: [
+          (
+            actual: Expr('({{0}}[0] as $errorExpectedInt).value'),
+            expected: Expr('0x30'),
+            reason: '$errorExpectedInt.value',
+          )
+        ]);
     return buffer.toString();
   });
 
   await fastBuild(
     context: context,
     parsers: [...tester.parsers],
-    filename: 'example/parser_test.dart',
+    filename: 'example/binary_parser_test.dart',
     addErrorMessageCode: false,
     footer: _footer,
     header: _header + tester.generate(),

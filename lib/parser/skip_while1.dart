@@ -8,10 +8,10 @@ class Skip16While1 extends ParserBuilder<String, Object?> {
   const Skip16While1(this.predicate);
 
   static const _template = '''
-final source = state.source;
+final input = state.input;
 final start = state.pos;
-while (state.pos < source.length) {
-  final c = source.runeAt(state.pos);
+while (state.pos < input.length) {
+  final c = input.runeAt(state.pos);
   final v = {{predicate}};
   if (!v) {
     break;
@@ -20,7 +20,7 @@ while (state.pos < source.length) {
 }
 return state.pos != start ?
     const Result(null)
-    : state.pos != source.length ?
+    : state.pos != input.length ?
         state.fail(const ErrorUnexpectedChar())
        : state.fail(const ErrorUnexpectedEof());''';
 

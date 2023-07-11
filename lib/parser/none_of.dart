@@ -3,9 +3,9 @@ import '../parser_builder.dart';
 
 class NoneOf extends ParserBuilder<String, int> {
   static const _template16 = '''
-final source = state.source;
-if (pos < source.length) {
-  final c = source.codeUnitAt(state);
+final input = state.input;
+if (pos < input.length) {
+  final c = input.codeUnitAt(state);
   const chars = {{chars}};
   for (var i = 0; i < {{length}}; i++) {
     final char = chars[i];
@@ -19,9 +19,9 @@ if (pos < source.length) {
 return state.fail(const ErrorUnexpectedEof());''';
 
   static const _template32 = '''
-final source = state.source;
-if (pos < source.length) {
-  final c = source.runeAt(state);
+final input = state.input;
+if (pos < input.length) {
+  final c = input.runeAt(state);
   const chars = {{chars}};
   for (var i = 0; i < {{length}}; i++) {
     final char = chars[i];

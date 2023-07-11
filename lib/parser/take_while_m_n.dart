@@ -5,11 +5,11 @@ import '../parser_builder.dart';
 
 class TakeWhileMN extends ParserBuilder<String, String> {
   static const _template = '''
-final source = state.source;
+final input = state.input;
 final pos = state.pos;
 var count = 0;
-while (count < {{n}} && state.pos < source.length) {
-  final c = source.runeAt(state.pos);
+while (count < {{n}} && state.pos < input.length) {
+  final c = input.runeAt(state.pos);
   final ok = {{predicate}};
   if (!ok) {
     break;
@@ -19,21 +19,21 @@ while (count < {{n}} && state.pos < source.length) {
 }
 if (count >= {{m}}) {
   return state.pos != pos ?
-      Result(source.substring(pos, state.pos))
+      Result(input.substring(pos, state.pos))
       : const Result('');
 }
 final end = state.pos;
 state.pos = pos;
-return end < source.length ?
+return end < input.length ?
     state.failAt(end, const ErrorUnexpectedChar())
     : state.failAt(end, const ErrorUnexpectedEof());''';
 
   static const _template0 = '''
-final source = state.source;
+final input = state.input;
 final pos = state.pos;
 var count = 0;
-while (count < {{n}} && state.pos < source.length) {
-  final c = source.runeAt(state.pos);
+while (count < {{n}} && state.pos < input.length) {
+  final c = input.runeAt(state.pos);
   final ok = {{predicate}};
   if (!ok) {
     break;
@@ -42,7 +42,7 @@ while (count < {{n}} && state.pos < source.length) {
   count++;
 }
 return state.pos != pos ?
-    Result(source.substring(pos, state.pos))
+    Result(input.substring(pos, state.pos))
     : const Result('');''';
 
   final int m;

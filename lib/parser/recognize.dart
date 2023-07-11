@@ -7,7 +7,7 @@ final pos = state.pos;
 final r1 = {{p1}}(state);
 if (r1 != null) {
   return state.pos != pos ?
-      Result(state.source.substring(pos, state.pos))
+      Result(state.input.substring(pos, state.pos))
       : const Result('');
 }
 return null;''';

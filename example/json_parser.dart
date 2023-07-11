@@ -3,20 +3,20 @@ void main() {
   print(r);
 }
 
-Object? parse(String source) {
-  final state = State(source);
+Object? parse(String input) {
+  final state = State(input);
   final result = json(state);
   if (result == null) {
-    final message = _errorMessage(source, state.failPos, state.errors);
+    final message = _errorMessage(input, state.failPos, state.errors);
     throw message;
   }
   return result.value;
 }
 
 Result<Object?>? _ws(State<String> state) {
-  final source = state.source;
-  while (state.pos < source.length) {
-    final c = source.codeUnitAt(state.pos);
+  final input = state.input;
+  while (state.pos < input.length) {
+    final c = input.codeUnitAt(state.pos);
     final v = c == 9 || c == 10 || c == 13 || c == 32;
     if (!v) {
       break;
@@ -28,8 +28,8 @@ Result<Object?>? _ws(State<String> state) {
 
 Result<String>? _p$1(State<String> state) {
   const tag = '{';
-  if (state.pos < state.source.length &&
-      state.source.codeUnitAt(state.pos) == 123) {
+  if (state.pos < state.input.length &&
+      state.input.codeUnitAt(state.pos) == 123) {
     state.pos++;
     return const Result(tag);
   }
@@ -51,8 +51,8 @@ Result<String>? _openBrace(State<String> state) {
 
 Result<String>? _p$3(State<String> state) {
   const tag = '"';
-  if (state.pos < state.source.length &&
-      state.source.codeUnitAt(state.pos) == 34) {
+  if (state.pos < state.input.length &&
+      state.input.codeUnitAt(state.pos) == 34) {
     state.pos++;
     return const Result(tag);
   }
@@ -61,9 +61,9 @@ Result<String>? _p$3(State<String> state) {
 
 Result<String>? _escapeChar(State<String> state) {
   final pos = state.pos;
-  final source = state.source;
-  if (pos < source.length) {
-    final c = source.codeUnitAt(pos);
+  final input = state.input;
+  if (pos < input.length) {
+    final c = input.codeUnitAt(pos);
     if (c == 34) {
       state.pos += 1;
       return const Result('"');
@@ -96,8 +96,8 @@ Result<String>? _escapeChar(State<String> state) {
 
 Result<String>? _p$5(State<String> state) {
   const tag = 'u';
-  if (state.pos < state.source.length &&
-      state.source.codeUnitAt(state.pos) == 117) {
+  if (state.pos < state.input.length &&
+      state.input.codeUnitAt(state.pos) == 117) {
     state.pos++;
     return const Result(tag);
   }
@@ -105,11 +105,11 @@ Result<String>? _p$5(State<String> state) {
 }
 
 Result<String>? _p$6(State<String> state) {
-  final source = state.source;
+  final input = state.input;
   final pos = state.pos;
   var count = 0;
-  while (count < 4 && state.pos < source.length) {
-    final c = source.codeUnitAt(state.pos);
+  while (count < 4 && state.pos < input.length) {
+    final c = input.codeUnitAt(state.pos);
     final ok =
         (c >= 48 && c <= 57) || (c >= 65 && c <= 70) || (c >= 97 && c <= 102);
     if (!ok) {
@@ -120,12 +120,12 @@ Result<String>? _p$6(State<String> state) {
   }
   if (count >= 4) {
     return state.pos != pos
-        ? Result(source.substring(pos, state.pos))
+        ? Result(input.substring(pos, state.pos))
         : const Result('');
   }
   final end = state.pos;
   state.pos = pos;
-  return end < source.length
+  return end < input.length
       ? state.failAt(end, const ErrorUnexpectedChar())
       : state.failAt(end, const ErrorUnexpectedEof());
 }
@@ -185,14 +185,14 @@ Result<String>? _p$4(State<String> state) {
 }
 
 Result<String>? _stringChars(State<String> state) {
-  final source = state.source;
+  final input = state.input;
   final list = <String>[];
   var str = '';
-  while (state.pos < source.length) {
+  while (state.pos < input.length) {
     final pos = state.pos;
     var c = 0;
-    while (state.pos < source.length) {
-      c = source.runeAt(state.pos);
+    while (state.pos < input.length) {
+      c = input.runeAt(state.pos);
       final ok = c <= 91
           ? c <= 33
               ? c >= 32
@@ -203,7 +203,7 @@ Result<String>? _stringChars(State<String> state) {
       }
       state.pos += c < 0xffff ? 1 : 2;
     }
-    str = state.pos != pos ? source.substring(pos, state.pos) : '';
+    str = state.pos != pos ? input.substring(pos, state.pos) : '';
     if (str != '' && list.isNotEmpty) {
       list.add(str);
     }
@@ -259,8 +259,8 @@ Result<String>? _string(State<String> state) {
 
 Result<String>? _p$8(State<String> state) {
   const tag = ':';
-  if (state.pos < state.source.length &&
-      state.source.codeUnitAt(state.pos) == 58) {
+  if (state.pos < state.input.length &&
+      state.input.codeUnitAt(state.pos) == 58) {
     state.pos++;
     return const Result(tag);
   }
@@ -307,8 +307,8 @@ Result<MapEntry<String, Object?>>? _keyValue(State<String> state) {
 
 Result<String>? _p$9(State<String> state) {
   const tag = ',';
-  if (state.pos < state.source.length &&
-      state.source.codeUnitAt(state.pos) == 44) {
+  if (state.pos < state.input.length &&
+      state.input.codeUnitAt(state.pos) == 44) {
     state.pos++;
     return const Result(tag);
   }
@@ -349,8 +349,8 @@ Result<List<MapEntry<String, Object?>>>? _keyValues(State<String> state) {
 
 Result<String>? _p$10(State<String> state) {
   const tag = '}';
-  if (state.pos < state.source.length &&
-      state.source.codeUnitAt(state.pos) == 125) {
+  if (state.pos < state.input.length &&
+      state.input.codeUnitAt(state.pos) == 125) {
     state.pos++;
     return const Result(tag);
   }
@@ -398,8 +398,8 @@ Result<Map<String, Object?>>? _object(State<String> state) {
 
 Result<String>? _p$11(State<String> state) {
   const tag = '[';
-  if (state.pos < state.source.length &&
-      state.source.codeUnitAt(state.pos) == 91) {
+  if (state.pos < state.input.length &&
+      state.input.codeUnitAt(state.pos) == 91) {
     state.pos++;
     return const Result(tag);
   }
@@ -440,8 +440,8 @@ Result<List<Object?>>? _values(State<String> state) {
 
 Result<String>? _p$13(State<String> state) {
   const tag = ']';
-  if (state.pos < state.source.length &&
-      state.source.codeUnitAt(state.pos) == 93) {
+  if (state.pos < state.input.length &&
+      state.input.codeUnitAt(state.pos) == 93) {
     state.pos++;
     return const Result(tag);
   }
@@ -479,8 +479,8 @@ Result<List<Object?>>? _array(State<String> state) {
 
 Result<String>? _p$21(State<String> state) {
   const tag = '-';
-  if (state.pos < state.source.length &&
-      state.source.codeUnitAt(state.pos) == 45) {
+  if (state.pos < state.input.length &&
+      state.input.codeUnitAt(state.pos) == 45) {
     state.pos++;
     return const Result(tag);
   }
@@ -497,8 +497,8 @@ Result<String?>? _minus(State<String> state) {
 
 Result<String>? _p$22(State<String> state) {
   const tag = '0';
-  if (state.pos < state.source.length &&
-      state.source.codeUnitAt(state.pos) == 48) {
+  if (state.pos < state.input.length &&
+      state.input.codeUnitAt(state.pos) == 48) {
     state.pos++;
     return const Result(tag);
   }
@@ -506,8 +506,8 @@ Result<String>? _p$22(State<String> state) {
 }
 
 Result<Object?>? _p$24(State<String> state) {
-  if (state.pos < state.source.length) {
-    final c = state.source.codeUnitAt(state.pos);
+  if (state.pos < state.input.length) {
+    final c = state.input.codeUnitAt(state.pos);
     final ok = c >= 49 && c <= 57;
     if (ok) {
       state.pos++;
@@ -519,9 +519,9 @@ Result<Object?>? _p$24(State<String> state) {
 }
 
 Result<Object?>? _digit0(State<String> state) {
-  final source = state.source;
-  while (state.pos < source.length) {
-    final c = source.codeUnitAt(state.pos);
+  final input = state.input;
+  while (state.pos < input.length) {
+    final c = input.codeUnitAt(state.pos);
     final v = c >= 48 && c <= 57;
     if (!v) {
       break;
@@ -559,8 +559,8 @@ Result<Object?>? _integer(State<String> state) {
 
 Result<String>? _p$26(State<String> state) {
   const tag = '.';
-  if (state.pos < state.source.length &&
-      state.source.codeUnitAt(state.pos) == 46) {
+  if (state.pos < state.input.length &&
+      state.input.codeUnitAt(state.pos) == 46) {
     state.pos++;
     return const Result(tag);
   }
@@ -568,10 +568,10 @@ Result<String>? _p$26(State<String> state) {
 }
 
 Result<Object?>? _digit1(State<String> state) {
-  final source = state.source;
+  final input = state.input;
   final start = state.pos;
-  while (state.pos < source.length) {
-    final c = source.codeUnitAt(state.pos);
+  while (state.pos < input.length) {
+    final c = input.codeUnitAt(state.pos);
     final v = c >= 48 && c <= 57;
     if (!v) {
       break;
@@ -580,7 +580,7 @@ Result<Object?>? _digit1(State<String> state) {
   }
   return state.pos != start
       ? const Result(null)
-      : state.pos != source.length
+      : state.pos != input.length
           ? state.fail(const ErrorUnexpectedChar())
           : state.fail(const ErrorUnexpectedEof());
 }
@@ -608,9 +608,9 @@ Result<Object?>? _frac(State<String> state) {
 
 Result<String>? _p$28(State<String> state) {
   final pos = state.pos;
-  final source = state.source;
-  if (pos < source.length) {
-    final c = source.codeUnitAt(pos);
+  final input = state.input;
+  if (pos < input.length) {
+    final c = input.codeUnitAt(pos);
     if (c == 101) {
       state.pos += 1;
       return const Result('e');
@@ -624,9 +624,9 @@ Result<String>? _p$28(State<String> state) {
 
 Result<String>? _p$30(State<String> state) {
   final pos = state.pos;
-  final source = state.source;
-  if (pos < source.length) {
-    final c = source.codeUnitAt(pos);
+  final input = state.input;
+  if (pos < input.length) {
+    final c = input.codeUnitAt(pos);
     if (c == 43) {
       state.pos += 1;
       return const Result('+');
@@ -694,7 +694,7 @@ Result<String>? _p$19(State<String> state) {
   final r1 = _p$20(state);
   if (r1 != null) {
     return state.pos != pos
-        ? Result(state.source.substring(pos, state.pos))
+        ? Result(state.input.substring(pos, state.pos))
         : const Result('');
   }
   return null;
@@ -724,7 +724,7 @@ Result<num>? _number(State<String> state) {
 
 Result<String>? _p$32(State<String> state) {
   const tag = 'true';
-  if (state.source.startsWith(tag, state.pos)) {
+  if (state.input.startsWith(tag, state.pos)) {
     state.pos += 4;
     return const Result(tag);
   }
@@ -754,7 +754,7 @@ Result<bool>? _true(State<String> state) {
 
 Result<String>? _p$34(State<String> state) {
   const tag = 'false';
-  if (state.source.startsWith(tag, state.pos)) {
+  if (state.input.startsWith(tag, state.pos)) {
     state.pos += 5;
     return const Result(tag);
   }
@@ -784,7 +784,7 @@ Result<bool>? _false(State<String> state) {
 
 Result<String>? _p$36(State<String> state) {
   const tag = 'null';
-  if (state.source.startsWith(tag, state.pos)) {
+  if (state.input.startsWith(tag, state.pos)) {
     state.pos += 4;
     return const Result(tag);
   }
@@ -846,7 +846,7 @@ Result<Object?>? _value(State<String> state) {
 }
 
 Result<Object?>? _p$37(State<String> state) {
-  if (state.pos >= state.source.length) {
+  if (state.pos >= state.input.length) {
     return const Result(null);
   }
   return state.fail(const ErrorExpectedEof());
@@ -890,7 +890,7 @@ int _toHexValue(String s) {
   return r;
 }
 
-String _errorMessage(String source, int offset, List<ParseError> errors) {
+String _errorMessage(String input, int offset, List<ParseError> errors) {
   final sb = StringBuffer();
   final errorList = errors.toList();
   final expectedTags = errorList.whereType<ErrorExpectedTags>().toList();
@@ -905,7 +905,7 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
   }
   final errorInfoList = errorList
       .map((e) => (
-            message: e.getMessage(offset: offset, source: source),
+            message: e.getMessage(offset: offset, input: input),
             start: offset - e.length,
           ))
       .toSet()
@@ -923,11 +923,11 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
     final end = max(errorInfo.start, offset);
     var row = 1;
     var lineStart = 0, next = 0, pos = 0;
-    while (pos < source.length) {
-      final c = source.codeUnitAt(pos++);
+    while (pos < input.length) {
+      final c = input.codeUnitAt(pos++);
       if (c == 0xa || c == 0xd) {
         next = c == 0xa ? 0xd : 0xa;
-        if (pos < source.length && source.codeUnitAt(pos) == next) {
+        if (pos < input.length && input.codeUnitAt(pos) == next) {
           pos++;
         }
         if (pos - 1 >= start) {
@@ -937,16 +937,16 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
         lineStart = pos;
       }
     }
-    final sourceLen = source.length;
-    final lineLimit = min(80, sourceLen);
+    final inputLen = input.length;
+    final lineLimit = min(80, inputLen);
     final start2 = start;
     final end2 = min(start2 + lineLimit, end);
     final errorLen = end2 - start;
     final extraLen = lineLimit - errorLen;
-    final rightLen = min(sourceLen - end2, extraLen - (extraLen >> 1));
+    final rightLen = min(inputLen - end2, extraLen - (extraLen >> 1));
     final leftLen = min(start, max(0, lineLimit - errorLen - rightLen));
     final list = <int>[];
-    final iterator = RuneIterator.at(source, start2);
+    final iterator = RuneIterator.at(input, start2);
     for (var i = 0; i < leftLen; i++) {
       if (!iterator.movePrevious()) {
         break;
@@ -955,9 +955,9 @@ String _errorMessage(String source, int offset, List<ParseError> errors) {
     }
     final column = start - lineStart + 1;
     final left = String.fromCharCodes(list.reversed);
-    final end3 = min(sourceLen, start2 + (lineLimit - leftLen));
+    final end3 = min(inputLen, start2 + (lineLimit - leftLen));
     final indicatorLen = max(1, errorLen);
-    final right = source.substring(start2, end3);
+    final right = input.substring(start2, end3);
     var text = left + right;
     text = text.replaceAll('\n', ' ');
     text = text.replaceAll('\r', ' ');
@@ -976,10 +976,10 @@ class ErrorExpectedChar extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
-    if (source is String) {
+    if (input is String) {
       final value = escape(char);
       return 'Expected character $value';
     } else {
@@ -993,10 +993,31 @@ class ErrorExpectedEof extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     return 'Expected end of file';
+  }
+}
+
+class ErrorExpectedInt extends ParseError {
+  final int size;
+
+  final int value;
+
+  const ErrorExpectedInt(this.size, this.value);
+
+  @override
+  String getMessage({
+    required Object input,
+    required int offset,
+  }) {
+    var string = value.toRadixString(16);
+    if (const [8, 16, 32, 64].contains(size)) {
+      string = string.padLeft(string.length - size >> 2, '0');
+    }
+
+    return 'Expected 0x$string';
   }
 }
 
@@ -1007,8 +1028,8 @@ class ErrorExpectedTags extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     final value = tags.map(escape).join(', ');
     return 'Expected $value';
@@ -1025,8 +1046,8 @@ class ErrorMessage extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     return message;
   }
@@ -1037,11 +1058,11 @@ class ErrorUnexpectedChar extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
-    if (source is String) {
-      final char = source.runeAt(offset);
+    if (input is String) {
+      final char = input.runeAt(offset);
       final value = escape(char);
       return 'Unexpected character $value';
     } else {
@@ -1055,8 +1076,8 @@ class ErrorUnexpectedEof extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     return 'Unexpected end of file';
   }
@@ -1070,8 +1091,8 @@ class ErrorUnexpectedInput extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     return 'Unexpected input';
   }
@@ -1082,8 +1103,8 @@ class ErrorUnknown extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     return 'Unknown error';
   }
@@ -1125,8 +1146,8 @@ abstract class ParseError {
   }
 
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   });
 }
 
@@ -1152,11 +1173,11 @@ class State<T> {
 
   int failPos = 0;
 
+  final T input;
+
   int pos = 0;
 
-  final T source;
-
-  State(this.source);
+  State(this.input);
 
   @pragma('vm:prefer-inline')
   Result<R>? fail<R>(ParseError error) {
@@ -1184,8 +1205,8 @@ class State<T> {
 
   @override
   String toString() {
-    if (source is String) {
-      final s = source as String;
+    if (input is String) {
+      final s = input as String;
       if (pos >= s.length) {
         return '$pos:';
       }

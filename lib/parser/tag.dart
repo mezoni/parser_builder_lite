@@ -4,7 +4,7 @@ import '../parser_builder.dart';
 class Tag extends ParserBuilder<String, String> {
   static const _template16 = '''
 const tag = {{tag}};
-if (state.pos < state.source.length && state.source.codeUnitAt(state.pos) == {{char}}) {
+if (state.pos < state.input.length && state.input.codeUnitAt(state.pos) == {{char}}) {
   state.pos++;
   return const Result(tag);
 }
@@ -12,7 +12,7 @@ return state.fail( const ErrorExpectedTags([tag]));''';
 
   static const _template32 = '''
 const tag = {{tag}};
-if (state.source.startsWith(tag, state.pos)) {
+if (state.input.startsWith(tag, state.pos)) {
   state.pos += {{length}};
   return const Result(tag);
 }

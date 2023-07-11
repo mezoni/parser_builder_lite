@@ -4,8 +4,8 @@ import '../parser_builder.dart';
 
 class SkipSatisfy extends ParserBuilder<String, Object?> {
   static const _template = '''
-if (state.pos < state.source.length) {
-  final c = state.source.runeAt(state.pos);
+if (state.pos < state.input.length) {
+  final c = state.input.runeAt(state.pos);
   final ok = {{predicate}};
   if (ok) {
     state.pos += c <= 0xffff ? 1 : 2;

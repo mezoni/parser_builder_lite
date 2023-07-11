@@ -9,6 +9,8 @@ const errorExpectedChar = 'ErrorExpectedChar';
 
 const errorExpectedEof = 'ErrorExpectedEof';
 
+const errorExpectedInt = 'ErrorExpectedInt';
+
 const errorExpectedTags = 'ErrorExpectedTags';
 
 const errorMessage = 'ErrorMessage';
@@ -24,6 +26,10 @@ class ParserTest<I, O> {
 
   final BuildContext context;
 
+  final String Function(I input)? inputAsCode;
+
+  final String Function(I input)? inputAsString;
+
   final StringSink output;
 
   final ParserBuilder<I, O> parser;
@@ -33,17 +39,19 @@ class ParserTest<I, O> {
   ParserTest({
     required this.context,
     required this.allocator,
+    this.inputAsCode,
+    this.inputAsString,
     required this.output,
     required this.parser,
     required this.parserName,
   });
 
   String getReason({
-    required String source,
+    required I input,
     required String subject,
   }) {
-    final sourceCode = getAsCode(source);
-    final message = getAsCode("Testing '$subject' failed, source: $sourceCode");
+    final inputString = _inputAsString(input);
+    final message = getAsCode("Testing '$subject' failed, input: $inputString");
     return message;
   }
 
@@ -57,27 +65,27 @@ class ParserTest<I, O> {
         errorTests,
     required List<String> errors,
     required int failPos,
+    required I input,
     required int pos,
-    required String source,
   }) {
     final resultVar = allocator.allocate('result');
     final stateVar = allocator.allocate('state');
     final errorsCountCode = getAsCode(errors.length);
-    final sourceCode = getAsCode(source);
-    output.writeln('final $stateVar = State($sourceCode);');
+    final inputCode = _inputAsCode(input);
+    output.writeln('final $stateVar = State($inputCode);');
     output.writeln('final $resultVar = $parserName($stateVar);');
     output.writeln(
-        'expect($resultVar == null, true, reason: ${getReason(source: source, subject: 'result == null')});');
+        'expect($resultVar == null, true, reason: ${getReason(input: input, subject: 'result == null')});');
     output.writeln(
-        'expect($stateVar.pos, $pos, reason: ${getReason(source: source, subject: 'state.pos')});');
+        'expect($stateVar.pos, $pos, reason: ${getReason(input: input, subject: 'state.pos')});');
     output.writeln(
-        'expect($stateVar.failPos, $failPos, reason: ${getReason(source: source, subject: 'state.failPos')});');
+        'expect($stateVar.failPos, $failPos, reason: ${getReason(input: input, subject: 'state.failPos')});');
     output.writeln(
-        'expect($stateVar.errors.length, $errorsCountCode, reason: ${getReason(source: source, subject: 'state.errors.length')});');
+        'expect($stateVar.errors.length, $errorsCountCode, reason: ${getReason(input: input, subject: 'state.errors.length')});');
     for (var i = 0; i < errors.length; i++) {
       final error = errors[i];
       output.writeln(
-          'expect($stateVar.errors[$i], isA<$error>(), reason: ${getReason(source: source, subject: 'state.error')});');
+          'expect($stateVar.errors[$i], isA<$error>(), reason: ${getReason(input: input, subject: 'state.error')});');
     }
     if (errorTests != null) {
       for (var resultError in errorTests) {
@@ -87,27 +95,27 @@ class ParserTest<I, O> {
             resultError.expected.calculate(context, ['$stateVar.errors']);
         final reason = resultError.reason;
         output.writeln(
-            'expect($actual, $expected, reason: ${getReason(source: source, subject: reason)});');
+            'expect($actual, $expected, reason: ${getReason(input: input, subject: reason)});');
       }
     }
   }
 
   void testSuccess({
+    required I input,
     required int pos,
     O? result,
     List<({String reason, Expr<Object?> actual, Expr<Object?> expected})>?
         resultTests,
-    required String source,
   }) {
     final resultVar = allocator.allocate('result');
     final resultValue = allocator.allocate('value');
     final stateVar = allocator.allocate('state');
     final resultCode = getAsCode(result);
-    final sourceCode = getAsCode(source);
-    output.writeln('final $stateVar = State($sourceCode);');
+    final inputCode = _inputAsCode(input);
+    output.writeln('final $stateVar = State($inputCode);');
     output.writeln('final $resultVar = $parserName($stateVar);');
     output.writeln(
-        'expect($resultVar != null, true, reason: ${getReason(source: source, subject: 'result != null')});');
+        'expect($resultVar != null, true, reason: ${getReason(input: input, subject: 'result != null')});');
     output.writeln('final $resultValue = $resultVar!.value;');
     if (resultTests != null) {
       for (var resultTest in resultTests) {
@@ -115,15 +123,31 @@ class ParserTest<I, O> {
         final expected = resultTest.expected.calculate(context, [resultValue]);
         final reason = resultTest.reason;
         output.writeln(
-            'expect($actual, $expected, reason: ${getReason(source: source, subject: reason)});');
+            'expect($actual, $expected, reason: ${getReason(input: input, subject: reason)});');
       }
     } else {
       output.writeln(
-          'expect($resultValue, $resultCode, reason: ${getReason(source: source, subject: 'result.value')});');
+          'expect($resultValue, $resultCode, reason: ${getReason(input: input, subject: 'result.value')});');
     }
 
     output.writeln(
-        'expect($stateVar.pos, $pos, reason: ${getReason(source: source, subject: 'state.pos')});');
+        'expect($stateVar.pos, $pos, reason: ${getReason(input: input, subject: 'state.pos')});');
+  }
+
+  String _inputAsCode(I input) {
+    if (inputAsCode != null) {
+      return inputAsCode!(input);
+    }
+
+    return getAsCode(input);
+  }
+
+  String _inputAsString(I input) {
+    if (inputAsString != null) {
+      return inputAsString!(input);
+    }
+
+    return input.toString();
   }
 }
 

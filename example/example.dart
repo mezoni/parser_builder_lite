@@ -72,11 +72,11 @@ void main() {
   final r = parse( '{"rocket": "🚀 flies to the stars"}');
   print(r);
 }
-Object? parse(String source) {
-  final state = State(source);
+Object? parse(String input) {
+  final state = State(input);
   final result = json(state);
   if (result == null) {
-    final message = _errorMessage(source, state.failPos, state.errors);
+    final message = _errorMessage(input, state.failPos, state.errors);
     throw message;
   }
   return result.value;

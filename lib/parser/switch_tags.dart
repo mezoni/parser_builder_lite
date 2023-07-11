@@ -4,9 +4,9 @@ import '../parser_builder.dart';
 class SwitchTags<O> extends ParserBuilder<String, O> {
   static const _template = '''
 final pos = state.pos;
-final source = state.source;
-if (pos < source.length) {
-  final c = source.codeUnitAt(pos);
+final input = state.input;
+if (pos < input.length) {
+  final c = input.codeUnitAt(pos);
   {{tests}}
 }
 return state.fail({{error}});''';
@@ -52,7 +52,7 @@ return state.fail({{error}});''';
         final length = tag.length;
         final isLong = length > 1;
         final branch = 'state.pos += $length;\nreturn $result;';
-        final test = 'source.startsWith($escaped, pos)';
+        final test = 'input.startsWith($escaped, pos)';
         final condition = isLong ? test : '';
         tests[condition] = branch;
       }

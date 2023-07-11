@@ -8,9 +8,9 @@ class Skip16While extends ParserBuilder<String, Object?> {
   const Skip16While(this.predicate);
 
   static const _template = '''
-final source = state.source;
-while (state.pos < source.length) {
-  final c = source.codeUnitAt(state.pos);
+final input = state.input;
+while (state.pos < input.length) {
+  final c = input.codeUnitAt(state.pos);
   final v = {{predicate}};
   if (!v) {
     break;

@@ -1,4 +1,9 @@
-## 0.5.1
+## 0.6.0
+
+- Breaking changes. The `State.source` field has been renamed to `State.input`.
+- Added initial support for parsing byte data (via `ByteData`).
+
+## 0.5.2
 
 - A fast and efficient universal parser for string characters has been implemented.
 - Changes have been made to the JSON parser example. At the moment it is quite fast.

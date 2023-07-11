@@ -4,8 +4,8 @@ import '../parser_builder.dart';
 
 class Satisfy16 extends ParserBuilder<String, int> {
   static const _template = '''
-if (state.pos < state.source.length) {
-  final c = state.source.codeUnitAt(state.pos);
+if (state.pos < state.input.length) {
+  final c = state.input.codeUnitAt(state.pos);
   final ok = {{predicate}};
   if (ok) {
     state.pos++;

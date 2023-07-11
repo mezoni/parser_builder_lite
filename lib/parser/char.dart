@@ -3,8 +3,8 @@ import '../parser_builder.dart';
 
 class Char extends ParserBuilder<String, int> {
   static const _template16 = '''
-if (state.pos < state.source.length) {
-  final c = state.source.codeUnitAt(state.pos);
+if (state.pos < state.input.length) {
+  final c = state.input.codeUnitAt(state.pos);
   if (c == {{char}}) {
     state.pos++;
     return const Result({{char}});
@@ -14,8 +14,8 @@ if (state.pos < state.source.length) {
 return state.fail(const ErrorUnexpectedEof());''';
 
   static const _template32 = '''
-if (state.pos < state.source.length) {
-  final c = state.source.runeAt(state.pos);
+if (state.pos < state.input.length) {
+  final c = state.input.runeAt(state.pos);
   if (c == {{char}}) {
     state.pos += c <= 0xffff ? 1 : 2;
     return const Result({{char}});

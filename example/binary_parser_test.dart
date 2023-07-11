@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 // ignore_for_file: inference_failure_on_collection_literal
 // ignore_for_file: unnecessary_cast
+import 'dart:typed_data';
 
 import 'package:test/test.dart' hide escape;
 
@@ -11,107 +12,99 @@ void main() {
 void _test() {
   // Many
   _test_Many$0();
-  // Preceded
-  _test_Preceded$0();
+  // UintBE
+  _test_UintBE$0();
 }
 
 void _test_Many$0() {
   // Many
   test('Many', () {
-    final state$0 = State('1112');
+    final state$0 =
+        State(Uint8List.fromList([0, 1, 0, 1, 0, 2]).buffer.asByteData());
     final result$0 = _Many$0(state$0);
     expect(result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'1112\'');
+        reason: 'Testing \'result != null\' failed, input: [0, 1, 0, 1, 0, 2');
     final value$0 = result$0!.value;
-    expect(value$0, [49, 49, 49],
-        reason: 'Testing \'result.value\' failed, source: \'1112\'');
-    expect(state$0.pos, 3,
-        reason: 'Testing \'state.pos\' failed, source: \'1112\'');
-    final state$1 = State('');
+    expect(value$0, [1, 1],
+        reason: 'Testing \'result.value\' failed, input: [0, 1, 0, 1, 0, 2');
+    expect(state$0.pos, 4,
+        reason: 'Testing \'state.pos\' failed, input: [0, 1, 0, 1, 0, 2');
+    final state$1 = State(Uint8List.fromList([]).buffer.asByteData());
     final result$1 = _Many$0(state$1);
     expect(result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'\'');
+        reason: 'Testing \'result != null\' failed, input: [');
     final value$1 = result$1!.value;
-    expect(value$1, [],
-        reason: 'Testing \'result.value\' failed, source: \'\'');
-    expect(state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
-    final state$2 = State('2');
+    expect(value$1, [], reason: 'Testing \'result.value\' failed, input: [');
+    expect(state$1.pos, 0, reason: 'Testing \'state.pos\' failed, input: [');
+    final state$2 =
+        State(Uint8List.fromList([0, 0, 2, 0, 0, 0, 1, 0]).buffer.asByteData());
     final result$2 = _Many$0(state$2);
     expect(result$2 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'2\'');
+        reason:
+            'Testing \'result != null\' failed, input: [0, 0, 2, 0, 0, 0, 1, 0');
     final value$2 = result$2!.value;
     expect(value$2, [],
-        reason: 'Testing \'result.value\' failed, source: \'2\'');
+        reason:
+            'Testing \'result.value\' failed, input: [0, 0, 2, 0, 0, 0, 1, 0');
     expect(state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+        reason: 'Testing \'state.pos\' failed, input: [0, 0, 2, 0, 0, 0, 1, 0');
   });
 }
 
-void _test_Preceded$0() {
-  // Preceded
-  test('Preceded', () {
-    final state$0 = State('123');
-    final result$0 = _Preceded$0(state$0);
+void _test_UintBE$0() {
+  // UintBE
+  test('UintBE', () {
+    final state$0 =
+        State(Uint8List.fromList([0, 48, 0, 48]).buffer.asByteData());
+    final result$0 = _UintBE$0(state$0);
     expect(result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'123\'');
+        reason: 'Testing \'result != null\' failed, input: [0, 48, 0, 48');
     final value$0 = result$0!.value;
-    expect(value$0, 50,
-        reason: 'Testing \'result.value\' failed, source: \'123\'');
+    expect(value$0, 48,
+        reason: 'Testing \'result.value\' failed, input: [0, 48, 0, 48');
     expect(state$0.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'123\'');
-    final state$1 = State('');
-    final result$1 = _Preceded$0(state$1);
+        reason: 'Testing \'state.pos\' failed, input: [0, 48, 0, 48');
+    final state$1 = State(Uint8List.fromList([]).buffer.asByteData());
+    final result$1 = _UintBE$0(state$1);
     expect(result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
-    expect(state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: [');
+    expect(state$1.pos, 0, reason: 'Testing \'state.pos\' failed, input: [');
     expect(state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: [');
     expect(state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: [');
     expect(state$1.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
-    final state$2 = State('1');
-    final result$2 = _Preceded$0(state$2);
+        reason: 'Testing \'state.error\' failed, input: [');
+    final state$2 = State(Uint8List.fromList([0, 49]).buffer.asByteData());
+    final result$2 = _UintBE$0(state$2);
     expect(result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'1\'');
+        reason: 'Testing \'result == null\' failed, input: [0, 49');
     expect(state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'1\'');
-    expect(state$2.failPos, 1,
-        reason: 'Testing \'state.failPos\' failed, source: \'1\'');
+        reason: 'Testing \'state.pos\' failed, input: [0, 49');
+    expect(state$2.failPos, 0,
+        reason: 'Testing \'state.failPos\' failed, input: [0, 49');
     expect(state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'1\'');
-    expect(state$2.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'1\'');
-    final state$3 = State('2');
-    final result$3 = _Preceded$0(state$3);
-    expect(result$3 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'2\'');
-    expect(state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
-    expect(state$3.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'2\'');
-    expect(state$3.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'2\'');
-    expect(state$3.errors[0], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'2\'');
+        reason: 'Testing \'state.errors.length\' failed, input: [0, 49');
+    expect(state$2.errors[0], isA<ErrorExpectedInt>(),
+        reason: 'Testing \'state.error\' failed, input: [0, 49');
+    expect((state$2.errors[0] as ErrorExpectedInt).value, 0x30,
+        reason: 'Testing \'ErrorExpectedInt.value\' failed, input: [0, 49');
   });
 }
 
-Result<int>? _$0(State<String> state) {
-  if (state.pos < state.source.length) {
-    final c = state.source.codeUnitAt(state.pos);
-    if (c == 49) {
-      state.pos++;
-      return const Result(49);
+Result<int>? _$0(State<ByteData> state) {
+  if (state.pos + 2 <= state.input.lengthInBytes) {
+    final v = state.input.getUint16(state.pos);
+    if (v == 1) {
+      state.pos += 2;
+      return const Result(1);
     }
-    return state.fail(const ErrorExpectedChar(49));
+    return state.fail(const ErrorExpectedInt(16, 1));
   }
   return state.fail(const ErrorUnexpectedEof());
 }
 
-Result<List<int>>? _Many$0(State<String> state) {
+Result<List<int>>? _Many$0(State<ByteData> state) {
   final list = <int>[];
   while (true) {
     final r1 = _$0(state);
@@ -123,29 +116,16 @@ Result<List<int>>? _Many$0(State<String> state) {
   return Result(list);
 }
 
-Result<int>? _$2(State<String> state) {
-  if (state.pos < state.source.length) {
-    final c = state.source.codeUnitAt(state.pos);
-    if (c == 50) {
-      state.pos++;
-      return const Result(50);
+Result<int>? _UintBE$0(State<ByteData> state) {
+  if (state.pos + 2 <= state.input.lengthInBytes) {
+    final v = state.input.getUint16(state.pos);
+    if (v == 48) {
+      state.pos += 2;
+      return const Result(48);
     }
-    return state.fail(const ErrorExpectedChar(50));
+    return state.fail(const ErrorExpectedInt(16, 48));
   }
   return state.fail(const ErrorUnexpectedEof());
-}
-
-Result<int>? _Preceded$0(State<String> state) {
-  final pos = state.pos;
-  final r1 = _$0(state);
-  if (r1 != null) {
-    final r2 = _$2(state);
-    if (r2 != null) {
-      return r2;
-    }
-  }
-  state.pos = pos;
-  return null;
 }
 
 class ErrorExpectedChar extends ParseError {
@@ -155,10 +135,10 @@ class ErrorExpectedChar extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
-    if (source is String) {
+    if (input is String) {
       final value = escape(char);
       return 'Expected character $value';
     } else {
@@ -172,10 +152,33 @@ class ErrorExpectedEof extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     return 'Expected end of file';
+  }
+}
+
+class ErrorExpectedInt extends ParseError {
+  final int size;
+
+  final int value;
+
+  const ErrorExpectedInt(this.size, this.value);
+
+  @override
+  String getMessage({
+    required Object input,
+    required int offset,
+  }) {
+    var string = value.toRadixString(16);
+    if (const [8, 16, 32, 64].contains(size)) {
+      string = string.padLeft(size >> 2, '0');
+    }
+    if (value >= 0 && value <= 0x10ffff) {
+      string = '$string (${escape(value)})';
+    }
+    return 'Expected 0x$string';
   }
 }
 
@@ -186,8 +189,8 @@ class ErrorExpectedTags extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     final value = tags.map(escape).join(', ');
     return 'Expected $value';
@@ -204,8 +207,8 @@ class ErrorMessage extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     return message;
   }
@@ -216,11 +219,11 @@ class ErrorUnexpectedChar extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
-    if (source is String) {
-      final char = source.runeAt(offset);
+    if (input is String) {
+      final char = input.runeAt(offset);
       final value = escape(char);
       return 'Unexpected character $value';
     } else {
@@ -234,8 +237,8 @@ class ErrorUnexpectedEof extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     return 'Unexpected end of file';
   }
@@ -249,8 +252,8 @@ class ErrorUnexpectedInput extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     return 'Unexpected input';
   }
@@ -261,8 +264,8 @@ class ErrorUnknown extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     return 'Unknown error';
   }
@@ -304,8 +307,8 @@ abstract class ParseError {
   }
 
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   });
 }
 
@@ -331,11 +334,11 @@ class State<T> {
 
   int failPos = 0;
 
+  final T input;
+
   int pos = 0;
 
-  final T source;
-
-  State(this.source);
+  State(this.input);
 
   @pragma('vm:prefer-inline')
   Result<R>? fail<R>(ParseError error) {
@@ -363,8 +366,8 @@ class State<T> {
 
   @override
   String toString() {
-    if (source is String) {
-      final s = source as String;
+    if (input is String) {
+      final s = input as String;
       if (pos >= s.length) {
         return '$pos:';
       }

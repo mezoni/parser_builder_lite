@@ -4,10 +4,10 @@ import '../parser_builder.dart';
 
 class Take16While1 extends ParserBuilder<String, String> {
   static const _template = '''
-final source = state.source;
+final input = state.input;
 final start = state.pos;
-while (state.pos < source.length) {
-  final c = source.runeAt(state.pos);
+while (state.pos < input.length) {
+  final c = input.runeAt(state.pos);
   final v = {{predicate}};
   if (!v) {
     break;
@@ -15,9 +15,9 @@ while (state.pos < source.length) {
   state.pos += c <= 0xffff ? 1 : 2;
 }
 if (state.pos != start) {
-  return Result(source.substring(start, state.pos));
+  return Result(input.substring(start, state.pos));
 }
-if (state.pos != source.length) {
+if (state.pos != input.length) {
   return state.fail(const ErrorUnexpectedChar());
 }
 return state.fail(const ErrorUnexpectedEof());''';

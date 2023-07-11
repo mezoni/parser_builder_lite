@@ -3,8 +3,8 @@ import '../parser_builder.dart';
 
 class AnyChar extends ParserBuilder<String, int> {
   static const _template = '''
-if (state.pos < state.source.length) {
-  final c = state.source.runeAt(state.pos);
+if (state.pos < state.input.length) {
+  final c = state.input.runeAt(state.pos);
   state.pos += c <= 0xffff ? 1 : 2;
   return Result(c);
 }

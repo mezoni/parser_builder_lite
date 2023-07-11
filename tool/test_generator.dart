@@ -75,24 +75,24 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '01',
+      input: '01',
       result: 0x30,
       pos: 1,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '1',
+      input: '1',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedChar],
     );
     t1.testFailure(
-      source: '0',
+      input: '0',
       failPos: 1,
       pos: 0,
       errors: [errorUnexpectedEof],
@@ -110,17 +110,17 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '01',
+      input: '01',
       result: 0x30,
       pos: 1,
     );
     t1.testSuccess(
-      source: _rune,
+      input: _rune,
       result: _runeCode,
       pos: 2,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
@@ -138,18 +138,18 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '01',
+      input: '01',
       result: 0x30,
       pos: 1,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: _rune,
+      input: _rune,
       failPos: 0,
       pos: 0,
       errors: [errorExpectedChar],
@@ -167,18 +167,18 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: _rune,
+      input: _rune,
       result: _runeCode,
       pos: 2,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '01',
+      input: '01',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedChar],
@@ -197,23 +197,23 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '01',
+      input: '01',
       result: 0x30,
       pos: 1,
     );
     t1.testSuccess(
-      source: '12',
+      input: '12',
       result: 0x31,
       pos: 1,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof, errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '2',
+      input: '2',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedChar, errorExpectedChar],
@@ -233,28 +233,28 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '01',
+      input: '01',
       result: 0x30,
       pos: 1,
     );
     t1.testSuccess(
-      source: '12',
+      input: '12',
       result: 0x31,
       pos: 1,
     );
     t1.testSuccess(
-      source: '23',
+      input: '23',
       result: 0x32,
       pos: 1,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof, errorUnexpectedEof, errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '3',
+      input: '3',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedChar, errorExpectedChar, errorExpectedChar],
@@ -272,18 +272,18 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '12',
+      input: '12',
       result: 0x31,
       pos: 1,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '2',
+      input: '2',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedChar],
@@ -301,18 +301,18 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '$_rune`',
+      input: '$_rune`',
       result: _runeCode,
       pos: 2,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '2',
+      input: '2',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedChar],
@@ -332,30 +332,30 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '123',
+      input: '123',
       result: 0x32,
       pos: 3,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '1',
+      input: '1',
       failPos: 1,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '12',
+      input: '12',
       failPos: 2,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '2',
+      input: '2',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedChar],
@@ -373,12 +373,12 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '',
+      input: '',
       result: null,
       pos: 0,
     );
     t1.testFailure(
-      source: '1',
+      input: '1',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedEof],
@@ -398,7 +398,7 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '123',
+      input: '123',
       resultTests: [
         (
           actual: Expr('{{0}}'),
@@ -409,7 +409,7 @@ Future<void> _generate() async {
       pos: 2,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedTags],
@@ -422,7 +422,7 @@ Future<void> _generate() async {
       ],
     );
     t1.testFailure(
-      source: '1',
+      input: '1',
       failPos: 1,
       pos: 0,
       errors: [errorUnexpectedEof],
@@ -441,7 +441,7 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '1',
+      input: '1',
       resultTests: [
         (
           actual: Expr('{{0}}'),
@@ -452,13 +452,13 @@ Future<void> _generate() async {
       pos: 1,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: 'a',
+      input: 'a',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedChar],
@@ -478,7 +478,7 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: _rune,
+      input: _rune,
       resultTests: [
         (
           actual: Expr('{{0}}'),
@@ -489,13 +489,13 @@ Future<void> _generate() async {
       pos: 2,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: 'a',
+      input: 'a',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedChar],
@@ -521,17 +521,17 @@ Future<void> _generate() async {
       parser: parser, parserName: parserName,
     );
     t1.testSuccess(
-      source: '123',
+      input: '123',
       result: 6,
       pos: 3,
     );
     t1.testSuccess(
-      source: '',
+      input: '',
       result: 0,
       pos: 0,
     );
     t1.testSuccess(
-      source: '2',
+      input: '2',
       result: 2,
       pos: 1,
     );
@@ -550,17 +550,17 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '1112',
+      input: '1112',
       result: [0x31, 0x31, 0x31],
       pos: 3,
     );
     t1.testSuccess(
-      source: '',
+      input: '',
       result: [],
       pos: 0,
     );
     t1.testSuccess(
-      source: '2',
+      input: '2',
       result: [],
       pos: 0,
     );
@@ -577,18 +577,18 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '1112',
+      input: '1112',
       result: [0x31, 0x31, 0x31],
       pos: 3,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '2',
+      input: '2',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedChar],
@@ -608,17 +608,17 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '1112',
+      input: '1112',
       result: 3,
       pos: 3,
     );
     t1.testSuccess(
-      source: '',
+      input: '',
       result: 0,
       pos: 0,
     );
     t1.testSuccess(
-      source: '2',
+      input: '2',
       result: 0,
       pos: 0,
     );
@@ -636,18 +636,18 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '1112',
+      input: '1112',
       result: 3,
       pos: 3,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '2',
+      input: '2',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedChar],
@@ -666,27 +666,27 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '12',
+      input: '12',
       result: [0x31],
       pos: 1,
     );
     t1.testSuccess(
-      source: '112',
+      input: '112',
       result: [0x31, 0x31],
       pos: 2,
     );
     t1.testSuccess(
-      source: '11112',
+      input: '11112',
       result: [0x31, 0x31, 0x31],
       pos: 3,
     );
     t1.testSuccess(
-      source: '2',
+      input: '2',
       result: [],
       pos: 0,
     );
     t1.testSuccess(
-      source: '',
+      input: '',
       result: [],
       pos: 0,
     );
@@ -704,29 +704,29 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '112',
+      input: '112',
       result: [0x31, 0x31],
       pos: 2,
     );
     t1.testSuccess(
-      source: '11112',
+      input: '11112',
       result: [0x31, 0x31, 0x31],
       pos: 3,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '1',
+      input: '1',
       failPos: 1,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '2',
+      input: '2',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedChar],
@@ -735,48 +735,7 @@ Future<void> _generate() async {
   });
 
   /*
-
-  g.addTest('ManyN (3)', const ManyN(3, Char16(0x31)),
-      (parserName,  parser) {
-    final  buffer = StringBuffer();
-    final t1 = ParserTest(
-      allocator: Allocator(_prefix), context: context,
-      
-      output: buffer,
-      parser: parser, parserName: parserName,
-    );
-    t1.testSuccess(
-      source: '11112',
-      result: [0x31, 0x31, 0x31],
-      pos: 3,
-    );
-    t1.testFailure(
-      source: '',
-      failPos: 0,
-      pos: 0,
-      errors: [errorUnexpectedEof],
-    );
-    t1.testFailure(
-      source: '1',
-      failPos: 1,
-      pos: 0,
-      errors: [errorUnexpectedEof],
-    );
-    t1.testFailure(
-      source: '11',
-      failPos: 2,
-      pos: 0,
-      errors: [errorUnexpectedEof],
-    );
-    t1.testFailure(
-      source: '2',
-      failPos: 0,
-      pos: 0,
-      errors: [errorExpectedChar],
-    );
-    return buffer.toString();
-  });
-
+    
   g.addTest('Many0Till', const Many0Till(Char(0x31), Char(0x32)),
       (parserName,  parser) {
     final  buffer = StringBuffer();
@@ -787,7 +746,7 @@ Future<void> _generate() async {
       parser: parser, parserName: parserName,
     );
     t1.testSuccess(
-      source: '112',
+      input: '112',
       resultTests: [
         ('{{0}}', 'isA<(List<int>, int)>()'),
         (r'_as<(List<int>, int)>({{0}}).$1', 'equals([0x31, 0x31])'),
@@ -796,7 +755,7 @@ Future<void> _generate() async {
       pos: 3,
     );
     t1.testSuccess(
-      source: '12',
+      input: '12',
       resultTests: [
         ('{{0}}', 'isA<(List<int>, int)>()'),
         (r'_as<(List<int>, int)>({{0}}).$1', 'equals([0x31])'),
@@ -805,7 +764,7 @@ Future<void> _generate() async {
       pos: 2,
     );
     t1.testSuccess(
-      source: '2',
+      input: '2',
       resultTests: [
         ('{{0}}', 'isA<(List<int>, int)>()'),
         (r'_as<(List<int>, int)>({{0}}).$1', 'equals([])'),
@@ -814,25 +773,25 @@ Future<void> _generate() async {
       pos: 1,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [_errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '1',
+      input: '1',
       failPos: 1,
       pos: 0,
       errors: [_errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '11',
+      input: '11',
       failPos: 2,
       pos: 0,
       errors: [_errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '2',
+      input: '2',
       failPos: 0,
       pos: 0,
       errors: [_errorExpectedChar],
@@ -853,28 +812,28 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '02',
+      input: '02',
       result: 0x30,
       pos: 1,
     );
     t1.testSuccess(
-      source: '0',
+      input: '0',
       result: 0x30,
       pos: 1,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '1',
+      input: '1',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedChar],
     );
-    t1.testFailure(source: '01', failPos: 1, pos: 0, errors: [
+    t1.testFailure(input: '01', failPos: 1, pos: 0, errors: [
       errorUnexpectedInput
     ], errorTests: [
       (
@@ -898,24 +857,24 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '123',
+      input: '123',
       result: 0x32,
       pos: 2,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '1',
+      input: '1',
       failPos: 1,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '2',
+      input: '2',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedChar],
@@ -937,12 +896,12 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '12a',
+      input: '12a',
       result: '12',
       pos: 2,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorMessage],
@@ -960,7 +919,7 @@ Future<void> _generate() async {
       ],
     );
     t1.testFailure(
-      source: '1',
+      input: '1',
       failPos: 1,
       pos: 0,
       errors: [errorMessage],
@@ -978,7 +937,7 @@ Future<void> _generate() async {
       ],
     );
     t1.testFailure(
-      source: 'a',
+      input: 'a',
       failPos: 0,
       pos: 0,
       errors: [errorMessage],
@@ -1010,27 +969,27 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '12',
+      input: '12',
       result: '12',
       pos: 2,
     );
     t1.testSuccess(
-      source: r'\n1',
+      input: r'\n1',
       result: '\n1',
       pos: 3,
     );
     t1.testSuccess(
-      source: r'1\n2',
+      input: r'1\n2',
       result: '1\n2',
       pos: 4,
     );
     t1.testSuccess(
-      source: r'\n\n1',
+      input: r'\n\n1',
       result: '\n\n1',
       pos: 5,
     );
     t1.testSuccess(
-      source: '',
+      input: '',
       result: '',
       pos: 0,
     );
@@ -1047,18 +1006,18 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '01',
+      input: '01',
       result: '0',
       pos: 1,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedTags],
     );
     t1.testFailure(
-      source: '2',
+      input: '2',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedTags],
@@ -1077,18 +1036,18 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '${_rune}1',
+      input: '${_rune}1',
       result: _rune,
       pos: 2,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedTags],
     );
     t1.testFailure(
-      source: '2',
+      input: '2',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedTags],
@@ -1109,48 +1068,48 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: 'abcd',
+      input: 'abcd',
       result: 'abc',
       pos: 3,
     );
     t1.testSuccess(
-      source: 'abd',
+      input: 'abd',
       result: 'ab',
       pos: 2,
     );
     t1.testSuccess(
-      source: 'ad',
+      input: 'ad',
       result: 'a',
       pos: 1,
     );
     t1.testSuccess(
-      source: 'bcd',
+      input: 'bcd',
       result: 'bc',
       pos: 2,
     );
     t1.testSuccess(
-      source: 'bd',
+      input: 'bd',
       result: 'b',
       pos: 1,
     );
     t1.testSuccess(
-      source: 'cd',
+      input: 'cd',
       result: 'c',
       pos: 1,
     );
     t1.testSuccess(
-      source: _rune,
+      input: _rune,
       result: _rune,
       pos: 2,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedTags],
     );
     t1.testFailure(
-      source: 'x',
+      input: 'x',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedTags],
@@ -1171,27 +1130,27 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: String.fromCharCodes([0x1f600, 0x1f600, 0x1f600, 0x1f600]),
+      input: String.fromCharCodes([0x1f600, 0x1f600, 0x1f600, 0x1f600]),
       result: String.fromCharCodes([0x1f600, 0x1f600, 0x1f600]),
       pos: 6,
     );
     t1.testSuccess(
-      source: String.fromCharCodes([0x1f600, 0x1f600]),
+      input: String.fromCharCodes([0x1f600, 0x1f600]),
       result: String.fromCharCodes([0x1f600, 0x1f600]),
       pos: 4,
     );
     t1.testSuccess(
-      source: String.fromCharCodes([0x1f600]),
+      input: String.fromCharCodes([0x1f600]),
       result: String.fromCharCodes([0x1f600]),
       pos: 2,
     );
     t1.testSuccess(
-      source: '',
+      input: '',
       result: '',
       pos: 0,
     );
     t1.testSuccess(
-      source: 'a',
+      input: 'a',
       result: '',
       pos: 0,
     );
@@ -1210,24 +1169,24 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: String.fromCharCodes([0x1f600, 0x1f600, 0x1f600, 0x1f600]),
+      input: String.fromCharCodes([0x1f600, 0x1f600, 0x1f600, 0x1f600]),
       result: String.fromCharCodes([0x1f600, 0x1f600]),
       pos: 4,
     );
     t1.testSuccess(
-      source: String.fromCharCodes([0x1f600]),
+      input: String.fromCharCodes([0x1f600]),
       result: String.fromCharCodes([0x1f600]),
       pos: 2,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
 
     t1.testFailure(
-      source: '1',
+      input: '1',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedChar],
@@ -1247,27 +1206,27 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '12345',
+      input: '12345',
       result: '123',
       pos: 3,
     );
     t1.testSuccess(
-      source: '12',
+      input: '12',
       result: '12',
       pos: 2,
     );
     t1.testSuccess(
-      source: '1',
+      input: '1',
       result: '1',
       pos: 1,
     );
     t1.testSuccess(
-      source: '',
+      input: '',
       result: '',
       pos: 0,
     );
     t1.testSuccess(
-      source: 'a',
+      input: 'a',
       result: '',
       pos: 0,
     );
@@ -1285,24 +1244,24 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '123',
+      input: '123',
       result: '12',
       pos: 2,
     );
     t1.testSuccess(
-      source: '1a',
+      input: '1a',
       result: '1',
       pos: 1,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
 
     t1.testFailure(
-      source: 'a',
+      input: 'a',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedChar],
@@ -1322,22 +1281,22 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: String.fromCharCodes([0x1f600]),
+      input: String.fromCharCodes([0x1f600]),
       result: String.fromCharCodes([0x1f600]),
       pos: 2,
     );
     t1.testSuccess(
-      source: String.fromCharCodes([0x1f600, 0x1f600]),
+      input: String.fromCharCodes([0x1f600, 0x1f600]),
       result: String.fromCharCodes([0x1f600, 0x1f600]),
       pos: 4,
     );
     t1.testSuccess(
-      source: '',
+      input: '',
       result: '',
       pos: 0,
     );
     t1.testSuccess(
-      source: 'a',
+      input: 'a',
       result: '',
       pos: 0,
     );
@@ -1355,23 +1314,23 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: String.fromCharCodes([0x1f600]),
+      input: String.fromCharCodes([0x1f600]),
       result: String.fromCharCodes([0x1f600]),
       pos: 2,
     );
     t1.testSuccess(
-      source: String.fromCharCodes([0x1f600, 0x1f600]),
+      input: String.fromCharCodes([0x1f600, 0x1f600]),
       result: String.fromCharCodes([0x1f600, 0x1f600]),
       pos: 4,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: 'a',
+      input: 'a',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedChar],
@@ -1390,22 +1349,22 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '1a',
+      input: '1a',
       result: '1',
       pos: 1,
     );
     t1.testSuccess(
-      source: '12a',
+      input: '12a',
       result: '12',
       pos: 2,
     );
     t1.testSuccess(
-      source: '',
+      input: '',
       result: '',
       pos: 0,
     );
     t1.testSuccess(
-      source: 'a',
+      input: 'a',
       result: '',
       pos: 0,
     );
@@ -1423,23 +1382,23 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '1a',
+      input: '1a',
       result: '1',
       pos: 1,
     );
     t1.testSuccess(
-      source: '12a',
+      input: '12a',
       result: '12',
       pos: 2,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: 'a',
+      input: 'a',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedChar],
@@ -1458,24 +1417,24 @@ Future<void> _generate() async {
       parserName: parserName,
     );
     t1.testSuccess(
-      source: '123',
+      input: '123',
       result: 0x31,
       pos: 2,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '1',
+      input: '1',
       failPos: 1,
       pos: 0,
       errors: [errorUnexpectedEof],
     );
     t1.testFailure(
-      source: '2',
+      input: '2',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedChar],

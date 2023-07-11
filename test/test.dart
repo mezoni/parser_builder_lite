@@ -87,48 +87,48 @@ void _test_And$0() {
     final $state$0 = State('01');
     final $result$0 = _And$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'01\'');
+        reason: 'Testing \'result != null\' failed, input: \'01\'');
     final $value$0 = $result$0!.value;
     expect($value$0, 48,
-        reason: 'Testing \'result.value\' failed, source: \'01\'');
+        reason: 'Testing \'result.value\' failed, input: \'01\'');
     expect($state$0.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'01\'');
+        reason: 'Testing \'state.pos\' failed, input: \'01\'');
     final $state$1 = State('');
     final $result$1 = _And$0($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$1.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$2 = State('1');
     final $result$2 = _And$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'1\'');
+        reason: 'Testing \'result == null\' failed, input: \'1\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'1\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'1\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'1\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'1\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'1\'');
     expect($state$2.errors[0], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'1\'');
+        reason: 'Testing \'state.error\' failed, input: \'1\'');
     final $state$3 = State('0');
     final $result$3 = _And$0($state$3);
     expect($result$3 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'0\'');
+        reason: 'Testing \'result == null\' failed, input: \'0\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'0\'');
+        reason: 'Testing \'state.pos\' failed, input: \'0\'');
     expect($state$3.failPos, 1,
-        reason: 'Testing \'state.failPos\' failed, source: \'0\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'0\'');
     expect($state$3.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'0\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'0\'');
     expect($state$3.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'0\'');
+        reason: 'Testing \'state.error\' failed, input: \'0\'');
   });
 }
 
@@ -138,33 +138,33 @@ void _test_And$1() {
     final $state$0 = State('01');
     final $result$0 = _And$1($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'01\'');
+        reason: 'Testing \'result != null\' failed, input: \'01\'');
     final $value$0 = $result$0!.value;
     expect($value$0, 48,
-        reason: 'Testing \'result.value\' failed, source: \'01\'');
+        reason: 'Testing \'result.value\' failed, input: \'01\'');
     expect($state$0.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'01\'');
+        reason: 'Testing \'state.pos\' failed, input: \'01\'');
     final $state$1 = State('😀');
     final $result$1 = _And$1($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'😀\'');
+        reason: 'Testing \'result != null\' failed, input: \'😀\'');
     final $value$1 = $result$1!.value;
     expect($value$1, 128512,
-        reason: 'Testing \'result.value\' failed, source: \'😀\'');
+        reason: 'Testing \'result.value\' failed, input: \'😀\'');
     expect($state$1.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'😀\'');
+        reason: 'Testing \'state.pos\' failed, input: \'😀\'');
     final $state$2 = State('');
     final $result$2 = _And$1($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$2.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
   });
 }
 
@@ -174,36 +174,36 @@ void _test_Char16bit$0() {
     final $state$0 = State('01');
     final $result$0 = _Char16bit$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'01\'');
+        reason: 'Testing \'result != null\' failed, input: \'01\'');
     final $value$0 = $result$0!.value;
     expect($value$0, 48,
-        reason: 'Testing \'result.value\' failed, source: \'01\'');
+        reason: 'Testing \'result.value\' failed, input: \'01\'');
     expect($state$0.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'01\'');
+        reason: 'Testing \'state.pos\' failed, input: \'01\'');
     final $state$1 = State('');
     final $result$1 = _Char16bit$0($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$1.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$2 = State('😀');
     final $result$2 = _Char16bit$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'😀\'');
+        reason: 'Testing \'result == null\' failed, input: \'😀\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'😀\'');
+        reason: 'Testing \'state.pos\' failed, input: \'😀\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'😀\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'😀\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'😀\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'😀\'');
     expect($state$2.errors[0], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'😀\'');
+        reason: 'Testing \'state.error\' failed, input: \'😀\'');
   });
 }
 
@@ -213,36 +213,36 @@ void _test_Char32bit$0() {
     final $state$0 = State('😀');
     final $result$0 = _Char32bit$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'😀\'');
+        reason: 'Testing \'result != null\' failed, input: \'😀\'');
     final $value$0 = $result$0!.value;
     expect($value$0, 128512,
-        reason: 'Testing \'result.value\' failed, source: \'😀\'');
+        reason: 'Testing \'result.value\' failed, input: \'😀\'');
     expect($state$0.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'😀\'');
+        reason: 'Testing \'state.pos\' failed, input: \'😀\'');
     final $state$1 = State('');
     final $result$1 = _Char32bit$0($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$1.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$2 = State('01');
     final $result$2 = _Char32bit$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'01\'');
+        reason: 'Testing \'result == null\' failed, input: \'01\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'01\'');
+        reason: 'Testing \'state.pos\' failed, input: \'01\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'01\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'01\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'01\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'01\'');
     expect($state$2.errors[0], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'01\'');
+        reason: 'Testing \'state.error\' failed, input: \'01\'');
   });
 }
 
@@ -252,49 +252,49 @@ void _test_Choice2variants$0() {
     final $state$0 = State('01');
     final $result$0 = _Choice2variants$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'01\'');
+        reason: 'Testing \'result != null\' failed, input: \'01\'');
     final $value$0 = $result$0!.value;
     expect($value$0, 48,
-        reason: 'Testing \'result.value\' failed, source: \'01\'');
+        reason: 'Testing \'result.value\' failed, input: \'01\'');
     expect($state$0.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'01\'');
+        reason: 'Testing \'state.pos\' failed, input: \'01\'');
     final $state$1 = State('12');
     final $result$1 = _Choice2variants$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'12\'');
+        reason: 'Testing \'result != null\' failed, input: \'12\'');
     final $value$1 = $result$1!.value;
     expect($value$1, 49,
-        reason: 'Testing \'result.value\' failed, source: \'12\'');
+        reason: 'Testing \'result.value\' failed, input: \'12\'');
     expect($state$1.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'12\'');
+        reason: 'Testing \'state.pos\' failed, input: \'12\'');
     final $state$2 = State('');
     final $result$2 = _Choice2variants$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$2.errors.length, 2,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$2.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     expect($state$2.errors[1], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$3 = State('2');
     final $result$3 = _Choice2variants$0($state$3);
     expect($result$3 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'2\'');
+        reason: 'Testing \'result == null\' failed, input: \'2\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+        reason: 'Testing \'state.pos\' failed, input: \'2\'');
     expect($state$3.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'2\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'2\'');
     expect($state$3.errors.length, 2,
-        reason: 'Testing \'state.errors.length\' failed, source: \'2\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'2\'');
     expect($state$3.errors[0], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'2\'');
+        reason: 'Testing \'state.error\' failed, input: \'2\'');
     expect($state$3.errors[1], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'2\'');
+        reason: 'Testing \'state.error\' failed, input: \'2\'');
   });
 }
 
@@ -304,62 +304,62 @@ void _test_Choice3variants$0() {
     final $state$0 = State('01');
     final $result$0 = _Choice3variants$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'01\'');
+        reason: 'Testing \'result != null\' failed, input: \'01\'');
     final $value$0 = $result$0!.value;
     expect($value$0, 48,
-        reason: 'Testing \'result.value\' failed, source: \'01\'');
+        reason: 'Testing \'result.value\' failed, input: \'01\'');
     expect($state$0.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'01\'');
+        reason: 'Testing \'state.pos\' failed, input: \'01\'');
     final $state$1 = State('12');
     final $result$1 = _Choice3variants$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'12\'');
+        reason: 'Testing \'result != null\' failed, input: \'12\'');
     final $value$1 = $result$1!.value;
     expect($value$1, 49,
-        reason: 'Testing \'result.value\' failed, source: \'12\'');
+        reason: 'Testing \'result.value\' failed, input: \'12\'');
     expect($state$1.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'12\'');
+        reason: 'Testing \'state.pos\' failed, input: \'12\'');
     final $state$2 = State('23');
     final $result$2 = _Choice3variants$0($state$2);
     expect($result$2 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'23\'');
+        reason: 'Testing \'result != null\' failed, input: \'23\'');
     final $value$2 = $result$2!.value;
     expect($value$2, 50,
-        reason: 'Testing \'result.value\' failed, source: \'23\'');
+        reason: 'Testing \'result.value\' failed, input: \'23\'');
     expect($state$2.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'23\'');
+        reason: 'Testing \'state.pos\' failed, input: \'23\'');
     final $state$3 = State('');
     final $result$3 = _Choice3variants$0($state$3);
     expect($result$3 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$3.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$3.errors.length, 3,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$3.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     expect($state$3.errors[1], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     expect($state$3.errors[2], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$4 = State('3');
     final $result$4 = _Choice3variants$0($state$4);
     expect($result$4 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'3\'');
+        reason: 'Testing \'result == null\' failed, input: \'3\'');
     expect($state$4.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'3\'');
+        reason: 'Testing \'state.pos\' failed, input: \'3\'');
     expect($state$4.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'3\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'3\'');
     expect($state$4.errors.length, 3,
-        reason: 'Testing \'state.errors.length\' failed, source: \'3\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'3\'');
     expect($state$4.errors[0], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'3\'');
+        reason: 'Testing \'state.error\' failed, input: \'3\'');
     expect($state$4.errors[1], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'3\'');
+        reason: 'Testing \'state.error\' failed, input: \'3\'');
     expect($state$4.errors[2], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'3\'');
+        reason: 'Testing \'state.error\' failed, input: \'3\'');
   });
 }
 
@@ -369,36 +369,36 @@ void _test_Char16$0() {
     final $state$0 = State('12');
     final $result$0 = _Char16$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'12\'');
+        reason: 'Testing \'result != null\' failed, input: \'12\'');
     final $value$0 = $result$0!.value;
     expect($value$0, 49,
-        reason: 'Testing \'result.value\' failed, source: \'12\'');
+        reason: 'Testing \'result.value\' failed, input: \'12\'');
     expect($state$0.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'12\'');
+        reason: 'Testing \'state.pos\' failed, input: \'12\'');
     final $state$1 = State('');
     final $result$1 = _Char16$0($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$1.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$2 = State('2');
     final $result$2 = _Char16$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'2\'');
+        reason: 'Testing \'result == null\' failed, input: \'2\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+        reason: 'Testing \'state.pos\' failed, input: \'2\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'2\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'2\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'2\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'2\'');
     expect($state$2.errors[0], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'2\'');
+        reason: 'Testing \'state.error\' failed, input: \'2\'');
   });
 }
 
@@ -408,36 +408,36 @@ void _test_Char$0() {
     final $state$0 = State('😀`');
     final $result$0 = _Char$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'😀`\'');
+        reason: 'Testing \'result != null\' failed, input: \'😀`\'');
     final $value$0 = $result$0!.value;
     expect($value$0, 128512,
-        reason: 'Testing \'result.value\' failed, source: \'😀`\'');
+        reason: 'Testing \'result.value\' failed, input: \'😀`\'');
     expect($state$0.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'😀`\'');
+        reason: 'Testing \'state.pos\' failed, input: \'😀`\'');
     final $state$1 = State('');
     final $result$1 = _Char$0($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$1.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$2 = State('2');
     final $result$2 = _Char$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'2\'');
+        reason: 'Testing \'result == null\' failed, input: \'2\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+        reason: 'Testing \'state.pos\' failed, input: \'2\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'2\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'2\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'2\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'2\'');
     expect($state$2.errors[0], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'2\'');
+        reason: 'Testing \'state.error\' failed, input: \'2\'');
   });
 }
 
@@ -447,60 +447,60 @@ void _test_Delimited$0() {
     final $state$0 = State('123');
     final $result$0 = _Delimited$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'123\'');
+        reason: 'Testing \'result != null\' failed, input: \'123\'');
     final $value$0 = $result$0!.value;
     expect($value$0, 50,
-        reason: 'Testing \'result.value\' failed, source: \'123\'');
+        reason: 'Testing \'result.value\' failed, input: \'123\'');
     expect($state$0.pos, 3,
-        reason: 'Testing \'state.pos\' failed, source: \'123\'');
+        reason: 'Testing \'state.pos\' failed, input: \'123\'');
     final $state$1 = State('');
     final $result$1 = _Delimited$0($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$1.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$2 = State('1');
     final $result$2 = _Delimited$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'1\'');
+        reason: 'Testing \'result == null\' failed, input: \'1\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'1\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1\'');
     expect($state$2.failPos, 1,
-        reason: 'Testing \'state.failPos\' failed, source: \'1\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'1\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'1\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'1\'');
     expect($state$2.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'1\'');
+        reason: 'Testing \'state.error\' failed, input: \'1\'');
     final $state$3 = State('12');
     final $result$3 = _Delimited$0($state$3);
     expect($result$3 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'12\'');
+        reason: 'Testing \'result == null\' failed, input: \'12\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'12\'');
+        reason: 'Testing \'state.pos\' failed, input: \'12\'');
     expect($state$3.failPos, 2,
-        reason: 'Testing \'state.failPos\' failed, source: \'12\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'12\'');
     expect($state$3.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'12\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'12\'');
     expect($state$3.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'12\'');
+        reason: 'Testing \'state.error\' failed, input: \'12\'');
     final $state$4 = State('2');
     final $result$4 = _Delimited$0($state$4);
     expect($result$4 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'2\'');
+        reason: 'Testing \'result == null\' failed, input: \'2\'');
     expect($state$4.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+        reason: 'Testing \'state.pos\' failed, input: \'2\'');
     expect($state$4.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'2\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'2\'');
     expect($state$4.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'2\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'2\'');
     expect($state$4.errors[0], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'2\'');
+        reason: 'Testing \'state.error\' failed, input: \'2\'');
   });
 }
 
@@ -510,24 +510,24 @@ void _test_Eof$0() {
     final $state$0 = State('');
     final $result$0 = _Eof$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'\'');
+        reason: 'Testing \'result != null\' failed, input: \'\'');
     final $value$0 = $result$0!.value;
     expect($value$0, null,
-        reason: 'Testing \'result.value\' failed, source: \'\'');
+        reason: 'Testing \'result.value\' failed, input: \'\'');
     expect($state$0.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     final $state$1 = State('1');
     final $result$1 = _Eof$0($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'1\'');
+        reason: 'Testing \'result == null\' failed, input: \'1\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'1\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'1\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'1\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'1\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'1\'');
     expect($state$1.errors[0], isA<ErrorExpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'1\'');
+        reason: 'Testing \'state.error\' failed, input: \'1\'');
   });
 }
 
@@ -537,38 +537,38 @@ void _test_Expected$0() {
     final $state$0 = State('123');
     final $result$0 = _Expected$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'123\'');
+        reason: 'Testing \'result != null\' failed, input: \'123\'');
     final $value$0 = $result$0!.value;
     expect($value$0, (0x31, 0x32),
-        reason: 'Testing \'result\' failed, source: \'123\'');
+        reason: 'Testing \'result\' failed, input: \'123\'');
     expect($state$0.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'123\'');
+        reason: 'Testing \'state.pos\' failed, input: \'123\'');
     final $state$1 = State('');
     final $result$1 = _Expected$0($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$1.errors[0], isA<ErrorExpectedTags>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     expect(($state$1.errors[0] as ErrorExpectedTags).tags[0], 'expr',
-        reason: 'Testing \'ErrorExpectedTags).tags\' failed, source: \'\'');
+        reason: 'Testing \'ErrorExpectedTags).tags\' failed, input: \'\'');
     final $state$2 = State('1');
     final $result$2 = _Expected$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'1\'');
+        reason: 'Testing \'result == null\' failed, input: \'1\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'1\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1\'');
     expect($state$2.failPos, 1,
-        reason: 'Testing \'state.failPos\' failed, source: \'1\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'1\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'1\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'1\'');
     expect($state$2.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'1\'');
+        reason: 'Testing \'state.error\' failed, input: \'1\'');
   });
 }
 
@@ -578,35 +578,35 @@ void _test_FastSatisfy16$0() {
     final $state$0 = State('1');
     final $result$0 = _FastSatisfy16$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'1\'');
+        reason: 'Testing \'result != null\' failed, input: \'1\'');
     final $value$0 = $result$0!.value;
-    expect($value$0, null, reason: 'Testing \'result\' failed, source: \'1\'');
+    expect($value$0, null, reason: 'Testing \'result\' failed, input: \'1\'');
     expect($state$0.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'1\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1\'');
     final $state$1 = State('');
     final $result$1 = _FastSatisfy16$0($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$1.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$2 = State('a');
     final $result$2 = _FastSatisfy16$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'a\'');
+        reason: 'Testing \'result == null\' failed, input: \'a\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'a\'');
+        reason: 'Testing \'state.pos\' failed, input: \'a\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'a\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'a\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'a\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'a\'');
     expect($state$2.errors[0], isA<ErrorUnexpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'a\'');
+        reason: 'Testing \'state.error\' failed, input: \'a\'');
   });
 }
 
@@ -616,35 +616,35 @@ void _test_FastSatisfy16$1() {
     final $state$0 = State('😀');
     final $result$0 = _FastSatisfy16$1($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'😀\'');
+        reason: 'Testing \'result != null\' failed, input: \'😀\'');
     final $value$0 = $result$0!.value;
-    expect($value$0, null, reason: 'Testing \'result\' failed, source: \'😀\'');
+    expect($value$0, null, reason: 'Testing \'result\' failed, input: \'😀\'');
     expect($state$0.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'😀\'');
+        reason: 'Testing \'state.pos\' failed, input: \'😀\'');
     final $state$1 = State('');
     final $result$1 = _FastSatisfy16$1($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$1.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$2 = State('a');
     final $result$2 = _FastSatisfy16$1($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'a\'');
+        reason: 'Testing \'result == null\' failed, input: \'a\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'a\'');
+        reason: 'Testing \'state.pos\' failed, input: \'a\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'a\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'a\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'a\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'a\'');
     expect($state$2.errors[0], isA<ErrorUnexpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'a\'');
+        reason: 'Testing \'state.error\' failed, input: \'a\'');
   });
 }
 
@@ -654,30 +654,30 @@ void _test_Many$0() {
     final $state$0 = State('1112');
     final $result$0 = _Many$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'1112\'');
+        reason: 'Testing \'result != null\' failed, input: \'1112\'');
     final $value$0 = $result$0!.value;
     expect($value$0, [49, 49, 49],
-        reason: 'Testing \'result.value\' failed, source: \'1112\'');
+        reason: 'Testing \'result.value\' failed, input: \'1112\'');
     expect($state$0.pos, 3,
-        reason: 'Testing \'state.pos\' failed, source: \'1112\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1112\'');
     final $state$1 = State('');
     final $result$1 = _Many$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'\'');
+        reason: 'Testing \'result != null\' failed, input: \'\'');
     final $value$1 = $result$1!.value;
     expect($value$1, [],
-        reason: 'Testing \'result.value\' failed, source: \'\'');
+        reason: 'Testing \'result.value\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     final $state$2 = State('2');
     final $result$2 = _Many$0($state$2);
     expect($result$2 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'2\'');
+        reason: 'Testing \'result != null\' failed, input: \'2\'');
     final $value$2 = $result$2!.value;
     expect($value$2, [],
-        reason: 'Testing \'result.value\' failed, source: \'2\'');
+        reason: 'Testing \'result.value\' failed, input: \'2\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+        reason: 'Testing \'state.pos\' failed, input: \'2\'');
   });
 }
 
@@ -687,36 +687,36 @@ void _test_Many1$0() {
     final $state$0 = State('1112');
     final $result$0 = _Many1$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'1112\'');
+        reason: 'Testing \'result != null\' failed, input: \'1112\'');
     final $value$0 = $result$0!.value;
     expect($value$0, [49, 49, 49],
-        reason: 'Testing \'result.value\' failed, source: \'1112\'');
+        reason: 'Testing \'result.value\' failed, input: \'1112\'');
     expect($state$0.pos, 3,
-        reason: 'Testing \'state.pos\' failed, source: \'1112\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1112\'');
     final $state$1 = State('');
     final $result$1 = _Many1$0($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$1.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$2 = State('2');
     final $result$2 = _Many1$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'2\'');
+        reason: 'Testing \'result == null\' failed, input: \'2\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+        reason: 'Testing \'state.pos\' failed, input: \'2\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'2\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'2\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'2\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'2\'');
     expect($state$2.errors[0], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'2\'');
+        reason: 'Testing \'state.error\' failed, input: \'2\'');
   });
 }
 
@@ -726,30 +726,29 @@ void _test_ManyCount$0() {
     final $state$0 = State('1112');
     final $result$0 = _ManyCount$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'1112\'');
+        reason: 'Testing \'result != null\' failed, input: \'1112\'');
     final $value$0 = $result$0!.value;
     expect($value$0, 3,
-        reason: 'Testing \'result.value\' failed, source: \'1112\'');
+        reason: 'Testing \'result.value\' failed, input: \'1112\'');
     expect($state$0.pos, 3,
-        reason: 'Testing \'state.pos\' failed, source: \'1112\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1112\'');
     final $state$1 = State('');
     final $result$1 = _ManyCount$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'\'');
+        reason: 'Testing \'result != null\' failed, input: \'\'');
     final $value$1 = $result$1!.value;
-    expect($value$1, 0,
-        reason: 'Testing \'result.value\' failed, source: \'\'');
+    expect($value$1, 0, reason: 'Testing \'result.value\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     final $state$2 = State('2');
     final $result$2 = _ManyCount$0($state$2);
     expect($result$2 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'2\'');
+        reason: 'Testing \'result != null\' failed, input: \'2\'');
     final $value$2 = $result$2!.value;
     expect($value$2, 0,
-        reason: 'Testing \'result.value\' failed, source: \'2\'');
+        reason: 'Testing \'result.value\' failed, input: \'2\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+        reason: 'Testing \'state.pos\' failed, input: \'2\'');
   });
 }
 
@@ -759,36 +758,36 @@ void _test_Many1Count$0() {
     final $state$0 = State('1112');
     final $result$0 = _Many1Count$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'1112\'');
+        reason: 'Testing \'result != null\' failed, input: \'1112\'');
     final $value$0 = $result$0!.value;
     expect($value$0, 3,
-        reason: 'Testing \'result.value\' failed, source: \'1112\'');
+        reason: 'Testing \'result.value\' failed, input: \'1112\'');
     expect($state$0.pos, 3,
-        reason: 'Testing \'state.pos\' failed, source: \'1112\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1112\'');
     final $state$1 = State('');
     final $result$1 = _Many1Count$0($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$1.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$2 = State('2');
     final $result$2 = _Many1Count$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'2\'');
+        reason: 'Testing \'result == null\' failed, input: \'2\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+        reason: 'Testing \'state.pos\' failed, input: \'2\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'2\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'2\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'2\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'2\'');
     expect($state$2.errors[0], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'2\'');
+        reason: 'Testing \'state.error\' failed, input: \'2\'');
   });
 }
 
@@ -798,48 +797,48 @@ void _test_ManyMN03$0() {
     final $state$0 = State('12');
     final $result$0 = _ManyMN03$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'12\'');
+        reason: 'Testing \'result != null\' failed, input: \'12\'');
     final $value$0 = $result$0!.value;
     expect($value$0, [49],
-        reason: 'Testing \'result.value\' failed, source: \'12\'');
+        reason: 'Testing \'result.value\' failed, input: \'12\'');
     expect($state$0.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'12\'');
+        reason: 'Testing \'state.pos\' failed, input: \'12\'');
     final $state$1 = State('112');
     final $result$1 = _ManyMN03$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'112\'');
+        reason: 'Testing \'result != null\' failed, input: \'112\'');
     final $value$1 = $result$1!.value;
     expect($value$1, [49, 49],
-        reason: 'Testing \'result.value\' failed, source: \'112\'');
+        reason: 'Testing \'result.value\' failed, input: \'112\'');
     expect($state$1.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'112\'');
+        reason: 'Testing \'state.pos\' failed, input: \'112\'');
     final $state$2 = State('11112');
     final $result$2 = _ManyMN03$0($state$2);
     expect($result$2 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'11112\'');
+        reason: 'Testing \'result != null\' failed, input: \'11112\'');
     final $value$2 = $result$2!.value;
     expect($value$2, [49, 49, 49],
-        reason: 'Testing \'result.value\' failed, source: \'11112\'');
+        reason: 'Testing \'result.value\' failed, input: \'11112\'');
     expect($state$2.pos, 3,
-        reason: 'Testing \'state.pos\' failed, source: \'11112\'');
+        reason: 'Testing \'state.pos\' failed, input: \'11112\'');
     final $state$3 = State('2');
     final $result$3 = _ManyMN03$0($state$3);
     expect($result$3 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'2\'');
+        reason: 'Testing \'result != null\' failed, input: \'2\'');
     final $value$3 = $result$3!.value;
     expect($value$3, [],
-        reason: 'Testing \'result.value\' failed, source: \'2\'');
+        reason: 'Testing \'result.value\' failed, input: \'2\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+        reason: 'Testing \'state.pos\' failed, input: \'2\'');
     final $state$4 = State('');
     final $result$4 = _ManyMN03$0($state$4);
     expect($result$4 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'\'');
+        reason: 'Testing \'result != null\' failed, input: \'\'');
     final $value$4 = $result$4!.value;
     expect($value$4, [],
-        reason: 'Testing \'result.value\' failed, source: \'\'');
+        reason: 'Testing \'result.value\' failed, input: \'\'');
     expect($state$4.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
   });
 }
 
@@ -849,57 +848,57 @@ void _test_ManyMN23$0() {
     final $state$0 = State('112');
     final $result$0 = _ManyMN23$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'112\'');
+        reason: 'Testing \'result != null\' failed, input: \'112\'');
     final $value$0 = $result$0!.value;
     expect($value$0, [49, 49],
-        reason: 'Testing \'result.value\' failed, source: \'112\'');
+        reason: 'Testing \'result.value\' failed, input: \'112\'');
     expect($state$0.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'112\'');
+        reason: 'Testing \'state.pos\' failed, input: \'112\'');
     final $state$1 = State('11112');
     final $result$1 = _ManyMN23$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'11112\'');
+        reason: 'Testing \'result != null\' failed, input: \'11112\'');
     final $value$1 = $result$1!.value;
     expect($value$1, [49, 49, 49],
-        reason: 'Testing \'result.value\' failed, source: \'11112\'');
+        reason: 'Testing \'result.value\' failed, input: \'11112\'');
     expect($state$1.pos, 3,
-        reason: 'Testing \'state.pos\' failed, source: \'11112\'');
+        reason: 'Testing \'state.pos\' failed, input: \'11112\'');
     final $state$2 = State('');
     final $result$2 = _ManyMN23$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$2.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$3 = State('1');
     final $result$3 = _ManyMN23$0($state$3);
     expect($result$3 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'1\'');
+        reason: 'Testing \'result == null\' failed, input: \'1\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'1\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1\'');
     expect($state$3.failPos, 1,
-        reason: 'Testing \'state.failPos\' failed, source: \'1\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'1\'');
     expect($state$3.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'1\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'1\'');
     expect($state$3.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'1\'');
+        reason: 'Testing \'state.error\' failed, input: \'1\'');
     final $state$4 = State('2');
     final $result$4 = _ManyMN23$0($state$4);
     expect($result$4 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'2\'');
+        reason: 'Testing \'result == null\' failed, input: \'2\'');
     expect($state$4.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+        reason: 'Testing \'state.pos\' failed, input: \'2\'');
     expect($state$4.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'2\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'2\'');
     expect($state$4.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'2\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'2\'');
     expect($state$4.errors[0], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'2\'');
+        reason: 'Testing \'state.error\' failed, input: \'2\'');
   });
 }
 
@@ -909,60 +908,60 @@ void _test_Not$0() {
     final $state$0 = State('02');
     final $result$0 = _Not$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'02\'');
+        reason: 'Testing \'result != null\' failed, input: \'02\'');
     final $value$0 = $result$0!.value;
     expect($value$0, 48,
-        reason: 'Testing \'result.value\' failed, source: \'02\'');
+        reason: 'Testing \'result.value\' failed, input: \'02\'');
     expect($state$0.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'02\'');
+        reason: 'Testing \'state.pos\' failed, input: \'02\'');
     final $state$1 = State('0');
     final $result$1 = _Not$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'0\'');
+        reason: 'Testing \'result != null\' failed, input: \'0\'');
     final $value$1 = $result$1!.value;
     expect($value$1, 48,
-        reason: 'Testing \'result.value\' failed, source: \'0\'');
+        reason: 'Testing \'result.value\' failed, input: \'0\'');
     expect($state$1.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'0\'');
+        reason: 'Testing \'state.pos\' failed, input: \'0\'');
     final $state$2 = State('');
     final $result$2 = _Not$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$2.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$3 = State('1');
     final $result$3 = _Not$0($state$3);
     expect($result$3 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'1\'');
+        reason: 'Testing \'result == null\' failed, input: \'1\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'1\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1\'');
     expect($state$3.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'1\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'1\'');
     expect($state$3.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'1\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'1\'');
     expect($state$3.errors[0], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'1\'');
+        reason: 'Testing \'state.error\' failed, input: \'1\'');
     final $state$4 = State('01');
     final $result$4 = _Not$0($state$4);
     expect($result$4 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'01\'');
+        reason: 'Testing \'result == null\' failed, input: \'01\'');
     expect($state$4.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'01\'');
+        reason: 'Testing \'state.pos\' failed, input: \'01\'');
     expect($state$4.failPos, 1,
-        reason: 'Testing \'state.failPos\' failed, source: \'01\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'01\'');
     expect($state$4.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'01\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'01\'');
     expect($state$4.errors[0], isA<ErrorUnexpectedInput>(),
-        reason: 'Testing \'state.error\' failed, source: \'01\'');
+        reason: 'Testing \'state.error\' failed, input: \'01\'');
     expect(($state$4.errors[0] as ErrorUnexpectedInput).length, 1,
         reason:
-            'Testing \'ErrorUnexpectedInput.length\' failed, source: \'01\'');
+            'Testing \'ErrorUnexpectedInput.length\' failed, input: \'01\'');
   });
 }
 
@@ -972,48 +971,48 @@ void _test_Preceded$0() {
     final $state$0 = State('123');
     final $result$0 = _Preceded$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'123\'');
+        reason: 'Testing \'result != null\' failed, input: \'123\'');
     final $value$0 = $result$0!.value;
     expect($value$0, 50,
-        reason: 'Testing \'result.value\' failed, source: \'123\'');
+        reason: 'Testing \'result.value\' failed, input: \'123\'');
     expect($state$0.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'123\'');
+        reason: 'Testing \'state.pos\' failed, input: \'123\'');
     final $state$1 = State('');
     final $result$1 = _Preceded$0($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$1.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$2 = State('1');
     final $result$2 = _Preceded$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'1\'');
+        reason: 'Testing \'result == null\' failed, input: \'1\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'1\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1\'');
     expect($state$2.failPos, 1,
-        reason: 'Testing \'state.failPos\' failed, source: \'1\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'1\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'1\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'1\'');
     expect($state$2.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'1\'');
+        reason: 'Testing \'state.error\' failed, input: \'1\'');
     final $state$3 = State('2');
     final $result$3 = _Preceded$0($state$3);
     expect($result$3 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'2\'');
+        reason: 'Testing \'result == null\' failed, input: \'2\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+        reason: 'Testing \'state.pos\' failed, input: \'2\'');
     expect($state$3.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'2\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'2\'');
     expect($state$3.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'2\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'2\'');
     expect($state$3.errors[0], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'2\'');
+        reason: 'Testing \'state.error\' failed, input: \'2\'');
   });
 }
 
@@ -1023,60 +1022,60 @@ void _test_ReplaceErrors$0() {
     final $state$0 = State('12a');
     final $result$0 = _ReplaceErrors$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'12a\'');
+        reason: 'Testing \'result != null\' failed, input: \'12a\'');
     final $value$0 = $result$0!.value;
     expect($value$0, '12',
-        reason: 'Testing \'result.value\' failed, source: \'12a\'');
+        reason: 'Testing \'result.value\' failed, input: \'12a\'');
     expect($state$0.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'12a\'');
+        reason: 'Testing \'state.pos\' failed, input: \'12a\'');
     final $state$1 = State('');
     final $result$1 = _ReplaceErrors$0($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$1.errors[0], isA<ErrorMessage>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     expect(($state$1.errors[0] as ErrorMessage).message, 'error message',
-        reason: 'Testing \'error.message\' failed, source: \'\'');
+        reason: 'Testing \'error.message\' failed, input: \'\'');
     expect(($state$1.errors[0] as ErrorMessage).length, 0,
-        reason: 'Testing \'ErrorMessage.length\' failed, source: \'\'');
+        reason: 'Testing \'ErrorMessage.length\' failed, input: \'\'');
     final $state$2 = State('1');
     final $result$2 = _ReplaceErrors$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'1\'');
+        reason: 'Testing \'result == null\' failed, input: \'1\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'1\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1\'');
     expect($state$2.failPos, 1,
-        reason: 'Testing \'state.failPos\' failed, source: \'1\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'1\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'1\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'1\'');
     expect($state$2.errors[0], isA<ErrorMessage>(),
-        reason: 'Testing \'state.error\' failed, source: \'1\'');
+        reason: 'Testing \'state.error\' failed, input: \'1\'');
     expect(($state$2.errors[0] as ErrorMessage).message, 'error message',
-        reason: 'Testing \'ErrorMessage.message\' failed, source: \'1\'');
+        reason: 'Testing \'ErrorMessage.message\' failed, input: \'1\'');
     expect(($state$2.errors[0] as ErrorMessage).length, 1,
-        reason: 'Testing \'ErrorMessage.length\' failed, source: \'1\'');
+        reason: 'Testing \'ErrorMessage.length\' failed, input: \'1\'');
     final $state$3 = State('a');
     final $result$3 = _ReplaceErrors$0($state$3);
     expect($result$3 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'a\'');
+        reason: 'Testing \'result == null\' failed, input: \'a\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'a\'');
+        reason: 'Testing \'state.pos\' failed, input: \'a\'');
     expect($state$3.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'a\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'a\'');
     expect($state$3.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'a\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'a\'');
     expect($state$3.errors[0], isA<ErrorMessage>(),
-        reason: 'Testing \'state.error\' failed, source: \'a\'');
+        reason: 'Testing \'state.error\' failed, input: \'a\'');
     expect(($state$3.errors[0] as ErrorMessage).message, 'error message',
-        reason: 'Testing \'ErrorMessage.message\' failed, source: \'a\'');
+        reason: 'Testing \'ErrorMessage.message\' failed, input: \'a\'');
     expect(($state$3.errors[0] as ErrorMessage).length, 0,
-        reason: 'Testing \'ErrorMessage.length\' failed, source: \'a\'');
+        reason: 'Testing \'ErrorMessage.length\' failed, input: \'a\'');
   });
 }
 
@@ -1086,48 +1085,48 @@ void _test_StringChars$0() {
     final $state$0 = State('12');
     final $result$0 = _StringChars$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'12\'');
+        reason: 'Testing \'result != null\' failed, input: \'12\'');
     final $value$0 = $result$0!.value;
     expect($value$0, '12',
-        reason: 'Testing \'result.value\' failed, source: \'12\'');
+        reason: 'Testing \'result.value\' failed, input: \'12\'');
     expect($state$0.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'12\'');
+        reason: 'Testing \'state.pos\' failed, input: \'12\'');
     final $state$1 = State('\\n1');
     final $result$1 = _StringChars$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'\\\\n1\'');
+        reason: 'Testing \'result != null\' failed, input: \'\\\\n1\'');
     final $value$1 = $result$1!.value;
     expect($value$1, '\n1',
-        reason: 'Testing \'result.value\' failed, source: \'\\\\n1\'');
+        reason: 'Testing \'result.value\' failed, input: \'\\\\n1\'');
     expect($state$1.pos, 3,
-        reason: 'Testing \'state.pos\' failed, source: \'\\\\n1\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\\\\n1\'');
     final $state$2 = State('1\\n2');
     final $result$2 = _StringChars$0($state$2);
     expect($result$2 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'1\\\\n2\'');
+        reason: 'Testing \'result != null\' failed, input: \'1\\\\n2\'');
     final $value$2 = $result$2!.value;
     expect($value$2, '1\n2',
-        reason: 'Testing \'result.value\' failed, source: \'1\\\\n2\'');
+        reason: 'Testing \'result.value\' failed, input: \'1\\\\n2\'');
     expect($state$2.pos, 4,
-        reason: 'Testing \'state.pos\' failed, source: \'1\\\\n2\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1\\\\n2\'');
     final $state$3 = State('\\n\\n1');
     final $result$3 = _StringChars$0($state$3);
     expect($result$3 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'\\\\n\\\\n1\'');
+        reason: 'Testing \'result != null\' failed, input: \'\\\\n\\\\n1\'');
     final $value$3 = $result$3!.value;
     expect($value$3, '\n\n1',
-        reason: 'Testing \'result.value\' failed, source: \'\\\\n\\\\n1\'');
+        reason: 'Testing \'result.value\' failed, input: \'\\\\n\\\\n1\'');
     expect($state$3.pos, 5,
-        reason: 'Testing \'state.pos\' failed, source: \'\\\\n\\\\n1\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\\\\n\\\\n1\'');
     final $state$4 = State('');
     final $result$4 = _StringChars$0($state$4);
     expect($result$4 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'\'');
+        reason: 'Testing \'result != null\' failed, input: \'\'');
     final $value$4 = $result$4!.value;
     expect($value$4, '',
-        reason: 'Testing \'result.value\' failed, source: \'\'');
+        reason: 'Testing \'result.value\' failed, input: \'\'');
     expect($state$4.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
   });
 }
 
@@ -1137,36 +1136,36 @@ void _test_Tagshort$0() {
     final $state$0 = State('01');
     final $result$0 = _Tagshort$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'01\'');
+        reason: 'Testing \'result != null\' failed, input: \'01\'');
     final $value$0 = $result$0!.value;
     expect($value$0, '0',
-        reason: 'Testing \'result.value\' failed, source: \'01\'');
+        reason: 'Testing \'result.value\' failed, input: \'01\'');
     expect($state$0.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'01\'');
+        reason: 'Testing \'state.pos\' failed, input: \'01\'');
     final $state$1 = State('');
     final $result$1 = _Tagshort$0($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$1.errors[0], isA<ErrorExpectedTags>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$2 = State('2');
     final $result$2 = _Tagshort$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'2\'');
+        reason: 'Testing \'result == null\' failed, input: \'2\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+        reason: 'Testing \'state.pos\' failed, input: \'2\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'2\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'2\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'2\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'2\'');
     expect($state$2.errors[0], isA<ErrorExpectedTags>(),
-        reason: 'Testing \'state.error\' failed, source: \'2\'');
+        reason: 'Testing \'state.error\' failed, input: \'2\'');
   });
 }
 
@@ -1176,36 +1175,36 @@ void _test_Taglong$0() {
     final $state$0 = State('😀1');
     final $result$0 = _Taglong$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'😀1\'');
+        reason: 'Testing \'result != null\' failed, input: \'😀1\'');
     final $value$0 = $result$0!.value;
     expect($value$0, '😀',
-        reason: 'Testing \'result.value\' failed, source: \'😀1\'');
+        reason: 'Testing \'result.value\' failed, input: \'😀1\'');
     expect($state$0.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'😀1\'');
+        reason: 'Testing \'state.pos\' failed, input: \'😀1\'');
     final $state$1 = State('');
     final $result$1 = _Taglong$0($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$1.errors[0], isA<ErrorExpectedTags>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$2 = State('2');
     final $result$2 = _Taglong$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'2\'');
+        reason: 'Testing \'result == null\' failed, input: \'2\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+        reason: 'Testing \'state.pos\' failed, input: \'2\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'2\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'2\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'2\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'2\'');
     expect($state$2.errors[0], isA<ErrorExpectedTags>(),
-        reason: 'Testing \'state.error\' failed, source: \'2\'');
+        reason: 'Testing \'state.error\' failed, input: \'2\'');
   });
 }
 
@@ -1215,90 +1214,90 @@ void _test_Tags16bit$0() {
     final $state$0 = State('abcd');
     final $result$0 = _Tags16bit$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'abcd\'');
+        reason: 'Testing \'result != null\' failed, input: \'abcd\'');
     final $value$0 = $result$0!.value;
     expect($value$0, 'abc',
-        reason: 'Testing \'result.value\' failed, source: \'abcd\'');
+        reason: 'Testing \'result.value\' failed, input: \'abcd\'');
     expect($state$0.pos, 3,
-        reason: 'Testing \'state.pos\' failed, source: \'abcd\'');
+        reason: 'Testing \'state.pos\' failed, input: \'abcd\'');
     final $state$1 = State('abd');
     final $result$1 = _Tags16bit$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'abd\'');
+        reason: 'Testing \'result != null\' failed, input: \'abd\'');
     final $value$1 = $result$1!.value;
     expect($value$1, 'ab',
-        reason: 'Testing \'result.value\' failed, source: \'abd\'');
+        reason: 'Testing \'result.value\' failed, input: \'abd\'');
     expect($state$1.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'abd\'');
+        reason: 'Testing \'state.pos\' failed, input: \'abd\'');
     final $state$2 = State('ad');
     final $result$2 = _Tags16bit$0($state$2);
     expect($result$2 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'ad\'');
+        reason: 'Testing \'result != null\' failed, input: \'ad\'');
     final $value$2 = $result$2!.value;
     expect($value$2, 'a',
-        reason: 'Testing \'result.value\' failed, source: \'ad\'');
+        reason: 'Testing \'result.value\' failed, input: \'ad\'');
     expect($state$2.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'ad\'');
+        reason: 'Testing \'state.pos\' failed, input: \'ad\'');
     final $state$3 = State('bcd');
     final $result$3 = _Tags16bit$0($state$3);
     expect($result$3 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'bcd\'');
+        reason: 'Testing \'result != null\' failed, input: \'bcd\'');
     final $value$3 = $result$3!.value;
     expect($value$3, 'bc',
-        reason: 'Testing \'result.value\' failed, source: \'bcd\'');
+        reason: 'Testing \'result.value\' failed, input: \'bcd\'');
     expect($state$3.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'bcd\'');
+        reason: 'Testing \'state.pos\' failed, input: \'bcd\'');
     final $state$4 = State('bd');
     final $result$4 = _Tags16bit$0($state$4);
     expect($result$4 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'bd\'');
+        reason: 'Testing \'result != null\' failed, input: \'bd\'');
     final $value$4 = $result$4!.value;
     expect($value$4, 'b',
-        reason: 'Testing \'result.value\' failed, source: \'bd\'');
+        reason: 'Testing \'result.value\' failed, input: \'bd\'');
     expect($state$4.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'bd\'');
+        reason: 'Testing \'state.pos\' failed, input: \'bd\'');
     final $state$5 = State('cd');
     final $result$5 = _Tags16bit$0($state$5);
     expect($result$5 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'cd\'');
+        reason: 'Testing \'result != null\' failed, input: \'cd\'');
     final $value$5 = $result$5!.value;
     expect($value$5, 'c',
-        reason: 'Testing \'result.value\' failed, source: \'cd\'');
+        reason: 'Testing \'result.value\' failed, input: \'cd\'');
     expect($state$5.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'cd\'');
+        reason: 'Testing \'state.pos\' failed, input: \'cd\'');
     final $state$6 = State('😀');
     final $result$6 = _Tags16bit$0($state$6);
     expect($result$6 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'😀\'');
+        reason: 'Testing \'result != null\' failed, input: \'😀\'');
     final $value$6 = $result$6!.value;
     expect($value$6, '😀',
-        reason: 'Testing \'result.value\' failed, source: \'😀\'');
+        reason: 'Testing \'result.value\' failed, input: \'😀\'');
     expect($state$6.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'😀\'');
+        reason: 'Testing \'state.pos\' failed, input: \'😀\'');
     final $state$7 = State('');
     final $result$7 = _Tags16bit$0($state$7);
     expect($result$7 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$7.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$7.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$7.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$7.errors[0], isA<ErrorExpectedTags>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$8 = State('x');
     final $result$8 = _Tags16bit$0($state$8);
     expect($result$8 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'x\'');
+        reason: 'Testing \'result == null\' failed, input: \'x\'');
     expect($state$8.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'x\'');
+        reason: 'Testing \'state.pos\' failed, input: \'x\'');
     expect($state$8.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'x\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'x\'');
     expect($state$8.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'x\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'x\'');
     expect($state$8.errors[0], isA<ErrorExpectedTags>(),
-        reason: 'Testing \'state.error\' failed, source: \'x\'');
+        reason: 'Testing \'state.error\' failed, input: \'x\'');
   });
 }
 
@@ -1308,48 +1307,48 @@ void _test_TakeWhileMN03$0() {
     final $state$0 = State('😀😀😀😀');
     final $result$0 = _TakeWhileMN03$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'😀😀😀😀\'');
+        reason: 'Testing \'result != null\' failed, input: \'😀😀😀😀\'');
     final $value$0 = $result$0!.value;
     expect($value$0, '😀😀😀',
-        reason: 'Testing \'result.value\' failed, source: \'😀😀😀😀\'');
+        reason: 'Testing \'result.value\' failed, input: \'😀😀😀😀\'');
     expect($state$0.pos, 6,
-        reason: 'Testing \'state.pos\' failed, source: \'😀😀😀😀\'');
+        reason: 'Testing \'state.pos\' failed, input: \'😀😀😀😀\'');
     final $state$1 = State('😀😀');
     final $result$1 = _TakeWhileMN03$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'😀😀\'');
+        reason: 'Testing \'result != null\' failed, input: \'😀😀\'');
     final $value$1 = $result$1!.value;
     expect($value$1, '😀😀',
-        reason: 'Testing \'result.value\' failed, source: \'😀😀\'');
+        reason: 'Testing \'result.value\' failed, input: \'😀😀\'');
     expect($state$1.pos, 4,
-        reason: 'Testing \'state.pos\' failed, source: \'😀😀\'');
+        reason: 'Testing \'state.pos\' failed, input: \'😀😀\'');
     final $state$2 = State('😀');
     final $result$2 = _TakeWhileMN03$0($state$2);
     expect($result$2 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'😀\'');
+        reason: 'Testing \'result != null\' failed, input: \'😀\'');
     final $value$2 = $result$2!.value;
     expect($value$2, '😀',
-        reason: 'Testing \'result.value\' failed, source: \'😀\'');
+        reason: 'Testing \'result.value\' failed, input: \'😀\'');
     expect($state$2.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'😀\'');
+        reason: 'Testing \'state.pos\' failed, input: \'😀\'');
     final $state$3 = State('');
     final $result$3 = _TakeWhileMN03$0($state$3);
     expect($result$3 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'\'');
+        reason: 'Testing \'result != null\' failed, input: \'\'');
     final $value$3 = $result$3!.value;
     expect($value$3, '',
-        reason: 'Testing \'result.value\' failed, source: \'\'');
+        reason: 'Testing \'result.value\' failed, input: \'\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     final $state$4 = State('a');
     final $result$4 = _TakeWhileMN03$0($state$4);
     expect($result$4 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'a\'');
+        reason: 'Testing \'result != null\' failed, input: \'a\'');
     final $value$4 = $result$4!.value;
     expect($value$4, '',
-        reason: 'Testing \'result.value\' failed, source: \'a\'');
+        reason: 'Testing \'result.value\' failed, input: \'a\'');
     expect($state$4.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'a\'');
+        reason: 'Testing \'state.pos\' failed, input: \'a\'');
   });
 }
 
@@ -1359,45 +1358,45 @@ void _test_TakeWhileMN12$0() {
     final $state$0 = State('😀😀😀😀');
     final $result$0 = _TakeWhileMN12$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'😀😀😀😀\'');
+        reason: 'Testing \'result != null\' failed, input: \'😀😀😀😀\'');
     final $value$0 = $result$0!.value;
     expect($value$0, '😀😀',
-        reason: 'Testing \'result.value\' failed, source: \'😀😀😀😀\'');
+        reason: 'Testing \'result.value\' failed, input: \'😀😀😀😀\'');
     expect($state$0.pos, 4,
-        reason: 'Testing \'state.pos\' failed, source: \'😀😀😀😀\'');
+        reason: 'Testing \'state.pos\' failed, input: \'😀😀😀😀\'');
     final $state$1 = State('😀');
     final $result$1 = _TakeWhileMN12$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'😀\'');
+        reason: 'Testing \'result != null\' failed, input: \'😀\'');
     final $value$1 = $result$1!.value;
     expect($value$1, '😀',
-        reason: 'Testing \'result.value\' failed, source: \'😀\'');
+        reason: 'Testing \'result.value\' failed, input: \'😀\'');
     expect($state$1.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'😀\'');
+        reason: 'Testing \'state.pos\' failed, input: \'😀\'');
     final $state$2 = State('');
     final $result$2 = _TakeWhileMN12$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$2.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$3 = State('1');
     final $result$3 = _TakeWhileMN12$0($state$3);
     expect($result$3 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'1\'');
+        reason: 'Testing \'result == null\' failed, input: \'1\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'1\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1\'');
     expect($state$3.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'1\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'1\'');
     expect($state$3.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'1\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'1\'');
     expect($state$3.errors[0], isA<ErrorUnexpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'1\'');
+        reason: 'Testing \'state.error\' failed, input: \'1\'');
   });
 }
 
@@ -1407,48 +1406,48 @@ void _test_Take16WhileMN03$0() {
     final $state$0 = State('12345');
     final $result$0 = _Take16WhileMN03$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'12345\'');
+        reason: 'Testing \'result != null\' failed, input: \'12345\'');
     final $value$0 = $result$0!.value;
     expect($value$0, '123',
-        reason: 'Testing \'result.value\' failed, source: \'12345\'');
+        reason: 'Testing \'result.value\' failed, input: \'12345\'');
     expect($state$0.pos, 3,
-        reason: 'Testing \'state.pos\' failed, source: \'12345\'');
+        reason: 'Testing \'state.pos\' failed, input: \'12345\'');
     final $state$1 = State('12');
     final $result$1 = _Take16WhileMN03$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'12\'');
+        reason: 'Testing \'result != null\' failed, input: \'12\'');
     final $value$1 = $result$1!.value;
     expect($value$1, '12',
-        reason: 'Testing \'result.value\' failed, source: \'12\'');
+        reason: 'Testing \'result.value\' failed, input: \'12\'');
     expect($state$1.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'12\'');
+        reason: 'Testing \'state.pos\' failed, input: \'12\'');
     final $state$2 = State('1');
     final $result$2 = _Take16WhileMN03$0($state$2);
     expect($result$2 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'1\'');
+        reason: 'Testing \'result != null\' failed, input: \'1\'');
     final $value$2 = $result$2!.value;
     expect($value$2, '1',
-        reason: 'Testing \'result.value\' failed, source: \'1\'');
+        reason: 'Testing \'result.value\' failed, input: \'1\'');
     expect($state$2.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'1\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1\'');
     final $state$3 = State('');
     final $result$3 = _Take16WhileMN03$0($state$3);
     expect($result$3 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'\'');
+        reason: 'Testing \'result != null\' failed, input: \'\'');
     final $value$3 = $result$3!.value;
     expect($value$3, '',
-        reason: 'Testing \'result.value\' failed, source: \'\'');
+        reason: 'Testing \'result.value\' failed, input: \'\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     final $state$4 = State('a');
     final $result$4 = _Take16WhileMN03$0($state$4);
     expect($result$4 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'a\'');
+        reason: 'Testing \'result != null\' failed, input: \'a\'');
     final $value$4 = $result$4!.value;
     expect($value$4, '',
-        reason: 'Testing \'result.value\' failed, source: \'a\'');
+        reason: 'Testing \'result.value\' failed, input: \'a\'');
     expect($state$4.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'a\'');
+        reason: 'Testing \'state.pos\' failed, input: \'a\'');
   });
 }
 
@@ -1458,45 +1457,45 @@ void _test_Take16WhileMN12$0() {
     final $state$0 = State('123');
     final $result$0 = _Take16WhileMN12$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'123\'');
+        reason: 'Testing \'result != null\' failed, input: \'123\'');
     final $value$0 = $result$0!.value;
     expect($value$0, '12',
-        reason: 'Testing \'result.value\' failed, source: \'123\'');
+        reason: 'Testing \'result.value\' failed, input: \'123\'');
     expect($state$0.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'123\'');
+        reason: 'Testing \'state.pos\' failed, input: \'123\'');
     final $state$1 = State('1a');
     final $result$1 = _Take16WhileMN12$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'1a\'');
+        reason: 'Testing \'result != null\' failed, input: \'1a\'');
     final $value$1 = $result$1!.value;
     expect($value$1, '1',
-        reason: 'Testing \'result.value\' failed, source: \'1a\'');
+        reason: 'Testing \'result.value\' failed, input: \'1a\'');
     expect($state$1.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'1a\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1a\'');
     final $state$2 = State('');
     final $result$2 = _Take16WhileMN12$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$2.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$3 = State('a');
     final $result$3 = _Take16WhileMN12$0($state$3);
     expect($result$3 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'a\'');
+        reason: 'Testing \'result == null\' failed, input: \'a\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'a\'');
+        reason: 'Testing \'state.pos\' failed, input: \'a\'');
     expect($state$3.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'a\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'a\'');
     expect($state$3.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'a\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'a\'');
     expect($state$3.errors[0], isA<ErrorUnexpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'a\'');
+        reason: 'Testing \'state.error\' failed, input: \'a\'');
   });
 }
 
@@ -1506,39 +1505,39 @@ void _test_TakeWhile$0() {
     final $state$0 = State('😀');
     final $result$0 = _TakeWhile$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'😀\'');
+        reason: 'Testing \'result != null\' failed, input: \'😀\'');
     final $value$0 = $result$0!.value;
     expect($value$0, '😀',
-        reason: 'Testing \'result.value\' failed, source: \'😀\'');
+        reason: 'Testing \'result.value\' failed, input: \'😀\'');
     expect($state$0.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'😀\'');
+        reason: 'Testing \'state.pos\' failed, input: \'😀\'');
     final $state$1 = State('😀😀');
     final $result$1 = _TakeWhile$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'😀😀\'');
+        reason: 'Testing \'result != null\' failed, input: \'😀😀\'');
     final $value$1 = $result$1!.value;
     expect($value$1, '😀😀',
-        reason: 'Testing \'result.value\' failed, source: \'😀😀\'');
+        reason: 'Testing \'result.value\' failed, input: \'😀😀\'');
     expect($state$1.pos, 4,
-        reason: 'Testing \'state.pos\' failed, source: \'😀😀\'');
+        reason: 'Testing \'state.pos\' failed, input: \'😀😀\'');
     final $state$2 = State('');
     final $result$2 = _TakeWhile$0($state$2);
     expect($result$2 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'\'');
+        reason: 'Testing \'result != null\' failed, input: \'\'');
     final $value$2 = $result$2!.value;
     expect($value$2, '',
-        reason: 'Testing \'result.value\' failed, source: \'\'');
+        reason: 'Testing \'result.value\' failed, input: \'\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     final $state$3 = State('a');
     final $result$3 = _TakeWhile$0($state$3);
     expect($result$3 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'a\'');
+        reason: 'Testing \'result != null\' failed, input: \'a\'');
     final $value$3 = $result$3!.value;
     expect($value$3, '',
-        reason: 'Testing \'result.value\' failed, source: \'a\'');
+        reason: 'Testing \'result.value\' failed, input: \'a\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'a\'');
+        reason: 'Testing \'state.pos\' failed, input: \'a\'');
   });
 }
 
@@ -1548,45 +1547,45 @@ void _test_TakeWhile1$0() {
     final $state$0 = State('😀');
     final $result$0 = _TakeWhile1$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'😀\'');
+        reason: 'Testing \'result != null\' failed, input: \'😀\'');
     final $value$0 = $result$0!.value;
     expect($value$0, '😀',
-        reason: 'Testing \'result.value\' failed, source: \'😀\'');
+        reason: 'Testing \'result.value\' failed, input: \'😀\'');
     expect($state$0.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'😀\'');
+        reason: 'Testing \'state.pos\' failed, input: \'😀\'');
     final $state$1 = State('😀😀');
     final $result$1 = _TakeWhile1$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'😀😀\'');
+        reason: 'Testing \'result != null\' failed, input: \'😀😀\'');
     final $value$1 = $result$1!.value;
     expect($value$1, '😀😀',
-        reason: 'Testing \'result.value\' failed, source: \'😀😀\'');
+        reason: 'Testing \'result.value\' failed, input: \'😀😀\'');
     expect($state$1.pos, 4,
-        reason: 'Testing \'state.pos\' failed, source: \'😀😀\'');
+        reason: 'Testing \'state.pos\' failed, input: \'😀😀\'');
     final $state$2 = State('');
     final $result$2 = _TakeWhile1$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$2.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$3 = State('a');
     final $result$3 = _TakeWhile1$0($state$3);
     expect($result$3 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'a\'');
+        reason: 'Testing \'result == null\' failed, input: \'a\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'a\'');
+        reason: 'Testing \'state.pos\' failed, input: \'a\'');
     expect($state$3.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'a\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'a\'');
     expect($state$3.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'a\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'a\'');
     expect($state$3.errors[0], isA<ErrorUnexpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'a\'');
+        reason: 'Testing \'state.error\' failed, input: \'a\'');
   });
 }
 
@@ -1596,39 +1595,39 @@ void _test_Take16While$0() {
     final $state$0 = State('1a');
     final $result$0 = _Take16While$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'1a\'');
+        reason: 'Testing \'result != null\' failed, input: \'1a\'');
     final $value$0 = $result$0!.value;
     expect($value$0, '1',
-        reason: 'Testing \'result.value\' failed, source: \'1a\'');
+        reason: 'Testing \'result.value\' failed, input: \'1a\'');
     expect($state$0.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'1a\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1a\'');
     final $state$1 = State('12a');
     final $result$1 = _Take16While$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'12a\'');
+        reason: 'Testing \'result != null\' failed, input: \'12a\'');
     final $value$1 = $result$1!.value;
     expect($value$1, '12',
-        reason: 'Testing \'result.value\' failed, source: \'12a\'');
+        reason: 'Testing \'result.value\' failed, input: \'12a\'');
     expect($state$1.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'12a\'');
+        reason: 'Testing \'state.pos\' failed, input: \'12a\'');
     final $state$2 = State('');
     final $result$2 = _Take16While$0($state$2);
     expect($result$2 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'\'');
+        reason: 'Testing \'result != null\' failed, input: \'\'');
     final $value$2 = $result$2!.value;
     expect($value$2, '',
-        reason: 'Testing \'result.value\' failed, source: \'\'');
+        reason: 'Testing \'result.value\' failed, input: \'\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     final $state$3 = State('a');
     final $result$3 = _Take16While$0($state$3);
     expect($result$3 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'a\'');
+        reason: 'Testing \'result != null\' failed, input: \'a\'');
     final $value$3 = $result$3!.value;
     expect($value$3, '',
-        reason: 'Testing \'result.value\' failed, source: \'a\'');
+        reason: 'Testing \'result.value\' failed, input: \'a\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'a\'');
+        reason: 'Testing \'state.pos\' failed, input: \'a\'');
   });
 }
 
@@ -1638,45 +1637,45 @@ void _test_Take16While1$0() {
     final $state$0 = State('1a');
     final $result$0 = _Take16While1$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'1a\'');
+        reason: 'Testing \'result != null\' failed, input: \'1a\'');
     final $value$0 = $result$0!.value;
     expect($value$0, '1',
-        reason: 'Testing \'result.value\' failed, source: \'1a\'');
+        reason: 'Testing \'result.value\' failed, input: \'1a\'');
     expect($state$0.pos, 1,
-        reason: 'Testing \'state.pos\' failed, source: \'1a\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1a\'');
     final $state$1 = State('12a');
     final $result$1 = _Take16While1$0($state$1);
     expect($result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'12a\'');
+        reason: 'Testing \'result != null\' failed, input: \'12a\'');
     final $value$1 = $result$1!.value;
     expect($value$1, '12',
-        reason: 'Testing \'result.value\' failed, source: \'12a\'');
+        reason: 'Testing \'result.value\' failed, input: \'12a\'');
     expect($state$1.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'12a\'');
+        reason: 'Testing \'state.pos\' failed, input: \'12a\'');
     final $state$2 = State('');
     final $result$2 = _Take16While1$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$2.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$2.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$3 = State('a');
     final $result$3 = _Take16While1$0($state$3);
     expect($result$3 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'a\'');
+        reason: 'Testing \'result == null\' failed, input: \'a\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'a\'');
+        reason: 'Testing \'state.pos\' failed, input: \'a\'');
     expect($state$3.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'a\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'a\'');
     expect($state$3.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'a\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'a\'');
     expect($state$3.errors[0], isA<ErrorUnexpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'a\'');
+        reason: 'Testing \'state.error\' failed, input: \'a\'');
   });
 }
 
@@ -1686,54 +1685,54 @@ void _test_Terminated$0() {
     final $state$0 = State('123');
     final $result$0 = _Terminated$0($state$0);
     expect($result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'123\'');
+        reason: 'Testing \'result != null\' failed, input: \'123\'');
     final $value$0 = $result$0!.value;
     expect($value$0, 49,
-        reason: 'Testing \'result.value\' failed, source: \'123\'');
+        reason: 'Testing \'result.value\' failed, input: \'123\'');
     expect($state$0.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'123\'');
+        reason: 'Testing \'state.pos\' failed, input: \'123\'');
     final $state$1 = State('');
     final $result$1 = _Terminated$0($state$1);
     expect($result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
+        reason: 'Testing \'result == null\' failed, input: \'\'');
     expect($state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
+        reason: 'Testing \'state.pos\' failed, input: \'\'');
     expect($state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'\'');
     expect($state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'\'');
     expect($state$1.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
+        reason: 'Testing \'state.error\' failed, input: \'\'');
     final $state$2 = State('1');
     final $result$2 = _Terminated$0($state$2);
     expect($result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'1\'');
+        reason: 'Testing \'result == null\' failed, input: \'1\'');
     expect($state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'1\'');
+        reason: 'Testing \'state.pos\' failed, input: \'1\'');
     expect($state$2.failPos, 1,
-        reason: 'Testing \'state.failPos\' failed, source: \'1\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'1\'');
     expect($state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'1\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'1\'');
     expect($state$2.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'1\'');
+        reason: 'Testing \'state.error\' failed, input: \'1\'');
     final $state$3 = State('2');
     final $result$3 = _Terminated$0($state$3);
     expect($result$3 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'2\'');
+        reason: 'Testing \'result == null\' failed, input: \'2\'');
     expect($state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+        reason: 'Testing \'state.pos\' failed, input: \'2\'');
     expect($state$3.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'2\'');
+        reason: 'Testing \'state.failPos\' failed, input: \'2\'');
     expect($state$3.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'2\'');
+        reason: 'Testing \'state.errors.length\' failed, input: \'2\'');
     expect($state$3.errors[0], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'2\'');
+        reason: 'Testing \'state.error\' failed, input: \'2\'');
   });
 }
 
 Result<int>? _$0(State<String> state) {
-  if (state.pos < state.source.length) {
-    final c = state.source.codeUnitAt(state.pos);
+  if (state.pos < state.input.length) {
+    final c = state.input.codeUnitAt(state.pos);
     if (c == 48) {
       state.pos++;
       return const Result(48);
@@ -1744,8 +1743,8 @@ Result<int>? _$0(State<String> state) {
 }
 
 Result<int>? _$2(State<String> state) {
-  if (state.pos < state.source.length) {
-    final c = state.source.codeUnitAt(state.pos);
+  if (state.pos < state.input.length) {
+    final c = state.input.codeUnitAt(state.pos);
     if (c == 49) {
       state.pos++;
       return const Result(49);
@@ -1779,8 +1778,8 @@ Result<int>? _And$0(State<String> state) {
 }
 
 Result<int>? _And$1(State<String> state) {
-  if (state.pos < state.source.length) {
-    final c = state.source.runeAt(state.pos);
+  if (state.pos < state.input.length) {
+    final c = state.input.runeAt(state.pos);
     state.pos += c <= 0xffff ? 1 : 2;
     return Result(c);
   }
@@ -1788,8 +1787,8 @@ Result<int>? _And$1(State<String> state) {
 }
 
 Result<int>? _Char16bit$0(State<String> state) {
-  if (state.pos < state.source.length) {
-    final c = state.source.codeUnitAt(state.pos);
+  if (state.pos < state.input.length) {
+    final c = state.input.codeUnitAt(state.pos);
     if (c == 48) {
       state.pos++;
       return const Result(48);
@@ -1800,8 +1799,8 @@ Result<int>? _Char16bit$0(State<String> state) {
 }
 
 Result<int>? _Char32bit$0(State<String> state) {
-  if (state.pos < state.source.length) {
-    final c = state.source.runeAt(state.pos);
+  if (state.pos < state.input.length) {
+    final c = state.input.runeAt(state.pos);
     if (c == 128512) {
       state.pos += c <= 0xffff ? 1 : 2;
       return const Result(128512);
@@ -1825,8 +1824,8 @@ Result<int>? _Choice2variants$0(State<String> state) {
 }
 
 Result<int>? _$7(State<String> state) {
-  if (state.pos < state.source.length) {
-    final c = state.source.codeUnitAt(state.pos);
+  if (state.pos < state.input.length) {
+    final c = state.input.codeUnitAt(state.pos);
     if (c == 50) {
       state.pos++;
       return const Result(50);
@@ -1854,8 +1853,8 @@ Result<int>? _Choice3variants$0(State<String> state) {
 }
 
 Result<int>? _Char16$0(State<String> state) {
-  if (state.pos < state.source.length) {
-    final c = state.source.codeUnitAt(state.pos);
+  if (state.pos < state.input.length) {
+    final c = state.input.codeUnitAt(state.pos);
     if (c == 49) {
       state.pos++;
       return const Result(49);
@@ -1866,8 +1865,8 @@ Result<int>? _Char16$0(State<String> state) {
 }
 
 Result<int>? _Char$0(State<String> state) {
-  if (state.pos < state.source.length) {
-    final c = state.source.runeAt(state.pos);
+  if (state.pos < state.input.length) {
+    final c = state.input.runeAt(state.pos);
     if (c == 128512) {
       state.pos += c <= 0xffff ? 1 : 2;
       return const Result(128512);
@@ -1878,8 +1877,8 @@ Result<int>? _Char$0(State<String> state) {
 }
 
 Result<int>? _$10(State<String> state) {
-  if (state.pos < state.source.length) {
-    final c = state.source.codeUnitAt(state.pos);
+  if (state.pos < state.input.length) {
+    final c = state.input.codeUnitAt(state.pos);
     if (c == 51) {
       state.pos++;
       return const Result(51);
@@ -1906,7 +1905,7 @@ Result<int>? _Delimited$0(State<String> state) {
 }
 
 Result<Object?>? _Eof$0(State<String> state) {
-  if (state.pos >= state.source.length) {
+  if (state.pos >= state.input.length) {
     return const Result(null);
   }
   return state.fail(const ErrorExpectedEof());
@@ -1940,8 +1939,8 @@ Result<(int, int)>? _Expected$0(State<String> state) {
 }
 
 Result<Object?>? _FastSatisfy16$0(State<String> state) {
-  if (state.pos < state.source.length) {
-    final c = state.source.codeUnitAt(state.pos);
+  if (state.pos < state.input.length) {
+    final c = state.input.codeUnitAt(state.pos);
     final ok = c >= 48 && c <= 57;
     if (ok) {
       state.pos++;
@@ -1953,8 +1952,8 @@ Result<Object?>? _FastSatisfy16$0(State<String> state) {
 }
 
 Result<Object?>? _FastSatisfy16$1(State<String> state) {
-  if (state.pos < state.source.length) {
-    final c = state.source.runeAt(state.pos);
+  if (state.pos < state.input.length) {
+    final c = state.input.runeAt(state.pos);
     final ok = c == 128512;
     if (ok) {
       state.pos += c < 0xffff ? 1 : 2;
@@ -2086,11 +2085,11 @@ Result<int>? _Preceded$0(State<String> state) {
 }
 
 Result<String>? _$25(State<String> state) {
-  final source = state.source;
+  final input = state.input;
   final pos = state.pos;
   var count = 0;
-  while (count < 2 && state.pos < source.length) {
-    final c = source.codeUnitAt(state.pos);
+  while (count < 2 && state.pos < input.length) {
+    final c = input.codeUnitAt(state.pos);
     final ok = c >= 48 && c <= 57;
     if (!ok) {
       break;
@@ -2100,12 +2099,12 @@ Result<String>? _$25(State<String> state) {
   }
   if (count >= 2) {
     return state.pos != pos
-        ? Result(source.substring(pos, state.pos))
+        ? Result(input.substring(pos, state.pos))
         : const Result('');
   }
   final end = state.pos;
   state.pos = pos;
-  return end < source.length
+  return end < input.length
       ? state.failAt(end, const ErrorUnexpectedChar())
       : state.failAt(end, const ErrorUnexpectedEof());
 }
@@ -2130,8 +2129,8 @@ Result<String>? _ReplaceErrors$0(State<String> state) {
 
 Result<String>? _$27(State<String> state) {
   const tag = 'n';
-  if (state.pos < state.source.length &&
-      state.source.codeUnitAt(state.pos) == 110) {
+  if (state.pos < state.input.length &&
+      state.input.codeUnitAt(state.pos) == 110) {
     state.pos++;
     return const Result(tag);
   }
@@ -2147,21 +2146,21 @@ Result<String>? _$26(State<String> state) {
 }
 
 Result<String>? _StringChars$0(State<String> state) {
-  final source = state.source;
+  final input = state.input;
   final list = <String>[];
   var str = '';
-  while (state.pos < source.length) {
+  while (state.pos < input.length) {
     final pos = state.pos;
     var c = 0;
-    while (state.pos < source.length) {
-      c = source.runeAt(state.pos);
+    while (state.pos < input.length) {
+      c = input.runeAt(state.pos);
       final ok = c >= 48 && c <= 57;
       if (!ok) {
         break;
       }
       state.pos += c < 0xffff ? 1 : 2;
     }
-    str = state.pos != pos ? source.substring(pos, state.pos) : '';
+    str = state.pos != pos ? input.substring(pos, state.pos) : '';
     if (str != '' && list.isNotEmpty) {
       list.add(str);
     }
@@ -2188,8 +2187,8 @@ Result<String>? _StringChars$0(State<String> state) {
 
 Result<String>? _Tagshort$0(State<String> state) {
   const tag = '0';
-  if (state.pos < state.source.length &&
-      state.source.codeUnitAt(state.pos) == 48) {
+  if (state.pos < state.input.length &&
+      state.input.codeUnitAt(state.pos) == 48) {
     state.pos++;
     return const Result(tag);
   }
@@ -2198,7 +2197,7 @@ Result<String>? _Tagshort$0(State<String> state) {
 
 Result<String>? _Taglong$0(State<String> state) {
   const tag = '😀';
-  if (state.source.startsWith(tag, state.pos)) {
+  if (state.input.startsWith(tag, state.pos)) {
     state.pos += 2;
     return const Result(tag);
   }
@@ -2207,14 +2206,14 @@ Result<String>? _Taglong$0(State<String> state) {
 
 Result<String>? _Tags16bit$0(State<String> state) {
   final pos = state.pos;
-  final source = state.source;
-  if (pos < source.length) {
-    final c = source.codeUnitAt(pos);
+  final input = state.input;
+  if (pos < input.length) {
+    final c = input.codeUnitAt(pos);
     if (c == 97) {
-      if (source.startsWith('abc', pos)) {
+      if (input.startsWith('abc', pos)) {
         state.pos += 3;
         return const Result('abc');
-      } else if (source.startsWith('ab', pos)) {
+      } else if (input.startsWith('ab', pos)) {
         state.pos += 2;
         return const Result('ab');
       } else {
@@ -2222,7 +2221,7 @@ Result<String>? _Tags16bit$0(State<String> state) {
         return const Result('a');
       }
     } else if (c == 98) {
-      if (source.startsWith('bc', pos)) {
+      if (input.startsWith('bc', pos)) {
         state.pos += 2;
         return const Result('bc');
       } else {
@@ -2233,7 +2232,7 @@ Result<String>? _Tags16bit$0(State<String> state) {
       state.pos += 1;
       return const Result('c');
     } else if (c == 55357) {
-      if (source.startsWith('😀', pos)) {
+      if (input.startsWith('😀', pos)) {
         state.pos += 2;
         return const Result('😀');
       }
@@ -2244,11 +2243,11 @@ Result<String>? _Tags16bit$0(State<String> state) {
 }
 
 Result<String>? _TakeWhileMN03$0(State<String> state) {
-  final source = state.source;
+  final input = state.input;
   final pos = state.pos;
   var count = 0;
-  while (count < 3 && state.pos < source.length) {
-    final c = source.runeAt(state.pos);
+  while (count < 3 && state.pos < input.length) {
+    final c = input.runeAt(state.pos);
     final ok = c == 0x1f600;
     if (!ok) {
       break;
@@ -2257,16 +2256,16 @@ Result<String>? _TakeWhileMN03$0(State<String> state) {
     count++;
   }
   return state.pos != pos
-      ? Result(source.substring(pos, state.pos))
+      ? Result(input.substring(pos, state.pos))
       : const Result('');
 }
 
 Result<String>? _TakeWhileMN12$0(State<String> state) {
-  final source = state.source;
+  final input = state.input;
   final pos = state.pos;
   var count = 0;
-  while (count < 2 && state.pos < source.length) {
-    final c = source.runeAt(state.pos);
+  while (count < 2 && state.pos < input.length) {
+    final c = input.runeAt(state.pos);
     final ok = c == 0x1f600;
     if (!ok) {
       break;
@@ -2276,22 +2275,22 @@ Result<String>? _TakeWhileMN12$0(State<String> state) {
   }
   if (count >= 1) {
     return state.pos != pos
-        ? Result(source.substring(pos, state.pos))
+        ? Result(input.substring(pos, state.pos))
         : const Result('');
   }
   final end = state.pos;
   state.pos = pos;
-  return end < source.length
+  return end < input.length
       ? state.failAt(end, const ErrorUnexpectedChar())
       : state.failAt(end, const ErrorUnexpectedEof());
 }
 
 Result<String>? _Take16WhileMN03$0(State<String> state) {
-  final source = state.source;
+  final input = state.input;
   final pos = state.pos;
   var count = 0;
-  while (count < 3 && state.pos < source.length) {
-    final c = source.codeUnitAt(state.pos);
+  while (count < 3 && state.pos < input.length) {
+    final c = input.codeUnitAt(state.pos);
     final ok = c >= 48 && c <= 57;
     if (!ok) {
       break;
@@ -2300,16 +2299,16 @@ Result<String>? _Take16WhileMN03$0(State<String> state) {
     count++;
   }
   return state.pos != pos
-      ? Result(source.substring(pos, state.pos))
+      ? Result(input.substring(pos, state.pos))
       : const Result('');
 }
 
 Result<String>? _Take16WhileMN12$0(State<String> state) {
-  final source = state.source;
+  final input = state.input;
   final pos = state.pos;
   var count = 0;
-  while (count < 2 && state.pos < source.length) {
-    final c = source.codeUnitAt(state.pos);
+  while (count < 2 && state.pos < input.length) {
+    final c = input.codeUnitAt(state.pos);
     final ok = c >= 48 && c <= 57;
     if (!ok) {
       break;
@@ -2319,21 +2318,21 @@ Result<String>? _Take16WhileMN12$0(State<String> state) {
   }
   if (count >= 1) {
     return state.pos != pos
-        ? Result(source.substring(pos, state.pos))
+        ? Result(input.substring(pos, state.pos))
         : const Result('');
   }
   final end = state.pos;
   state.pos = pos;
-  return end < source.length
+  return end < input.length
       ? state.failAt(end, const ErrorUnexpectedChar())
       : state.failAt(end, const ErrorUnexpectedEof());
 }
 
 Result<String>? _TakeWhile$0(State<String> state) {
-  final source = state.source;
+  final input = state.input;
   final start = state.pos;
-  while (state.pos < source.length) {
-    final c = source.runeAt(state.pos);
+  while (state.pos < input.length) {
+    final c = input.runeAt(state.pos);
     final v = c == 0x1f600;
     if (!v) {
       break;
@@ -2341,15 +2340,15 @@ Result<String>? _TakeWhile$0(State<String> state) {
     state.pos += c <= 0xffff ? 1 : 2;
   }
   return state.pos != start
-      ? Result(source.substring(start, state.pos))
+      ? Result(input.substring(start, state.pos))
       : const Result('');
 }
 
 Result<String>? _TakeWhile1$0(State<String> state) {
-  final source = state.source;
+  final input = state.input;
   final start = state.pos;
-  while (state.pos < source.length) {
-    final c = source.runeAt(state.pos);
+  while (state.pos < input.length) {
+    final c = input.runeAt(state.pos);
     final v = c == 0x1f600;
     if (!v) {
       break;
@@ -2357,19 +2356,19 @@ Result<String>? _TakeWhile1$0(State<String> state) {
     state.pos += c <= 0xffff ? 1 : 2;
   }
   if (state.pos != start) {
-    return Result(source.substring(start, state.pos));
+    return Result(input.substring(start, state.pos));
   }
-  if (state.pos != source.length) {
+  if (state.pos != input.length) {
     return state.fail(const ErrorUnexpectedChar());
   }
   return state.fail(const ErrorUnexpectedEof());
 }
 
 Result<String>? _Take16While$0(State<String> state) {
-  final source = state.source;
+  final input = state.input;
   final start = state.pos;
-  while (state.pos < source.length) {
-    final c = source.runeAt(state.pos);
+  while (state.pos < input.length) {
+    final c = input.runeAt(state.pos);
     final v = c >= 48 && c <= 57;
     if (!v) {
       break;
@@ -2377,15 +2376,15 @@ Result<String>? _Take16While$0(State<String> state) {
     state.pos++;
   }
   return state.pos != start
-      ? Result(source.substring(start, state.pos))
+      ? Result(input.substring(start, state.pos))
       : const Result('');
 }
 
 Result<String>? _Take16While1$0(State<String> state) {
-  final source = state.source;
+  final input = state.input;
   final start = state.pos;
-  while (state.pos < source.length) {
-    final c = source.runeAt(state.pos);
+  while (state.pos < input.length) {
+    final c = input.runeAt(state.pos);
     final v = c >= 48 && c <= 57;
     if (!v) {
       break;
@@ -2393,9 +2392,9 @@ Result<String>? _Take16While1$0(State<String> state) {
     state.pos += c <= 0xffff ? 1 : 2;
   }
   if (state.pos != start) {
-    return Result(source.substring(start, state.pos));
+    return Result(input.substring(start, state.pos));
   }
-  if (state.pos != source.length) {
+  if (state.pos != input.length) {
     return state.fail(const ErrorUnexpectedChar());
   }
   return state.fail(const ErrorUnexpectedEof());
@@ -2421,10 +2420,10 @@ class ErrorExpectedChar extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
-    if (source is String) {
+    if (input is String) {
       final value = escape(char);
       return 'Expected character $value';
     } else {
@@ -2438,8 +2437,8 @@ class ErrorExpectedEof extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     return 'Expected end of file';
   }
@@ -2452,8 +2451,8 @@ class ErrorExpectedTags extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     final value = tags.map(escape).join(', ');
     return 'Expected $value';
@@ -2470,8 +2469,8 @@ class ErrorMessage extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     return message;
   }
@@ -2482,11 +2481,11 @@ class ErrorUnexpectedChar extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
-    if (source is String) {
-      final char = source.runeAt(offset);
+    if (input is String) {
+      final char = input.runeAt(offset);
       final value = escape(char);
       return 'Unexpected character $value';
     } else {
@@ -2500,8 +2499,8 @@ class ErrorUnexpectedEof extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     return 'Unexpected end of file';
   }
@@ -2515,8 +2514,8 @@ class ErrorUnexpectedInput extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     return 'Unexpected input';
   }
@@ -2527,8 +2526,8 @@ class ErrorUnknown extends ParseError {
 
   @override
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   }) {
     return 'Unknown error';
   }
@@ -2570,8 +2569,8 @@ abstract class ParseError {
   }
 
   String getMessage({
+    required Object input,
     required int offset,
-    required Object source,
   });
 }
 
@@ -2597,11 +2596,11 @@ class State<T> {
 
   int failPos = 0;
 
+  final T input;
+
   int pos = 0;
 
-  final T source;
-
-  State(this.source);
+  State(this.input);
 
   @pragma('vm:prefer-inline')
   Result<R>? fail<R>(ParseError error) {
@@ -2629,8 +2628,8 @@ class State<T> {
 
   @override
   String toString() {
-    if (source is String) {
-      final s = source as String;
+    if (input is String) {
+      final s = input as String;
       if (pos >= s.length) {
         return '$pos:';
       }

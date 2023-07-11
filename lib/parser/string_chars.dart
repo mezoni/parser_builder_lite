@@ -13,21 +13,21 @@ import '../parser_builder.dart';
 /// ```
 class StringChars extends ParserBuilder<String, String> {
   static const _template = '''
-final source = state.source;
+final input = state.input;
 final list = <String>[];
 var str = '';
-while (state.pos < source.length) {
+while (state.pos < input.length) {
   final pos = state.pos;
   var c = 0;
-  while (state.pos < source.length) {
-    c = source.runeAt(state.pos);
+  while (state.pos < input.length) {
+    c = input.runeAt(state.pos);
     final ok = {{normalChar}};
     if (!ok) {
       break;
     }
     state.pos += c < 0xffff ? 1 : 2;
   }
-  str = state.pos != pos ? source.substring(pos, state.pos) : '';
+  str = state.pos != pos ? input.substring(pos, state.pos) : '';
   if (str != '' && list.isNotEmpty) {
     list.add(str);
   }

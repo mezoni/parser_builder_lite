@@ -1,9 +1,12 @@
 name: parser_builder_lite
 description: Parser Builder Lite is a lightweight and uncomplicated parser combinator builder (source code generator).
-version: 0.5.1
+version: 0.6.0
 homepage: https://github.com/mezoni/parser_builder_lite
 topics:
   - parser
+  - parser-builder
+  - parser-combinator
+  - parser-generator
   - peg
 environment:
   sdk: '>=3.0.0 <4.0.0'

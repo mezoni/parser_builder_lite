@@ -3,11 +3,7 @@ class Allocator {
 
   final String prefix;
 
-  Allocator(this.prefix) {
-    if (prefix.isEmpty) {
-      throw ArgumentError.value(prefix, 'prefix', 'Must not be empty');
-    }
-  }
+  Allocator(this.prefix);
 
   String allocate([String name = '']) {
     var id = _names[name];

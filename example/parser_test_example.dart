@@ -20,7 +20,7 @@ const _header = '''
 import 'package:test/test.dart' hide escape;
 ''';
 
-const _prefix = '\$';
+const _prefix = '';
 
 Future<void> _generate() async {
   final context = BuildContext(

@@ -60,8 +60,8 @@ class ParserTest<I, O> {
     required int pos,
     required String source,
   }) {
-    final resultVar = allocator.allocate();
-    final stateVar = allocator.allocate();
+    final resultVar = allocator.allocate('result');
+    final stateVar = allocator.allocate('state');
     final errorsCountCode = getAsCode(errors.length);
     final sourceCode = getAsCode(source);
     output.writeln('final $stateVar = State($sourceCode);');
@@ -99,9 +99,9 @@ class ParserTest<I, O> {
         resultTests,
     required String source,
   }) {
-    final resultVar = allocator.allocate();
-    final resultValue = allocator.allocate();
-    final stateVar = allocator.allocate();
+    final resultVar = allocator.allocate('result');
+    final resultValue = allocator.allocate('value');
+    final stateVar = allocator.allocate('state');
     final resultCode = getAsCode(result);
     final sourceCode = getAsCode(source);
     output.writeln('final $stateVar = State($sourceCode);');

@@ -16,29 +16,33 @@ void _test() {
 void _test_Many$0() {
   // Many
   test('Many', () {
-    final $$2 = State('1112');
-    final $$0 = _Many$0($$2);
-    expect($$0 != null, true,
+    final state$0 = State('1112');
+    final result$0 = _Many$0(state$0);
+    expect(result$0 != null, true,
         reason: 'Testing \'result != null\' failed, source: \'1112\'');
-    final $$1 = $$0!.value;
-    expect($$1, [49, 49, 49],
+    final value$0 = result$0!.value;
+    expect(value$0, [49, 49, 49],
         reason: 'Testing \'result.value\' failed, source: \'1112\'');
-    expect($$2.pos, 3,
+    expect(state$0.pos, 3,
         reason: 'Testing \'state.pos\' failed, source: \'1112\'');
-    final $$5 = State('');
-    final $$3 = _Many$0($$5);
-    expect($$3 != null, true,
+    final state$1 = State('');
+    final result$1 = _Many$0(state$1);
+    expect(result$1 != null, true,
         reason: 'Testing \'result != null\' failed, source: \'\'');
-    final $$4 = $$3!.value;
-    expect($$4, [], reason: 'Testing \'result.value\' failed, source: \'\'');
-    expect($$5.pos, 0, reason: 'Testing \'state.pos\' failed, source: \'\'');
-    final $$8 = State('2');
-    final $$6 = _Many$0($$8);
-    expect($$6 != null, true,
+    final value$1 = result$1!.value;
+    expect(value$1, [],
+        reason: 'Testing \'result.value\' failed, source: \'\'');
+    expect(state$1.pos, 0,
+        reason: 'Testing \'state.pos\' failed, source: \'\'');
+    final state$2 = State('2');
+    final result$2 = _Many$0(state$2);
+    expect(result$2 != null, true,
         reason: 'Testing \'result != null\' failed, source: \'2\'');
-    final $$7 = $$6!.value;
-    expect($$7, [], reason: 'Testing \'result.value\' failed, source: \'2\'');
-    expect($$8.pos, 0, reason: 'Testing \'state.pos\' failed, source: \'2\'');
+    final value$2 = result$2!.value;
+    expect(value$2, [],
+        reason: 'Testing \'result.value\' failed, source: \'2\'');
+    expect(state$2.pos, 0,
+        reason: 'Testing \'state.pos\' failed, source: \'2\'');
   });
 }
 

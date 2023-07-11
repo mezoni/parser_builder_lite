@@ -119,6 +119,10 @@ Future<void> main(List<String> args) async {
 
 ## Error reporting
 
+All errors are generated automatically.  
+But if you need elegant error messages, then you can use the built-in parsers for this, which generate more informative error messages.  
+Or you can always write your own parser builder for this purpose.  
+Moreover, this parser builder will be the same as all the others, no different from any other.  
 Error reporting example.  
 
 ```dart
@@ -144,6 +148,8 @@ line 1, column 7: Expected 4 digit hexadecimal number
 "abc\u123  "
       ^^^
 ```
+
+An example of standard error messages.
 
 Data source (JSON):  
 

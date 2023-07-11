@@ -2,6 +2,7 @@ import 'package:parser_builder_lite/allocator.dart';
 import 'package:parser_builder_lite/fast_build.dart';
 import 'package:parser_builder_lite/parser/char.dart';
 import 'package:parser_builder_lite/parser/many.dart';
+import 'package:parser_builder_lite/parser/preceded.dart';
 import 'package:parser_builder_lite/parser_builder.dart';
 import 'package:parser_builder_lite/parser_tester.dart';
 
@@ -54,6 +55,42 @@ Future<void> _generate() async {
       source: '2',
       result: [],
       pos: 0,
+    );
+    return buffer.toString();
+  });
+
+  tester.addTest('Preceded', const Preceded(Char(0x31), Char(0x32)),
+      (parserName, parser) {
+    final buffer = StringBuffer();
+    final t1 = ParserTest(
+      allocator: Allocator(_prefix),
+      context: context,
+      output: buffer,
+      parser: parser,
+      parserName: parserName,
+    );
+    t1.testSuccess(
+      source: '123',
+      result: 0x32,
+      pos: 2,
+    );
+    t1.testFailure(
+      source: '',
+      failPos: 0,
+      pos: 0,
+      errors: [errorUnexpectedEof],
+    );
+    t1.testFailure(
+      source: '1',
+      failPos: 1,
+      pos: 0,
+      errors: [errorUnexpectedEof],
+    );
+    t1.testFailure(
+      source: '2',
+      failPos: 0,
+      pos: 0,
+      errors: [errorExpectedChar],
     );
     return buffer.toString();
   });

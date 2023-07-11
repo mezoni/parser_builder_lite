@@ -181,6 +181,7 @@ import 'package:parser_builder_lite/allocator.dart';
 import 'package:parser_builder_lite/fast_build.dart';
 import 'package:parser_builder_lite/parser/char.dart';
 import 'package:parser_builder_lite/parser/many.dart';
+import 'package:parser_builder_lite/parser/preceded.dart';
 import 'package:parser_builder_lite/parser_builder.dart';
 import 'package:parser_builder_lite/parser_tester.dart';
 
@@ -237,6 +238,42 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
+  tester.addTest('Preceded', const Preceded(Char(0x31), Char(0x32)),
+      (parserName, parser) {
+    final buffer = StringBuffer();
+    final t1 = ParserTest(
+      allocator: Allocator(_prefix),
+      context: context,
+      output: buffer,
+      parser: parser,
+      parserName: parserName,
+    );
+    t1.testSuccess(
+      source: '123',
+      result: 0x32,
+      pos: 2,
+    );
+    t1.testFailure(
+      source: '',
+      failPos: 0,
+      pos: 0,
+      errors: [errorUnexpectedEof],
+    );
+    t1.testFailure(
+      source: '1',
+      failPos: 1,
+      pos: 0,
+      errors: [errorUnexpectedEof],
+    );
+    t1.testFailure(
+      source: '2',
+      failPos: 0,
+      pos: 0,
+      errors: [errorExpectedChar],
+    );
+    return buffer.toString();
+  });
+
   await fastBuild(
     context: context,
     parsers: [...tester.parsers],
@@ -265,6 +302,8 @@ void main() {
 void _test() {
   // Many
   _test_Many$0();
+  // Preceded
+  _test_Preceded$0();
 }
 
 void _test_Many$0() {
@@ -297,6 +336,57 @@ void _test_Many$0() {
         reason: 'Testing \'result.value\' failed, source: \'2\'');
     expect(state$2.pos, 0,
         reason: 'Testing \'state.pos\' failed, source: \'2\'');
+  });
+}
+
+void _test_Preceded$0() {
+  // Preceded
+  test('Preceded', () {
+    final state$0 = State('123');
+    final result$0 = _Preceded$0(state$0);
+    expect(result$0 != null, true,
+        reason: 'Testing \'result != null\' failed, source: \'123\'');
+    final value$0 = result$0!.value;
+    expect(value$0, 50,
+        reason: 'Testing \'result.value\' failed, source: \'123\'');
+    expect(state$0.pos, 2,
+        reason: 'Testing \'state.pos\' failed, source: \'123\'');
+    final state$1 = State('');
+    final result$1 = _Preceded$0(state$1);
+    expect(result$1 == null, true,
+        reason: 'Testing \'result == null\' failed, source: \'\'');
+    expect(state$1.pos, 0,
+        reason: 'Testing \'state.pos\' failed, source: \'\'');
+    expect(state$1.failPos, 0,
+        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+    expect(state$1.errors.length, 1,
+        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+    expect(state$1.errors[0], isA<ErrorUnexpectedEof>(),
+        reason: 'Testing \'state.error\' failed, source: \'\'');
+    final state$2 = State('1');
+    final result$2 = _Preceded$0(state$2);
+    expect(result$2 == null, true,
+        reason: 'Testing \'result == null\' failed, source: \'1\'');
+    expect(state$2.pos, 0,
+        reason: 'Testing \'state.pos\' failed, source: \'1\'');
+    expect(state$2.failPos, 1,
+        reason: 'Testing \'state.failPos\' failed, source: \'1\'');
+    expect(state$2.errors.length, 1,
+        reason: 'Testing \'state.errors.length\' failed, source: \'1\'');
+    expect(state$2.errors[0], isA<ErrorUnexpectedEof>(),
+        reason: 'Testing \'state.error\' failed, source: \'1\'');
+    final state$3 = State('2');
+    final result$3 = _Preceded$0(state$3);
+    expect(result$3 == null, true,
+        reason: 'Testing \'result == null\' failed, source: \'2\'');
+    expect(state$3.pos, 0,
+        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+    expect(state$3.failPos, 0,
+        reason: 'Testing \'state.failPos\' failed, source: \'2\'');
+    expect(state$3.errors.length, 1,
+        reason: 'Testing \'state.errors.length\' failed, source: \'2\'');
+    expect(state$3.errors[0], isA<ErrorExpectedChar>(),
+        reason: 'Testing \'state.error\' failed, source: \'2\'');
   });
 }
 

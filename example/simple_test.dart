@@ -11,6 +11,8 @@ void main() {
 void _test() {
   // Many
   _test_Many$0();
+  // Preceded
+  _test_Preceded$0();
 }
 
 void _test_Many$0() {
@@ -46,6 +48,57 @@ void _test_Many$0() {
   });
 }
 
+void _test_Preceded$0() {
+  // Preceded
+  test('Preceded', () {
+    final state$0 = State('123');
+    final result$0 = _Preceded$0(state$0);
+    expect(result$0 != null, true,
+        reason: 'Testing \'result != null\' failed, source: \'123\'');
+    final value$0 = result$0!.value;
+    expect(value$0, 50,
+        reason: 'Testing \'result.value\' failed, source: \'123\'');
+    expect(state$0.pos, 2,
+        reason: 'Testing \'state.pos\' failed, source: \'123\'');
+    final state$1 = State('');
+    final result$1 = _Preceded$0(state$1);
+    expect(result$1 == null, true,
+        reason: 'Testing \'result == null\' failed, source: \'\'');
+    expect(state$1.pos, 0,
+        reason: 'Testing \'state.pos\' failed, source: \'\'');
+    expect(state$1.failPos, 0,
+        reason: 'Testing \'state.failPos\' failed, source: \'\'');
+    expect(state$1.errors.length, 1,
+        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
+    expect(state$1.errors[0], isA<ErrorUnexpectedEof>(),
+        reason: 'Testing \'state.error\' failed, source: \'\'');
+    final state$2 = State('1');
+    final result$2 = _Preceded$0(state$2);
+    expect(result$2 == null, true,
+        reason: 'Testing \'result == null\' failed, source: \'1\'');
+    expect(state$2.pos, 0,
+        reason: 'Testing \'state.pos\' failed, source: \'1\'');
+    expect(state$2.failPos, 1,
+        reason: 'Testing \'state.failPos\' failed, source: \'1\'');
+    expect(state$2.errors.length, 1,
+        reason: 'Testing \'state.errors.length\' failed, source: \'1\'');
+    expect(state$2.errors[0], isA<ErrorUnexpectedEof>(),
+        reason: 'Testing \'state.error\' failed, source: \'1\'');
+    final state$3 = State('2');
+    final result$3 = _Preceded$0(state$3);
+    expect(result$3 == null, true,
+        reason: 'Testing \'result == null\' failed, source: \'2\'');
+    expect(state$3.pos, 0,
+        reason: 'Testing \'state.pos\' failed, source: \'2\'');
+    expect(state$3.failPos, 0,
+        reason: 'Testing \'state.failPos\' failed, source: \'2\'');
+    expect(state$3.errors.length, 1,
+        reason: 'Testing \'state.errors.length\' failed, source: \'2\'');
+    expect(state$3.errors[0], isA<ErrorExpectedChar>(),
+        reason: 'Testing \'state.error\' failed, source: \'2\'');
+  });
+}
+
 Result<int>? _$0(State<String> state) {
   if (state.pos < state.source.length) {
     final c = state.source.codeUnitAt(state.pos);
@@ -68,6 +121,31 @@ Result<List<int>>? _Many$0(State<String> state) {
     list.add(r1.value);
   }
   return Result(list);
+}
+
+Result<int>? _$2(State<String> state) {
+  if (state.pos < state.source.length) {
+    final c = state.source.codeUnitAt(state.pos);
+    if (c == 50) {
+      state.pos++;
+      return const Result(50);
+    }
+    return state.fail(const ErrorExpectedChar(50));
+  }
+  return state.fail(const ErrorUnexpectedEof());
+}
+
+Result<int>? _Preceded$0(State<String> state) {
+  final pos = state.pos;
+  final r1 = _$0(state);
+  if (r1 != null) {
+    final r2 = _$2(state);
+    if (r2 != null) {
+      return r2;
+    }
+  }
+  state.pos = pos;
+  return null;
 }
 
 class ErrorExpectedChar extends ParseError {

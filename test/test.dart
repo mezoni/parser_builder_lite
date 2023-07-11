@@ -4,6 +4,83 @@
 
 import 'package:test/test.dart' hide escape;
 
+void main() {
+  _test();
+}
+
+void _test() {
+  // And
+  _test_And$0();
+  // And
+  _test_And$1();
+  // Char (16-bit)
+  _test_Char16bit$0();
+  // Char (32-bit)
+  _test_Char32bit$0();
+  // Choice (2 variants)
+  _test_Choice2variants$0();
+  // Choice (3 variants)
+  _test_Choice3variants$0();
+  // Char16
+  _test_Char16$0();
+  // Char
+  _test_Char$0();
+  // Delimited
+  _test_Delimited$0();
+  // Eof
+  _test_Eof$0();
+  // Expected
+  _test_Expected$0();
+  // FastSatisfy16
+  _test_FastSatisfy16$0();
+  // FastSatisfy16
+  _test_FastSatisfy16$1();
+  // Many
+  _test_Many$0();
+  // Many1
+  _test_Many1$0();
+  // ManyCount
+  _test_ManyCount$0();
+  // Many1Count
+  _test_Many1Count$0();
+  // ManyMN (0..3)
+  _test_ManyMN03$0();
+  // ManyMN (2..3)
+  _test_ManyMN23$0();
+  // Not
+  _test_Not$0();
+  // Preceded
+  _test_Preceded$0();
+  // ReplaceErrors
+  _test_ReplaceErrors$0();
+  // StringChars
+  _test_StringChars$0();
+  // Tag (short)
+  _test_Tagshort$0();
+  // Tag (long)
+  _test_Taglong$0();
+  // Tags (16-bit)
+  _test_Tags16bit$0();
+  // TakeWhileMN (0..3)
+  _test_TakeWhileMN03$0();
+  // TakeWhileMN (1..2)
+  _test_TakeWhileMN12$0();
+  // Take16WhileMN (0..3)
+  _test_Take16WhileMN03$0();
+  // Take16WhileMN (1..2)
+  _test_Take16WhileMN12$0();
+  // TakeWhile
+  _test_TakeWhile$0();
+  // TakeWhile1
+  _test_TakeWhile1$0();
+  // Take16While
+  _test_Take16While$0();
+  // Take16While1
+  _test_Take16While1$0();
+  // Terminated
+  _test_Terminated$0();
+}
+
 void _test_And$0() {
   // And
   test('And', () {
@@ -1494,83 +1571,6 @@ void _test_Terminated$0() {
     expect($$8.errors[0], isA<ErrorExpectedChar>(),
         reason: 'Testing \'state.error\' failed, source: \'2\'');
   });
-}
-
-void main() {
-  _test();
-}
-
-void _test() {
-  // And
-  _test_And$0();
-  // And
-  _test_And$1();
-  // Char (16-bit)
-  _test_Char16bit$0();
-  // Char (32-bit)
-  _test_Char32bit$0();
-  // Choice (2 variants)
-  _test_Choice2variants$0();
-  // Choice (3 variants)
-  _test_Choice3variants$0();
-  // Char16
-  _test_Char16$0();
-  // Char
-  _test_Char$0();
-  // Delimited
-  _test_Delimited$0();
-  // Eof
-  _test_Eof$0();
-  // Expected
-  _test_Expected$0();
-  // FastSatisfy16
-  _test_FastSatisfy16$0();
-  // FastSatisfy16
-  _test_FastSatisfy16$1();
-  // Many
-  _test_Many$0();
-  // Many1
-  _test_Many1$0();
-  // ManyCount
-  _test_ManyCount$0();
-  // Many1Count
-  _test_Many1Count$0();
-  // ManyMN (0..3)
-  _test_ManyMN03$0();
-  // ManyMN (2..3)
-  _test_ManyMN23$0();
-  // Not
-  _test_Not$0();
-  // Preceded
-  _test_Preceded$0();
-  // ReplaceErrors
-  _test_ReplaceErrors$0();
-  // StringChars
-  _test_StringChars$0();
-  // Tag (short)
-  _test_Tagshort$0();
-  // Tag (long)
-  _test_Taglong$0();
-  // Tags (16-bit)
-  _test_Tags16bit$0();
-  // TakeWhileMN (0..3)
-  _test_TakeWhileMN03$0();
-  // TakeWhileMN (1..2)
-  _test_TakeWhileMN12$0();
-  // Take16WhileMN (0..3)
-  _test_Take16WhileMN03$0();
-  // Take16WhileMN (1..2)
-  _test_Take16WhileMN12$0();
-  // TakeWhile
-  _test_TakeWhile$0();
-  // TakeWhile1
-  _test_TakeWhile1$0();
-  // Take16While
-  _test_Take16While$0();
-  // Take16While1
-  _test_Take16While1$0();
-  // Terminated
-  _test_Terminated$0();
 }
 
 Result<int>? _$0(State<String> state) {

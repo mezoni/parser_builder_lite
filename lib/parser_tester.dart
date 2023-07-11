@@ -134,6 +134,8 @@ class ParserTester<I> {
 
   final List<Named<I, Object?>> parsers = [];
 
+  final List<String> _tests = [];
+
   ParserTester({
     required this.context,
     required this.localOutput,
@@ -150,7 +152,6 @@ class ParserTester<I> {
     }
 
     final globalAllocator = context.allocator;
-    final globalOutput = context.output;
     final nameFromDescription = description
         .replaceAll(' ', '_')
         .codeUnits
@@ -169,11 +170,12 @@ class ParserTester<I> {
 test($titleCode, () {
 $body
 });''';
-    globalOutput.writeln('void _test$parserName() {');
-    globalOutput.writeln(' // $description');
-    globalOutput.writeln(source);
-    globalOutput.writeln('}');
-    globalOutput.writeln();
+    final buffer = StringBuffer();
+    buffer.writeln('void _test$parserName() {');
+    buffer.writeln(' // $description');
+    buffer.writeln(source);
+    buffer.writeln('}');
+    _tests.add(buffer.toString());
     localOutput.writeln(' // $description');
     localOutput.writeln('_test$parserName();');
   }
@@ -191,6 +193,7 @@ void _test() {
     final globalOutput = context.output;
     final output = StringBuffer();
     globalOutput.writeln(source);
+    globalOutput.writeln(_tests.join('\n\n'));
     return output.toString();
   }
 }

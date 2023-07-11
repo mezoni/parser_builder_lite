@@ -19,6 +19,7 @@ import 'package:parser_builder_lite/parser/not.dart';
 import 'package:parser_builder_lite/parser/preceded.dart';
 import 'package:parser_builder_lite/parser/predicate.dart';
 import 'package:parser_builder_lite/parser/replace_errors.dart';
+import 'package:parser_builder_lite/parser/string_chars.dart';
 import 'package:parser_builder_lite/parser/tag.dart';
 import 'package:parser_builder_lite/parser/tags.dart';
 import 'package:parser_builder_lite/parser/take16_while.dart';
@@ -29,6 +30,7 @@ import 'package:parser_builder_lite/parser/take_while1.dart';
 import 'package:parser_builder_lite/parser/take_while_m_n.dart';
 import 'package:parser_builder_lite/parser/terminated.dart';
 import 'package:parser_builder_lite/parser/tuple.dart';
+import 'package:parser_builder_lite/parser/value.dart';
 import 'package:parser_builder_lite/parser_builder.dart';
 import 'package:parser_builder_lite/parser_tester.dart';
 
@@ -992,6 +994,45 @@ Future<void> _generate() async {
           reason: '$errorMessage.length',
         ),
       ],
+    );
+    return buffer.toString();
+  });
+
+  tester.addTest(
+      'StringChars', const StringChars(isDigit, 0x5c, Value(r"'\n'", Tag('n'))),
+      (parserName, parser) {
+    final buffer = StringBuffer();
+    final t1 = ParserTest(
+      allocator: Allocator(_prefix),
+      context: context,
+      output: buffer,
+      parser: parser,
+      parserName: parserName,
+    );
+    t1.testSuccess(
+      source: '12',
+      result: '12',
+      pos: 2,
+    );
+    t1.testSuccess(
+      source: r'\n1',
+      result: '\n1',
+      pos: 3,
+    );
+    t1.testSuccess(
+      source: r'1\n2',
+      result: '1\n2',
+      pos: 4,
+    );
+    t1.testSuccess(
+      source: r'\n\n1',
+      result: '\n\n1',
+      pos: 5,
+    );
+    t1.testSuccess(
+      source: '',
+      result: '',
+      pos: 0,
     );
     return buffer.toString();
   });

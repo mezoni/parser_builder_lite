@@ -18,9 +18,9 @@ while (count < {{n}} && state.pos < source.length) {
   count++;
 }
 if (count >= {{m}}) {
-  return state.pos == pos ?
-      const Result('')
-      : Result(source.substring(pos, state.pos));
+  return state.pos != pos ?
+      Result(source.substring(pos, state.pos))
+      : const Result('');
 }
 final end = state.pos;
 state.pos = pos;
@@ -41,9 +41,9 @@ while (count < {{n}} && state.pos < source.length) {
   state.pos += c <= 0xffff ? 1 : 2;
   count++;
 }
-return state.pos == pos ?
-    const Result('')
-    : Result(source.substring(pos, state.pos));''';
+return state.pos != pos ?
+    Result(source.substring(pos, state.pos))
+    : const Result('');''';
 
   final int m;
 

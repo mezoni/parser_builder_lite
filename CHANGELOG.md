@@ -1,3 +1,8 @@
+## 0.5.1
+
+- A fast and efficient universal parser for string characters has been implemented.
+- Changes have been made to the JSON parser example. At the moment it is quite fast.
+
 ## 0.5.0
 
 - Breaking changes. Simplified and improved algorithms and structures used for building parsers.

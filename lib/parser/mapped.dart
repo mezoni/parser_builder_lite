@@ -1,4 +1,4 @@
-import '../expr.dart';
+import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
 
@@ -11,7 +11,7 @@ if (r1 != null) {
 }
 return null;''';
 
-  final Expr<O> map;
+  final Calculable<O> map;
 
   final ParserBuilder<I, O1> p;
 

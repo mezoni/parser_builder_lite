@@ -7,7 +7,6 @@ import 'package:parser_builder_lite/parser/choice.dart';
 import 'package:parser_builder_lite/parser/delimited.dart';
 import 'package:parser_builder_lite/parser/eof.dart';
 import 'package:parser_builder_lite/parser/fast_satisfy16.dart';
-import 'package:parser_builder_lite/parser/many.dart';
 import 'package:parser_builder_lite/parser/mapped.dart';
 import 'package:parser_builder_lite/parser/named.dart';
 import 'package:parser_builder_lite/parser/opt.dart';
@@ -20,11 +19,11 @@ import 'package:parser_builder_lite/parser/separated_list.dart';
 import 'package:parser_builder_lite/parser/skip.dart';
 import 'package:parser_builder_lite/parser/skip16_while.dart';
 import 'package:parser_builder_lite/parser/skip16_while1.dart';
+import 'package:parser_builder_lite/parser/string_chars.dart';
 import 'package:parser_builder_lite/parser/switch_tags.dart';
 import 'package:parser_builder_lite/parser/tag.dart';
 import 'package:parser_builder_lite/parser/tags.dart';
 import 'package:parser_builder_lite/parser/take16_while_m_n.dart';
-import 'package:parser_builder_lite/parser/take_while1.dart';
 import 'package:parser_builder_lite/parser/terminated.dart';
 import 'package:parser_builder_lite/parser/tuple.dart';
 import 'package:parser_builder_lite/parser/value.dart';
@@ -99,8 +98,6 @@ const _digit1 =
 
 const _doubleQuote = Named('_doubleQuote', Terminated(Tag('"'), _ws));
 
-const _escape = Named('_escape', Preceded(Tag('\\'), _escapeChar));
-
 const _escapeChar = Named(
     '_escapeChar',
     SwitchTags<String>({
@@ -112,7 +109,9 @@ const _escapeChar = Named(
       'n': r"const Result('\n')",
       'r': r"const Result('\r')",
       't': r"const Result('\t')",
-    }, 'const ErrorUnexpectedChar()'));
+    }, r'''const ErrorExpectedTags(['"', '/', '\\', 'b', 'f', 'n', 'r', 't'])'''));
+
+const _escapeHex = Named('_escapeHex', Preceded(Tag('u'), _hexValueChecked));
 
 const _exp = Named(
     '_exp',
@@ -124,16 +123,9 @@ const _false = Named<String, bool>(
 
 const _frac = Named('_frac', Opt<String, Object?>(Skip2(Tag('.'), _digit1)));
 
-const _hexChar = Named('_hexChar', Preceded(Tag(r'\u'), _hexValueChecked));
-
 const _hexValue = Named(
     '_hexValue',
-    Mapped(
-        Take16WhileMN(
-            4,
-            4,
-            Expr(
-                '({{0}} >= 48 && {{0}} <= 57) || ({{0}} >= 65 && {{0}} <= 70) || ({{0}} >= 97 && {{0}} <= 102)')),
+    Mapped(Take16WhileMN(4, 4, isHexDigit),
         Expr<String>('String.fromCharCode(_toHexValue({{0}}))')));
 
 const _hexValueChecked = Named(
@@ -162,10 +154,8 @@ const _keyValues = Named('_keyValues', SeparatedList(_keyValue, _comma));
 
 const _minus = Named('_minus', Opt(Tag('-')));
 
-const _normalChars = Named(
-    '_normalChars',
-    TakeWhile1(Expr(
-        '{{0}} <= 91 ? {{0}} <= 33 ? {{0}} >= 32 : {{0}} >= 35 : {{0}} <= 1114111 && {{0}} >= 93')));
+const _normalChars = Expr<bool>(
+    '{{0}} <= 91 ? {{0}} <= 33 ? {{0}} >= 32 : {{0}} >= 35 : {{0}} <= 1114111 && {{0}} >= 93');
 
 const _null = Named(
     '_null', Value<String, Object?>('null', Terminated(Tag('null'), _ws)));
@@ -202,23 +192,16 @@ const _openBracket = Named('_openBracket', Terminated(Tag('['), _ws));
 
 const _semicolon = Named('_semicolon', Terminated(Tag(':'), _ws));
 
-const _string = Named(
-    '_string',
-    Delimited(
-        Tag('"'),
-        Mapped(
-          _stringChars,
-          Expr<String>('{{0}}.join()'),
-        ),
-        _doubleQuote));
+const _string =
+    Named('_string', Delimited(Tag('"'), _stringChars, _doubleQuote));
 
 const _stringChars = Named(
     '_stringChars',
-    Many(Choice3(
+    StringChars(
       _normalChars,
-      _escape,
-      _hexChar,
-    )));
+      0x5c,
+      Choice2(_escapeChar, _escapeHex),
+    ));
 
 const _true =
     Named<String, bool>('_true', Value('true', Terminated(Tag('true'), _ws)));

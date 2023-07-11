@@ -59,40 +59,6 @@ Result<String>? _p$3(State<String> state) {
   return state.fail(const ErrorExpectedTags([tag]));
 }
 
-Result<String>? _normalChars(State<String> state) {
-  final source = state.source;
-  final start = state.pos;
-  while (state.pos < source.length) {
-    final c = source.runeAt(state.pos);
-    final v = c <= 91
-        ? c <= 33
-            ? c >= 32
-            : c >= 35
-        : c <= 1114111 && c >= 93;
-    if (!v) {
-      break;
-    }
-    state.pos += c <= 0xffff ? 1 : 2;
-  }
-  if (state.pos != start) {
-    return Result(source.substring(start, state.pos));
-  }
-  if (state.pos != source.length) {
-    return state.fail(const ErrorUnexpectedChar());
-  }
-  return state.fail(const ErrorUnexpectedEof());
-}
-
-Result<String>? _p$6(State<String> state) {
-  const tag = '\\';
-  if (state.pos < state.source.length &&
-      state.source.codeUnitAt(state.pos) == 92) {
-    state.pos++;
-    return const Result(tag);
-  }
-  return state.fail(const ErrorExpectedTags([tag]));
-}
-
 Result<String>? _escapeChar(State<String> state) {
   final pos = state.pos;
   final source = state.source;
@@ -124,32 +90,21 @@ Result<String>? _escapeChar(State<String> state) {
       return const Result('\t');
     }
   }
-  return state.fail(const ErrorUnexpectedChar());
+  return state
+      .fail(const ErrorExpectedTags(['"', '/', '\\', 'b', 'f', 'n', 'r', 't']));
 }
 
-Result<String>? _escape(State<String> state) {
-  final pos = state.pos;
-  final r1 = _p$6(state);
-  if (r1 != null) {
-    final r2 = _escapeChar(state);
-    if (r2 != null) {
-      return r2;
-    }
-  }
-  state.pos = pos;
-  return null;
-}
-
-Result<String>? _p$7(State<String> state) {
-  const tag = '\\u';
-  if (state.source.startsWith(tag, state.pos)) {
-    state.pos += 2;
+Result<String>? _p$5(State<String> state) {
+  const tag = 'u';
+  if (state.pos < state.source.length &&
+      state.source.codeUnitAt(state.pos) == 117) {
+    state.pos++;
     return const Result(tag);
   }
   return state.fail(const ErrorExpectedTags([tag]));
 }
 
-Result<String>? _p$8(State<String> state) {
+Result<String>? _p$6(State<String> state) {
   final source = state.source;
   final pos = state.pos;
   var count = 0;
@@ -164,9 +119,9 @@ Result<String>? _p$8(State<String> state) {
     count++;
   }
   if (count >= 4) {
-    return state.pos == pos
-        ? const Result('')
-        : Result(source.substring(pos, state.pos));
+    return state.pos != pos
+        ? Result(source.substring(pos, state.pos))
+        : const Result('');
   }
   final end = state.pos;
   state.pos = pos;
@@ -176,7 +131,7 @@ Result<String>? _p$8(State<String> state) {
 }
 
 Result<String>? _hexValue(State<String> state) {
-  final r1 = _p$8(state);
+  final r1 = _p$6(state);
   if (r1 != null) {
     final v = String.fromCharCode(_toHexValue(r1.value));
     return Result(v);
@@ -203,9 +158,9 @@ Result<String>? _hexValueChecked(State<String> state) {
   return state.failAt(state.failPos, error);
 }
 
-Result<String>? _hexChar(State<String> state) {
+Result<String>? _escapeHex(State<String> state) {
   final pos = state.pos;
-  final r1 = _p$7(state);
+  final r1 = _p$5(state);
   if (r1 != null) {
     final r2 = _hexValueChecked(state);
     if (r2 != null) {
@@ -216,42 +171,61 @@ Result<String>? _hexChar(State<String> state) {
   return null;
 }
 
-Result<String>? _p$5(State<String> state) {
-  final r1 = _normalChars(state);
+Result<String>? _p$4(State<String> state) {
+  final r1 = _escapeChar(state);
   if (r1 != null) {
     return r1;
   }
-  final r2 = _escape(state);
+  final r2 = _escapeHex(state);
   if (r2 != null) {
     return r2;
   }
-  final r3 = _hexChar(state);
-  if (r3 != null) {
-    return r3;
-  }
 
   return null;
 }
 
-Result<List<String>>? _stringChars(State<String> state) {
+Result<String>? _stringChars(State<String> state) {
+  final source = state.source;
   final list = <String>[];
-  while (true) {
-    final r1 = _p$5(state);
-    if (r1 == null) {
+  var str = '';
+  while (state.pos < source.length) {
+    final pos = state.pos;
+    var c = 0;
+    while (state.pos < source.length) {
+      c = source.runeAt(state.pos);
+      final ok = c <= 91
+          ? c <= 33
+              ? c >= 32
+              : c >= 35
+          : c <= 1114111 && c >= 93;
+      if (!ok) {
+        break;
+      }
+      state.pos += c < 0xffff ? 1 : 2;
+    }
+    str = state.pos != pos ? source.substring(pos, state.pos) : '';
+    if (str != '' && list.isNotEmpty) {
+      list.add(str);
+    }
+    if (c != 92) {
       break;
+    }
+    state.pos += 1;
+    final r1 = _p$4(state);
+    if (r1 == null) {
+      state.pos = pos;
+      break;
+    }
+    if (list.isEmpty && str != '') {
+      list.add(str);
     }
     list.add(r1.value);
   }
-  return Result(list);
-}
-
-Result<String>? _p$4(State<String> state) {
-  final r1 = _stringChars(state);
-  if (r1 != null) {
-    final v = r1.value.join();
-    return Result(v);
+  if (list.isEmpty) {
+    return Result(str);
+  } else {
+    return Result(list.join());
   }
-  return null;
 }
 
 Result<String>? _doubleQuote(State<String> state) {
@@ -271,7 +245,7 @@ Result<String>? _string(State<String> state) {
   final pos = state.pos;
   final r1 = _p$3(state);
   if (r1 != null) {
-    final r2 = _p$4(state);
+    final r2 = _stringChars(state);
     if (r2 != null) {
       final r3 = _doubleQuote(state);
       if (r3 != null) {
@@ -283,7 +257,7 @@ Result<String>? _string(State<String> state) {
   return null;
 }
 
-Result<String>? _p$10(State<String> state) {
+Result<String>? _p$8(State<String> state) {
   const tag = ':';
   if (state.pos < state.source.length &&
       state.source.codeUnitAt(state.pos) == 58) {
@@ -295,7 +269,7 @@ Result<String>? _p$10(State<String> state) {
 
 Result<String>? _semicolon(State<String> state) {
   final pos = state.pos;
-  final r1 = _p$10(state);
+  final r1 = _p$8(state);
   if (r1 != null) {
     final r2 = _ws(state);
     if (r2 != null) {
@@ -331,7 +305,7 @@ Result<MapEntry<String, Object?>>? _keyValue(State<String> state) {
   return null;
 }
 
-Result<String>? _p$11(State<String> state) {
+Result<String>? _p$9(State<String> state) {
   const tag = ',';
   if (state.pos < state.source.length &&
       state.source.codeUnitAt(state.pos) == 44) {
@@ -343,7 +317,7 @@ Result<String>? _p$11(State<String> state) {
 
 Result<String>? _comma(State<String> state) {
   final pos = state.pos;
-  final r1 = _p$11(state);
+  final r1 = _p$9(state);
   if (r1 != null) {
     final r2 = _ws(state);
     if (r2 != null) {
@@ -373,7 +347,7 @@ Result<List<MapEntry<String, Object?>>>? _keyValues(State<String> state) {
   return Result(list);
 }
 
-Result<String>? _p$12(State<String> state) {
+Result<String>? _p$10(State<String> state) {
   const tag = '}';
   if (state.pos < state.source.length &&
       state.source.codeUnitAt(state.pos) == 125) {
@@ -385,7 +359,7 @@ Result<String>? _p$12(State<String> state) {
 
 Result<String>? _closeBrace(State<String> state) {
   final pos = state.pos;
-  final r1 = _p$12(state);
+  final r1 = _p$10(state);
   if (r1 != null) {
     final r2 = _ws(state);
     if (r2 != null) {
@@ -422,7 +396,7 @@ Result<Map<String, Object?>>? _object(State<String> state) {
   return null;
 }
 
-Result<String>? _p$13(State<String> state) {
+Result<String>? _p$11(State<String> state) {
   const tag = '[';
   if (state.pos < state.source.length &&
       state.source.codeUnitAt(state.pos) == 91) {
@@ -434,7 +408,7 @@ Result<String>? _p$13(State<String> state) {
 
 Result<String>? _openBracket(State<String> state) {
   final pos = state.pos;
-  final r1 = _p$13(state);
+  final r1 = _p$11(state);
   if (r1 != null) {
     final r2 = _ws(state);
     if (r2 != null) {
@@ -464,7 +438,7 @@ Result<List<Object?>>? _values(State<String> state) {
   return Result(list);
 }
 
-Result<String>? _p$15(State<String> state) {
+Result<String>? _p$13(State<String> state) {
   const tag = ']';
   if (state.pos < state.source.length &&
       state.source.codeUnitAt(state.pos) == 93) {
@@ -476,7 +450,7 @@ Result<String>? _p$15(State<String> state) {
 
 Result<String>? _closeBracket(State<String> state) {
   final pos = state.pos;
-  final r1 = _p$15(state);
+  final r1 = _p$13(state);
   if (r1 != null) {
     final r2 = _ws(state);
     if (r2 != null) {
@@ -503,7 +477,7 @@ Result<List<Object?>>? _array(State<String> state) {
   return null;
 }
 
-Result<String>? _p$25(State<String> state) {
+Result<String>? _p$21(State<String> state) {
   const tag = '-';
   if (state.pos < state.source.length &&
       state.source.codeUnitAt(state.pos) == 45) {
@@ -514,14 +488,14 @@ Result<String>? _p$25(State<String> state) {
 }
 
 Result<String?>? _minus(State<String> state) {
-  final r1 = _p$25(state);
+  final r1 = _p$21(state);
   if (r1 != null) {
     return r1;
   }
   return const Result<String?>(null);
 }
 
-Result<String>? _p$26(State<String> state) {
+Result<String>? _p$22(State<String> state) {
   const tag = '0';
   if (state.pos < state.source.length &&
       state.source.codeUnitAt(state.pos) == 48) {
@@ -531,7 +505,7 @@ Result<String>? _p$26(State<String> state) {
   return state.fail(const ErrorExpectedTags([tag]));
 }
 
-Result<Object?>? _p$28(State<String> state) {
+Result<Object?>? _p$24(State<String> state) {
   if (state.pos < state.source.length) {
     final c = state.source.codeUnitAt(state.pos);
     final ok = c >= 49 && c <= 57;
@@ -557,9 +531,9 @@ Result<Object?>? _digit0(State<String> state) {
   return const Result(null);
 }
 
-Result<Object?>? _p$27(State<String> state) {
+Result<Object?>? _p$23(State<String> state) {
   final pos = state.pos;
-  final r1 = _p$28(state);
+  final r1 = _p$24(state);
   if (r1 != null) {
     final r2 = _digit0(state);
     if (r2 != null) {
@@ -571,11 +545,11 @@ Result<Object?>? _p$27(State<String> state) {
 }
 
 Result<Object?>? _integer(State<String> state) {
-  final r1 = _p$26(state);
+  final r1 = _p$22(state);
   if (r1 != null) {
     return r1;
   }
-  final r2 = _p$27(state);
+  final r2 = _p$23(state);
   if (r2 != null) {
     return r2;
   }
@@ -583,7 +557,7 @@ Result<Object?>? _integer(State<String> state) {
   return null;
 }
 
-Result<String>? _p$30(State<String> state) {
+Result<String>? _p$26(State<String> state) {
   const tag = '.';
   if (state.pos < state.source.length &&
       state.source.codeUnitAt(state.pos) == 46) {
@@ -611,9 +585,9 @@ Result<Object?>? _digit1(State<String> state) {
           : state.fail(const ErrorUnexpectedEof());
 }
 
-Result<Object?>? _p$29(State<String> state) {
+Result<Object?>? _p$25(State<String> state) {
   final pos = state.pos;
-  final r1 = _p$30(state);
+  final r1 = _p$26(state);
   if (r1 != null) {
     final r2 = _digit1(state);
     if (r2 != null) {
@@ -625,14 +599,14 @@ Result<Object?>? _p$29(State<String> state) {
 }
 
 Result<Object?>? _frac(State<String> state) {
-  final r1 = _p$29(state);
+  final r1 = _p$25(state);
   if (r1 != null) {
     return r1;
   }
   return const Result<Object?>(null);
 }
 
-Result<String>? _p$32(State<String> state) {
+Result<String>? _p$28(State<String> state) {
   final pos = state.pos;
   final source = state.source;
   if (pos < source.length) {
@@ -648,7 +622,7 @@ Result<String>? _p$32(State<String> state) {
   return state.fail(const ErrorExpectedTags(['e', 'E']));
 }
 
-Result<String>? _p$34(State<String> state) {
+Result<String>? _p$30(State<String> state) {
   final pos = state.pos;
   final source = state.source;
   if (pos < source.length) {
@@ -664,19 +638,19 @@ Result<String>? _p$34(State<String> state) {
   return state.fail(const ErrorExpectedTags(['+', '-']));
 }
 
-Result<Object?>? _p$33(State<String> state) {
-  final r1 = _p$34(state);
+Result<Object?>? _p$29(State<String> state) {
+  final r1 = _p$30(state);
   if (r1 != null) {
     return r1;
   }
   return const Result<Object?>(null);
 }
 
-Result<Object?>? _p$31(State<String> state) {
+Result<Object?>? _p$27(State<String> state) {
   final pos = state.pos;
-  final r1 = _p$32(state);
+  final r1 = _p$28(state);
   if (r1 != null) {
-    final r2 = _p$33(state);
+    final r2 = _p$29(state);
     if (r2 != null) {
       final r3 = _digit1(state);
       if (r3 != null) {
@@ -689,14 +663,14 @@ Result<Object?>? _p$31(State<String> state) {
 }
 
 Result<Object?>? _exp(State<String> state) {
-  final r1 = _p$31(state);
+  final r1 = _p$27(state);
   if (r1 != null) {
     return r1;
   }
   return const Result<Object?>(null);
 }
 
-Result<Object?>? _p$24(State<String> state) {
+Result<Object?>? _p$20(State<String> state) {
   final pos = state.pos;
   final r1 = _minus(state);
   if (r1 != null) {
@@ -715,9 +689,9 @@ Result<Object?>? _p$24(State<String> state) {
   return null;
 }
 
-Result<String>? _p$23(State<String> state) {
+Result<String>? _p$19(State<String> state) {
   final pos = state.pos;
-  final r1 = _p$24(state);
+  final r1 = _p$20(state);
   if (r1 != null) {
     return state.pos != pos
         ? Result(state.source.substring(pos, state.pos))
@@ -727,7 +701,7 @@ Result<String>? _p$23(State<String> state) {
 }
 
 Result<num>? _num(State<String> state) {
-  final r1 = _p$23(state);
+  final r1 = _p$19(state);
   if (r1 != null) {
     final v = num.parse(r1.value);
     return Result(v);
@@ -748,8 +722,68 @@ Result<num>? _number(State<String> state) {
   return null;
 }
 
-Result<String>? _p$36(State<String> state) {
+Result<String>? _p$32(State<String> state) {
   const tag = 'true';
+  if (state.source.startsWith(tag, state.pos)) {
+    state.pos += 4;
+    return const Result(tag);
+  }
+  return state.fail(const ErrorExpectedTags([tag]));
+}
+
+Result<Object?>? _p$31(State<String> state) {
+  final pos = state.pos;
+  final r1 = _p$32(state);
+  if (r1 != null) {
+    final r2 = _ws(state);
+    if (r2 != null) {
+      return r1;
+    }
+  }
+  state.pos = pos;
+  return null;
+}
+
+Result<bool>? _true(State<String> state) {
+  final r1 = _p$31(state);
+  if (r1 != null) {
+    return Result(true);
+  }
+  return null;
+}
+
+Result<String>? _p$34(State<String> state) {
+  const tag = 'false';
+  if (state.source.startsWith(tag, state.pos)) {
+    state.pos += 5;
+    return const Result(tag);
+  }
+  return state.fail(const ErrorExpectedTags([tag]));
+}
+
+Result<Object?>? _p$33(State<String> state) {
+  final pos = state.pos;
+  final r1 = _p$34(state);
+  if (r1 != null) {
+    final r2 = _ws(state);
+    if (r2 != null) {
+      return r1;
+    }
+  }
+  state.pos = pos;
+  return null;
+}
+
+Result<bool>? _false(State<String> state) {
+  final r1 = _p$33(state);
+  if (r1 != null) {
+    return Result(false);
+  }
+  return null;
+}
+
+Result<String>? _p$36(State<String> state) {
+  const tag = 'null';
   if (state.source.startsWith(tag, state.pos)) {
     state.pos += 4;
     return const Result(tag);
@@ -770,68 +804,8 @@ Result<Object?>? _p$35(State<String> state) {
   return null;
 }
 
-Result<bool>? _true(State<String> state) {
-  final r1 = _p$35(state);
-  if (r1 != null) {
-    return Result(true);
-  }
-  return null;
-}
-
-Result<String>? _p$38(State<String> state) {
-  const tag = 'false';
-  if (state.source.startsWith(tag, state.pos)) {
-    state.pos += 5;
-    return const Result(tag);
-  }
-  return state.fail(const ErrorExpectedTags([tag]));
-}
-
-Result<Object?>? _p$37(State<String> state) {
-  final pos = state.pos;
-  final r1 = _p$38(state);
-  if (r1 != null) {
-    final r2 = _ws(state);
-    if (r2 != null) {
-      return r1;
-    }
-  }
-  state.pos = pos;
-  return null;
-}
-
-Result<bool>? _false(State<String> state) {
-  final r1 = _p$37(state);
-  if (r1 != null) {
-    return Result(false);
-  }
-  return null;
-}
-
-Result<String>? _p$40(State<String> state) {
-  const tag = 'null';
-  if (state.source.startsWith(tag, state.pos)) {
-    state.pos += 4;
-    return const Result(tag);
-  }
-  return state.fail(const ErrorExpectedTags([tag]));
-}
-
-Result<Object?>? _p$39(State<String> state) {
-  final pos = state.pos;
-  final r1 = _p$40(state);
-  if (r1 != null) {
-    final r2 = _ws(state);
-    if (r2 != null) {
-      return r1;
-    }
-  }
-  state.pos = pos;
-  return null;
-}
-
 Result<Object?>? _null(State<String> state) {
-  final r1 = _p$39(state);
+  final r1 = _p$35(state);
   if (r1 != null) {
     return Result(null);
   }
@@ -871,7 +845,7 @@ Result<Object?>? _value(State<String> state) {
   return null;
 }
 
-Result<Object?>? _p$41(State<String> state) {
+Result<Object?>? _p$37(State<String> state) {
   if (state.pos >= state.source.length) {
     return const Result(null);
   }
@@ -884,7 +858,7 @@ Result<Object?>? json(State<String> state) {
   if (r1 != null) {
     final r2 = _value(state);
     if (r2 != null) {
-      final r3 = _p$41(state);
+      final r3 = _p$37(state);
       if (r3 != null) {
         return r2;
       }

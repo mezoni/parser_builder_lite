@@ -908,6 +908,54 @@ void _test_ReplaceErrors$0() {
   });
 }
 
+void _test_StringChars$0() {
+  // StringChars
+  test('StringChars', () {
+    final $$2 = State('12');
+    final $$0 = _StringChars$0($$2);
+    expect($$0 != null, true,
+        reason: 'Testing \'result != null\' failed, source: \'12\'');
+    final $$1 = $$0!.value;
+    expect($$1, '12',
+        reason: 'Testing \'result.value\' failed, source: \'12\'');
+    expect($$2.pos, 2, reason: 'Testing \'state.pos\' failed, source: \'12\'');
+    final $$5 = State('\\n1');
+    final $$3 = _StringChars$0($$5);
+    expect($$3 != null, true,
+        reason: 'Testing \'result != null\' failed, source: \'\\\\n1\'');
+    final $$4 = $$3!.value;
+    expect($$4, '\n1',
+        reason: 'Testing \'result.value\' failed, source: \'\\\\n1\'');
+    expect($$5.pos, 3,
+        reason: 'Testing \'state.pos\' failed, source: \'\\\\n1\'');
+    final $$8 = State('1\\n2');
+    final $$6 = _StringChars$0($$8);
+    expect($$6 != null, true,
+        reason: 'Testing \'result != null\' failed, source: \'1\\\\n2\'');
+    final $$7 = $$6!.value;
+    expect($$7, '1\n2',
+        reason: 'Testing \'result.value\' failed, source: \'1\\\\n2\'');
+    expect($$8.pos, 4,
+        reason: 'Testing \'state.pos\' failed, source: \'1\\\\n2\'');
+    final $$11 = State('\\n\\n1');
+    final $$9 = _StringChars$0($$11);
+    expect($$9 != null, true,
+        reason: 'Testing \'result != null\' failed, source: \'\\\\n\\\\n1\'');
+    final $$10 = $$9!.value;
+    expect($$10, '\n\n1',
+        reason: 'Testing \'result.value\' failed, source: \'\\\\n\\\\n1\'');
+    expect($$11.pos, 5,
+        reason: 'Testing \'state.pos\' failed, source: \'\\\\n\\\\n1\'');
+    final $$14 = State('');
+    final $$12 = _StringChars$0($$14);
+    expect($$12 != null, true,
+        reason: 'Testing \'result != null\' failed, source: \'\'');
+    final $$13 = $$12!.value;
+    expect($$13, '', reason: 'Testing \'result.value\' failed, source: \'\'');
+    expect($$14.pos, 0, reason: 'Testing \'state.pos\' failed, source: \'\'');
+  });
+}
+
 void _test_Tagshort$0() {
   // Tag (short)
   test('Tag (short)', () {
@@ -1497,6 +1545,8 @@ void _test() {
   _test_Preceded$0();
   // ReplaceErrors
   _test_ReplaceErrors$0();
+  // StringChars
+  _test_StringChars$0();
   // Tag (short)
   _test_Tagshort$0();
   // Tag (long)
@@ -1891,9 +1941,9 @@ Result<String>? _$25(State<String> state) {
     count++;
   }
   if (count >= 2) {
-    return state.pos == pos
-        ? const Result('')
-        : Result(source.substring(pos, state.pos));
+    return state.pos != pos
+        ? Result(source.substring(pos, state.pos))
+        : const Result('');
   }
   final end = state.pos;
   state.pos = pos;
@@ -1918,6 +1968,64 @@ Result<String>? _ReplaceErrors$0(State<String> state) {
   }
   final error = ErrorMessage(state.failPos - state.pos, 'error message');
   return state.failAt(state.failPos, error);
+}
+
+Result<String>? _$27(State<String> state) {
+  const tag = 'n';
+  if (state.pos < state.source.length &&
+      state.source.codeUnitAt(state.pos) == 110) {
+    state.pos++;
+    return const Result(tag);
+  }
+  return state.fail(const ErrorExpectedTags([tag]));
+}
+
+Result<String>? _$26(State<String> state) {
+  final r1 = _$27(state);
+  if (r1 != null) {
+    return Result('\n');
+  }
+  return null;
+}
+
+Result<String>? _StringChars$0(State<String> state) {
+  final source = state.source;
+  final list = <String>[];
+  var str = '';
+  while (state.pos < source.length) {
+    final pos = state.pos;
+    var c = 0;
+    while (state.pos < source.length) {
+      c = source.runeAt(state.pos);
+      final ok = c >= 48 && c <= 57;
+      if (!ok) {
+        break;
+      }
+      state.pos += c < 0xffff ? 1 : 2;
+    }
+    str = state.pos != pos ? source.substring(pos, state.pos) : '';
+    if (str != '' && list.isNotEmpty) {
+      list.add(str);
+    }
+    if (c != 92) {
+      break;
+    }
+    state.pos += 1;
+    final r1 = _$26(state);
+    if (r1 == null) {
+      state.pos = pos;
+      break;
+    }
+    if (list.isEmpty && str != '') {
+      list.add(str);
+    }
+    list.add(r1.value);
+  }
+  if (list.isEmpty) {
+    return Result(str);
+  } else {
+    return Result(list.join());
+  }
 }
 
 Result<String>? _Tagshort$0(State<String> state) {
@@ -1990,9 +2098,9 @@ Result<String>? _TakeWhileMN03$0(State<String> state) {
     state.pos += c <= 0xffff ? 1 : 2;
     count++;
   }
-  return state.pos == pos
-      ? const Result('')
-      : Result(source.substring(pos, state.pos));
+  return state.pos != pos
+      ? Result(source.substring(pos, state.pos))
+      : const Result('');
 }
 
 Result<String>? _TakeWhileMN12$0(State<String> state) {
@@ -2009,9 +2117,9 @@ Result<String>? _TakeWhileMN12$0(State<String> state) {
     count++;
   }
   if (count >= 1) {
-    return state.pos == pos
-        ? const Result('')
-        : Result(source.substring(pos, state.pos));
+    return state.pos != pos
+        ? Result(source.substring(pos, state.pos))
+        : const Result('');
   }
   final end = state.pos;
   state.pos = pos;
@@ -2033,9 +2141,9 @@ Result<String>? _Take16WhileMN03$0(State<String> state) {
     state.pos++;
     count++;
   }
-  return state.pos == pos
-      ? const Result('')
-      : Result(source.substring(pos, state.pos));
+  return state.pos != pos
+      ? Result(source.substring(pos, state.pos))
+      : const Result('');
 }
 
 Result<String>? _Take16WhileMN12$0(State<String> state) {
@@ -2052,9 +2160,9 @@ Result<String>? _Take16WhileMN12$0(State<String> state) {
     count++;
   }
   if (count >= 1) {
-    return state.pos == pos
-        ? const Result('')
-        : Result(source.substring(pos, state.pos));
+    return state.pos != pos
+        ? Result(source.substring(pos, state.pos))
+        : const Result('');
   }
   final end = state.pos;
   state.pos = pos;

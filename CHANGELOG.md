@@ -1,3 +1,7 @@
+## 0.6.1
+
+- Fixed bugs.
+
 ## 0.6.0
 
 - Breaking changes. The `State.source` field has been renamed to `State.input`.

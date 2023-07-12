@@ -2,10 +2,10 @@ import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
 
-class Skip16While extends ParserBuilder<String, Object?> {
+class SkipWhile extends ParserBuilder<String, Object?> {
   final Calculable<bool> predicate;
 
-  const Skip16While(this.predicate);
+  const SkipWhile(this.predicate);
 
   static const _template = '''
 final input = state.input;

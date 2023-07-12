@@ -30,6 +30,7 @@ import 'package:parser_builder_lite/parser/take_while1.dart';
 import 'package:parser_builder_lite/parser/take_while_m_n.dart';
 import 'package:parser_builder_lite/parser/terminated.dart';
 import 'package:parser_builder_lite/parser/tuple.dart';
+import 'package:parser_builder_lite/parser/unterminated.dart';
 import 'package:parser_builder_lite/parser/value.dart';
 import 'package:parser_builder_lite/parser_builder.dart';
 import 'package:parser_builder_lite/parser_tester.dart';
@@ -1439,6 +1440,57 @@ Future<void> _generate() async {
       pos: 0,
       errors: [errorExpectedChar],
     );
+    return buffer.toString();
+  });
+
+  tester.addTest(
+      'Unterminated',
+      const Unterminated(
+        Tag('"'),
+        TakeWhile(isDigit),
+        Tag('"'),
+        Expr("ErrorMessage({{0}} - {{1}}, 'unterminated')"),
+      ), (parserName, parser) {
+    final buffer = StringBuffer();
+    final t1 = ParserTest(
+      allocator: Allocator(_prefix),
+      context: context,
+      output: buffer,
+      parser: parser,
+      parserName: parserName,
+    );
+    t1.testSuccess(
+      input: '"123"',
+      pos: 5,
+      resultTests: [
+        (
+          actual: Expr(r'{{0}}.$2'),
+          expected: Expr("'123'"),
+          reason: 'result',
+        ),
+      ],
+    );
+    t1.testFailure(
+      input: '',
+      failPos: 0,
+      pos: 0,
+      errors: [errorExpectedTags],
+    );
+    t1.testFailure(input: '"123', failPos: 4, pos: 0, errors: [
+      errorExpectedTags,
+      errorMessage
+    ], errorTests: [
+      (
+        actual: Expr('({{0}}[1] as $errorMessage).message'),
+        expected: Expr("'unterminated'"),
+        reason: '$errorMessage.message',
+      ),
+      (
+        actual: Expr('({{0}}[1] as $errorMessage).length'),
+        expected: Expr('-4'),
+        reason: '$errorMessage.length',
+      ),
+    ]);
     return buffer.toString();
   });
 

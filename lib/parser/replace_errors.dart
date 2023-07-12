@@ -11,11 +11,12 @@ if (r1 != null) {
   return r1;
 }
 if (state.failPos == failPos) {
+  if (state.errors.length == errors.length) {
+    return null;
+  }
   state.errors = errors;
 } else if (state.failPos > failPos) {
   state.errors = [];
-} else {
-  return null;
 }
 final error = {{handle}};
 return state.failAt(state.failPos, error);''';

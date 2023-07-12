@@ -1013,10 +1013,12 @@ class ErrorExpectedInt extends ParseError {
     required int offset,
   }) {
     var string = value.toRadixString(16);
-    if (const [8, 16, 32, 64].contains(size)) {
-      string = string.padLeft(string.length - size >> 2, '0');
+    if (const [8, 16, 24, 32, 40, 48, 56, 64].contains(size)) {
+      string = string.padLeft(size >> 2, '0');
     }
-
+    if (value >= 0 && value <= 0x10ffff) {
+      string = '$string (${escape(value)})';
+    }
     return 'Expected 0x$string';
   }
 }

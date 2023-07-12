@@ -2,16 +2,18 @@
 
 Parser Builder Lite is a lightweight and uncomplicated parser combinator builder (source code generator).
 
-Version: 0.6.1
+Version: 0.6.2
 
 ## What is it and what is it for?
 
 Parser Builder is intended to quickly implement (and test) parsers through source code templates.  
-The main feature and advantage is that a very simple builder is used to build parsers.  
-The error reporting system is simple, but at the same time very flexible and informative.  
-For quick implementation of parser tests, a simple and convenient test generator is included.  
-Parsing is supported not only for text data (`String`), but also for binary data (`ByteData`).  
-Parsing of data located in files can be easily added by implementing the appropriate parsers and readers.  
+The main features and advantage:
+- A very simple builder is used to build parsers
+- Parsers are generated into source code
+- The generated parsers are very fast and efficient
+- The error reporting system is very flexible and informative
+- Convenient and easy debugging of the parsing process
+- A simple and convenient test generator is included
 
 ## Parser builder example
 

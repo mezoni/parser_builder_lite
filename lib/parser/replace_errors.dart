@@ -1,26 +1,9 @@
 import '../calculable.dart';
-import '../helper.dart';
+import '../expr.dart';
 import '../parser_builder.dart';
+import 'handle_error.dart';
 
 class ReplaceErrors<I, O> extends ParserBuilder<I, O> {
-  static const _template = '''
-final errors = state.errors.toList();
-final failPos = state.failPos;
-final r1 = {{p1}}(state);
-if (r1 != null) {
-  return r1;
-}
-if (state.failPos == failPos) {
-  if (state.errors.length == errors.length) {
-    return null;
-  }
-  state.errors = errors;
-} else if (state.failPos > failPos) {
-  state.errors = [];
-}
-final error = {{handle}};
-return state.failAt(state.failPos, error);''';
-
   final Calculable<Object?> handle;
 
   final ParserBuilder<I, O> p;
@@ -29,9 +12,10 @@ return state.failAt(state.failPos, error);''';
 
   @override
   String buildBody(BuildContext context) {
-    return render(_template, {
-      'handle': handle.calculate(context, ['state.pos', 'state.failPos']),
-      'p1': p.build(context).name,
-    });
+    final handle2 = handle.calculate(context, ['{{0}}', '{{1}}']);
+    return HandleError(
+      p,
+      Expr('(true, $handle2)'),
+    ).buildBody(context);
   }
 }

@@ -1,3 +1,7 @@
+## 0.6.2
+
+- Unified the way to create parser builders that generate custom errors. For these purposes, a universal, fairly complex parser builder was created. This eliminates mistakes when implementing parser builders that generate custom errors. This drastically simplifies the implementation of error handlers such as `unterminated`, `malformed`, `expected`, `replace_errors` and other similar (which can replace errors), since it is very easy to determine the location of the error (for example, to find out the error occurred at the starting position or later) and replace errors (or add to existing).
+
 ## 0.6.1
 
 - Fixed bugs.

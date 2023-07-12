@@ -1446,9 +1446,7 @@ Future<void> _generate() async {
   tester.addTest(
       'Unterminated',
       const Unterminated(
-        Tag('"'),
-        TakeWhile(isDigit),
-        Tag('"'),
+        Delimited(Tag('"'), TakeWhile(isDigit), Tag('"')),
         Expr("ErrorMessage({{0}} - {{1}}, 'unterminated')"),
       ), (parserName, parser) {
     final buffer = StringBuffer();
@@ -1464,7 +1462,7 @@ Future<void> _generate() async {
       pos: 5,
       resultTests: [
         (
-          actual: Expr(r'{{0}}.$2'),
+          actual: Expr(r'{{0}}'),
           expected: Expr("'123'"),
           reason: 'result',
         ),

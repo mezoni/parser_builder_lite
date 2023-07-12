@@ -1579,8 +1579,7 @@ void _test_Unterminated$0() {
     expect($result$0 != null, true,
         reason: 'Testing \'result != null\' failed, input: "123"');
     final $value$0 = $result$0!.value;
-    expect($value$0.$2, '123',
-        reason: 'Testing \'result\' failed, input: "123"');
+    expect($value$0, '123', reason: 'Testing \'result\' failed, input: "123"');
     expect($state$0.pos, 5,
         reason: 'Testing \'state.pos\' failed, input: "123"');
     final $state$1 = State('');
@@ -1812,15 +1811,42 @@ Result<(int, int)>? _$11(State<String> state) {
 Result<(int, int)>? _Expected$0(State<String> state) {
   final errors = state.errors.toList();
   final failPos = state.failPos;
+  state.errors = [];
+  state.failPos = 0;
   final r1 = _$11(state);
+  final failPos2 = state.failPos;
+  if (failPos2 < failPos) {
+    state.errors = errors;
+    state.failPos = failPos;
+  }
   if (r1 != null) {
+    if (failPos2 == failPos) {
+      state.errors.addAll(errors);
+    }
     return r1;
   }
-  if (state.failPos != failPos) {
+  if (failPos2 < failPos) {
     return null;
   }
-  state.errors = errors;
-  return state.fail(const ErrorExpectedTags(['expr']));
+  final v = state.pos != failPos2
+      ? (false, null)
+      : (true, const ErrorExpectedTags(['expr']));
+  if (failPos2 == failPos) {
+    if (v.$1) {
+      state.errors = errors;
+    } else {
+      state.errors.addAll(errors);
+    }
+  } else {
+    if (v.$1) {
+      state.errors = [];
+    }
+  }
+  final error = v.$2 as ParseError?;
+  if (error != null) {
+    return state.failAt(state.failPos, error);
+  }
+  return null;
 }
 
 Result<Object?>? _FastSatisfy16$0(State<String> state) {
@@ -1997,20 +2023,40 @@ Result<String>? _$25(State<String> state) {
 Result<String>? _ReplaceErrors$0(State<String> state) {
   final errors = state.errors.toList();
   final failPos = state.failPos;
+  state.errors = [];
+  state.failPos = 0;
   final r1 = _$25(state);
+  final failPos2 = state.failPos;
+  if (failPos2 < failPos) {
+    state.errors = errors;
+    state.failPos = failPos;
+  }
   if (r1 != null) {
+    if (failPos2 == failPos) {
+      state.errors.addAll(errors);
+    }
     return r1;
   }
-  if (state.failPos == failPos) {
-    if (state.errors.length == errors.length) {
-      return null;
-    }
-    state.errors = errors;
-  } else if (state.failPos > failPos) {
-    state.errors = [];
+  if (failPos2 < failPos) {
+    return null;
   }
-  final error = ErrorMessage(state.failPos - state.pos, 'error message');
-  return state.failAt(state.failPos, error);
+  final v = (true, ErrorMessage(failPos2 - state.pos, 'error message'));
+  if (failPos2 == failPos) {
+    if (v.$1) {
+      state.errors = errors;
+    } else {
+      state.errors.addAll(errors);
+    }
+  } else {
+    if (v.$1) {
+      state.errors = [];
+    }
+  }
+  final error = v.$2 as ParseError?;
+  if (error != null) {
+    return state.failAt(state.failPos, error);
+  }
+  return null;
 }
 
 Result<String>? _$27(State<String> state) {
@@ -2299,7 +2345,7 @@ Result<int>? _Terminated$0(State<String> state) {
   return null;
 }
 
-Result<String>? _$30(State<String> state) {
+Result<String>? _$31(State<String> state) {
   const tag = '"';
   if (state.pos < state.input.length &&
       state.input.codeUnitAt(state.pos) == 34) {
@@ -2309,7 +2355,7 @@ Result<String>? _$30(State<String> state) {
   return state.fail(const ErrorExpectedTags([tag]));
 }
 
-Result<String>? _$31(State<String> state) {
+Result<String>? _$32(State<String> state) {
   final input = state.input;
   final start = state.pos;
   while (state.pos < input.length) {
@@ -2325,27 +2371,61 @@ Result<String>? _$31(State<String> state) {
       : const Result('');
 }
 
-Result<(String, String, String)>? _Unterminated$0(State<String> state) {
-  final errors = state.errors;
-  final failPos = state.failPos;
+Result<String>? _$30(State<String> state) {
   final pos = state.pos;
-  final r1 = _$30(state);
-  if (r1 == null) {
-    return null;
-  }
-  final r2 = _$31(state);
-  if (r2 != null) {
-    final r3 = _$30(state);
-    if (r3 != null) {
-      return Result((r1.value, r2.value, r3.value));
+  final r1 = _$31(state);
+  if (r1 != null) {
+    final r2 = _$32(state);
+    if (r2 != null) {
+      final r3 = _$31(state);
+      if (r3 != null) {
+        return r2;
+      }
     }
   }
   state.pos = pos;
-  if (state.failPos == failPos && state.errors.length == errors.length) {
+  return null;
+}
+
+Result<String>? _Unterminated$0(State<String> state) {
+  final errors = state.errors.toList();
+  final failPos = state.failPos;
+  state.errors = [];
+  state.failPos = 0;
+  final r1 = _$30(state);
+  final failPos2 = state.failPos;
+  if (failPos2 < failPos) {
+    state.errors = errors;
+    state.failPos = failPos;
+  }
+  if (r1 != null) {
+    if (failPos2 == failPos) {
+      state.errors.addAll(errors);
+    }
+    return r1;
+  }
+  if (failPos2 < failPos) {
     return null;
   }
-  return state.failAt(
-      state.failPos, ErrorMessage(pos - state.failPos, 'unterminated'));
+  final v = state.pos == failPos2
+      ? (false, null)
+      : (false, ErrorMessage(state.pos - failPos2, 'unterminated'));
+  if (failPos2 == failPos) {
+    if (v.$1) {
+      state.errors = errors;
+    } else {
+      state.errors.addAll(errors);
+    }
+  } else {
+    if (v.$1) {
+      state.errors = [];
+    }
+  }
+  final error = v.$2 as ParseError?;
+  if (error != null) {
+    return state.failAt(state.failPos, error);
+  }
+  return null;
 }
 
 class ErrorExpectedChar extends ParseError {

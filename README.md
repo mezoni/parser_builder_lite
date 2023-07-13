@@ -2,7 +2,7 @@
 
 Parser Builder Lite is a lightweight and uncomplicated parser combinator builder (source code generator).
 
-Version: 0.6.5
+Version: 0.6.6
 
 ## What is it and what is it for?
 
@@ -398,20 +398,44 @@ void _test_Preceded$0() {
 
 ## Performance
 
+JIT code execution.
+
 ```
 Test failures
 
 Parse 20 times: E:\prj\test_json\bin\data\canada.json (2251.05 Kb)
-Dart SDK JSON : k: 2.26, 53.87 MB/s, 797.0740 ms (42.15%),
-JSON Parser: k: 1.00, 121.52 MB/s, 353.3200 ms (18.69%),
+Dart SDK JSON : k: 2.05, 53.75 MB/s, 798.7460 ms (100.00%),
+JSON Parser: k: 1.00, 110.03 MB/s, 390.2050 ms (48.85%),
 
 Parse 20 times: E:\prj\test_json\bin\data\citm_catalog.json (1727.03 Kb)
-Dart SDK JSON : k: 1.00, 109.12 MB/s, 301.8860 ms (38.28%),
-JSON Parser: k: 1.44, 75.82 MB/s, 434.4810 ms (55.09%),
+Dart SDK JSON : k: 1.00, 106.24 MB/s, 310.0440 ms (72.65%),
+JSON Parser: k: 1.38, 77.19 MB/s, 426.7540 ms (100.00%),
 
 Parse 20 times: E:\prj\test_json\bin\data\twitter.json (567.93 Kb)
-Dart SDK JSON : k: 1.00, 68.22 MB/s, 158.7850 ms (57.10%),
-JSON Parser: k: 1.22, 55.85 MB/s, 193.9450 ms (69.75%),
+Dart SDK JSON : k: 1.00, 67.48 MB/s, 160.5340 ms (80.84%),
+JSON Parser: k: 1.24, 54.55 MB/s, 198.5810 ms (100.00%),
+
+OS: Њ ©Єа®б®дв Windows 10 Pro 10.0.19045
+Kernel: Windows_NT 10.0.19045
+Processor (4 core) Intel(R) Core(TM) i5-3450 CPU @ 3.10GHz
+```
+
+AOT code execution.
+
+```
+Test failures
+
+Parse 20 times: E:\prj\test_json\bin\data\canada.json (2251.05 Kb)
+Dart SDK JSON : k: 1.54, 50.20 MB/s, 855.2930 ms (100.00%),
+JSON Parser: k: 1.00, 77.43 MB/s, 554.5380 ms (64.84%),
+
+Parse 20 times: E:\prj\test_json\bin\data\citm_catalog.json (1727.03 Kb)
+Dart SDK JSON : k: 1.00, 91.70 MB/s, 359.2160 ms (79.55%),
+JSON Parser: k: 1.26, 72.95 MB/s, 451.5760 ms (100.00%),
+
+Parse 20 times: E:\prj\test_json\bin\data\twitter.json (567.93 Kb)
+Dart SDK JSON : k: 1.00, 61.09 MB/s, 177.3080 ms (79.32%),
+JSON Parser: k: 1.26, 48.46 MB/s, 223.5440 ms (100.00%),
 
 OS: Њ ©Єа®б®дв Windows 10 Pro 10.0.19045
 Kernel: Windows_NT 10.0.19045

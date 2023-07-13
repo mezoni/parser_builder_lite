@@ -11,7 +11,6 @@ import 'package:parser_builder_lite/parser/named.dart';
 import 'package:parser_builder_lite/parser/opt.dart';
 import 'package:parser_builder_lite/parser/preceded.dart';
 import 'package:parser_builder_lite/parser/predicate.dart';
-import 'package:parser_builder_lite/parser/recognize.dart';
 import 'package:parser_builder_lite/parser/ref.dart';
 import 'package:parser_builder_lite/parser/replace_errors.dart';
 import 'package:parser_builder_lite/parser/separated_list.dart';
@@ -28,6 +27,8 @@ import 'package:parser_builder_lite/parser/terminated.dart';
 import 'package:parser_builder_lite/parser/tuple.dart';
 import 'package:parser_builder_lite/parser/value.dart';
 import 'package:parser_builder_lite/parser_builder.dart';
+
+import '../tool/build_json_number_parser.dart';
 
 Future<void> main(List<String> args) async {
   await fastBuild(
@@ -162,20 +163,7 @@ const _normalChars = Expr<bool>(
 const _null = Named(
     '_null', Value<String, Object?>('null', Terminated(Tag('null'), _ws)));
 
-/// '-'?('0'|[1-9][0-9]*)('.'[0-9]+)?([eE][+-]?[0-9]+)?
-const _num = Named(
-    '_num',
-    Mapped(
-      Recognize(Skip4(
-        _minus,
-        _integer,
-        _frac,
-        _exp,
-      )),
-      Expr<num>('num.parse({{0}})'),
-    ));
-
-const _number = Named('_number', Terminated(_num, _ws));
+const _number = Named('_number', Terminated(Number(), _ws));
 
 const _object = Named(
     '_object',

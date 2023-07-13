@@ -2,7 +2,7 @@
 
 Parser Builder Lite is a lightweight and uncomplicated parser combinator builder (source code generator).
 
-Version: 0.6.4
+Version: 0.6.5
 
 ## What is it and what is it for?
 
@@ -394,4 +394,26 @@ void _test_Preceded$0() {
   });
 }
 
+```
+
+## Performance
+
+```
+Test failures
+
+Parse 20 times: E:\prj\test_json\bin\data\canada.json (2251.05 Kb)
+Dart SDK JSON : k: 2.26, 53.87 MB/s, 797.0740 ms (42.15%),
+JSON Parser: k: 1.00, 121.52 MB/s, 353.3200 ms (18.69%),
+
+Parse 20 times: E:\prj\test_json\bin\data\citm_catalog.json (1727.03 Kb)
+Dart SDK JSON : k: 1.00, 109.12 MB/s, 301.8860 ms (38.28%),
+JSON Parser: k: 1.44, 75.82 MB/s, 434.4810 ms (55.09%),
+
+Parse 20 times: E:\prj\test_json\bin\data\twitter.json (567.93 Kb)
+Dart SDK JSON : k: 1.00, 68.22 MB/s, 158.7850 ms (57.10%),
+JSON Parser: k: 1.22, 55.85 MB/s, 193.9450 ms (69.75%),
+
+OS: Њ ©Єа®б®дв Windows 10 Pro 10.0.19045
+Kernel: Windows_NT 10.0.19045
+Processor (4 core) Intel(R) Core(TM) i5-3450 CPU @ 3.10GHz
 ```

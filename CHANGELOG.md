@@ -1,3 +1,7 @@
+## 0.6.5
+
+- Added `Number` parser builder.
+
 ## 0.6.4
 
 - The functionality for determining start characters and start errors has been implemented.

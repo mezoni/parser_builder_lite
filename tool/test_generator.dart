@@ -886,7 +886,7 @@ Future<void> _generate() async {
   tester.addTest(
       'ReplaceErrors',
       const ReplaceErrors(Take16WhileMN(2, 2, isDigit),
-          Expr("$errorMessage({{1}} - {{0}}, 'error message')")),
+          Expr("[$errorMessage({{1}} - {{0}}, 'error message')]")),
       (parserName, parser) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
@@ -1447,7 +1447,7 @@ Future<void> _generate() async {
       'Unterminated',
       const Unterminated(
         Delimited(Tag('"'), TakeWhile(isDigit), Tag('"')),
-        Expr("ErrorMessage({{0}} - {{1}}, 'unterminated')"),
+        Expr("[ErrorMessage({{0}} - {{1}}, 'unterminated')]"),
       ), (parserName, parser) {
     final buffer = StringBuffer();
     final t1 = ParserTest(

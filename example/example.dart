@@ -133,7 +133,7 @@ const _hexValueChecked = Named(
     ReplaceErrors(
       _hexValue,
       Expr<Object?>(
-          '''ErrorMessage({{1}} - {{0}}, 'Expected 4 digit hexadecimal number')'''),
+          '''[ErrorMessage({{1}} - {{0}}, 'Expected 4 digit hexadecimal number')]'''),
     ));
 
 const _integer = Named(

@@ -16,7 +16,7 @@ class Expected<I, O> extends ParserBuilder<I, O> {
     return HandleError(
             p,
             Expr(
-                '{{0}} != {{1}} ? (false, null) : (true, const ErrorExpectedTags([$text]))'))
+                '{{0}} != {{1}} ? (false, []) : (true, [const ErrorExpectedTags([$text])])'))
         .buildBody(context);
   }
 }

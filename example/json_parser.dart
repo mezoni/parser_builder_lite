@@ -141,29 +141,30 @@ Result<String>? _hexValue(State<String> state) {
 
 Result<String>? _hexValueChecked(State<String> state) {
   final errors = state.errors.toList();
-  final failPos = state.failPos;
+  final previous = state.failPos;
   state.errors = [];
   state.failPos = 0;
   final r1 = _hexValue(state);
-  final failPos2 = state.failPos;
-  if (failPos2 < failPos) {
+  final current = state.failPos;
+  if (current < previous) {
     state.errors = errors;
-    state.failPos = failPos;
+    state.failPos = previous;
   }
   if (r1 != null) {
-    if (failPos2 == failPos) {
+    if (current == previous) {
       state.errors.addAll(errors);
     }
     return r1;
   }
-  if (failPos2 < failPos) {
+  if (current < previous) {
     return null;
   }
-  final v = (
+  final (bool, List<ParseError>)? v;
+  v = (
     true,
-    ErrorMessage(failPos2 - state.pos, 'Expected 4 digit hexadecimal number')
+    [ErrorMessage(current - state.pos, 'Expected 4 digit hexadecimal number')]
   );
-  if (failPos2 == failPos) {
+  if (current == previous) {
     if (v.$1) {
       state.errors = errors;
     } else {
@@ -174,10 +175,7 @@ Result<String>? _hexValueChecked(State<String> state) {
       state.errors = [];
     }
   }
-  final error = v.$2 as ParseError?;
-  if (error != null) {
-    return state.failAt(state.failPos, error);
-  }
+  state.errors.addAll(v.$2);
   return null;
 }
 

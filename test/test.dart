@@ -1810,28 +1810,34 @@ Result<(int, int)>? _$11(State<String> state) {
 
 Result<(int, int)>? _Expected$0(State<String> state) {
   final errors = state.errors.toList();
-  final failPos = state.failPos;
+  final previous = state.failPos;
   state.errors = [];
   state.failPos = 0;
   final r1 = _$11(state);
-  final failPos2 = state.failPos;
-  if (failPos2 < failPos) {
+  final current = state.failPos;
+  if (current < previous) {
     state.errors = errors;
-    state.failPos = failPos;
+    state.failPos = previous;
   }
   if (r1 != null) {
-    if (failPos2 == failPos) {
+    if (current == previous) {
       state.errors.addAll(errors);
     }
     return r1;
   }
-  if (failPos2 < failPos) {
+  if (current < previous) {
     return null;
   }
-  final v = state.pos != failPos2
-      ? (false, null)
-      : (true, const ErrorExpectedTags(['expr']));
-  if (failPos2 == failPos) {
+  final (bool, List<ParseError>)? v;
+  v = state.pos != current
+      ? (false, [])
+      : (
+          true,
+          [
+            const ErrorExpectedTags(['expr'])
+          ]
+        );
+  if (current == previous) {
     if (v.$1) {
       state.errors = errors;
     } else {
@@ -1842,10 +1848,7 @@ Result<(int, int)>? _Expected$0(State<String> state) {
       state.errors = [];
     }
   }
-  final error = v.$2 as ParseError?;
-  if (error != null) {
-    return state.failAt(state.failPos, error);
-  }
+  state.errors.addAll(v.$2);
   return null;
 }
 
@@ -2022,26 +2025,27 @@ Result<String>? _$25(State<String> state) {
 
 Result<String>? _ReplaceErrors$0(State<String> state) {
   final errors = state.errors.toList();
-  final failPos = state.failPos;
+  final previous = state.failPos;
   state.errors = [];
   state.failPos = 0;
   final r1 = _$25(state);
-  final failPos2 = state.failPos;
-  if (failPos2 < failPos) {
+  final current = state.failPos;
+  if (current < previous) {
     state.errors = errors;
-    state.failPos = failPos;
+    state.failPos = previous;
   }
   if (r1 != null) {
-    if (failPos2 == failPos) {
+    if (current == previous) {
       state.errors.addAll(errors);
     }
     return r1;
   }
-  if (failPos2 < failPos) {
+  if (current < previous) {
     return null;
   }
-  final v = (true, ErrorMessage(failPos2 - state.pos, 'error message'));
-  if (failPos2 == failPos) {
+  final (bool, List<ParseError>)? v;
+  v = (true, [ErrorMessage(current - state.pos, 'error message')]);
+  if (current == previous) {
     if (v.$1) {
       state.errors = errors;
     } else {
@@ -2052,10 +2056,7 @@ Result<String>? _ReplaceErrors$0(State<String> state) {
       state.errors = [];
     }
   }
-  final error = v.$2 as ParseError?;
-  if (error != null) {
-    return state.failAt(state.failPos, error);
-  }
+  state.errors.addAll(v.$2);
   return null;
 }
 
@@ -2389,28 +2390,29 @@ Result<String>? _$30(State<String> state) {
 
 Result<String>? _Unterminated$0(State<String> state) {
   final errors = state.errors.toList();
-  final failPos = state.failPos;
+  final previous = state.failPos;
   state.errors = [];
   state.failPos = 0;
   final r1 = _$30(state);
-  final failPos2 = state.failPos;
-  if (failPos2 < failPos) {
+  final current = state.failPos;
+  if (current < previous) {
     state.errors = errors;
-    state.failPos = failPos;
+    state.failPos = previous;
   }
   if (r1 != null) {
-    if (failPos2 == failPos) {
+    if (current == previous) {
       state.errors.addAll(errors);
     }
     return r1;
   }
-  if (failPos2 < failPos) {
+  if (current < previous) {
     return null;
   }
-  final v = state.pos == failPos2
-      ? (false, null)
-      : (false, ErrorMessage(state.pos - failPos2, 'unterminated'));
-  if (failPos2 == failPos) {
+  final (bool, List<ParseError>)? v;
+  v = state.pos == current
+      ? (false, [])
+      : (false, [ErrorMessage(state.pos - current, 'unterminated')]);
+  if (current == previous) {
     if (v.$1) {
       state.errors = errors;
     } else {
@@ -2421,10 +2423,7 @@ Result<String>? _Unterminated$0(State<String> state) {
       state.errors = [];
     }
   }
-  final error = v.$2 as ParseError?;
-  if (error != null) {
-    return state.failAt(state.failPos, error);
-  }
+  state.errors.addAll(v.$2);
   return null;
 }
 

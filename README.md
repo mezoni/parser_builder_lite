@@ -2,7 +2,7 @@
 
 Parser Builder Lite is a lightweight and uncomplicated parser combinator builder (source code generator).
 
-Version: 0.6.2
+Version: 0.6.3
 
 ## What is it and what is it for?
 

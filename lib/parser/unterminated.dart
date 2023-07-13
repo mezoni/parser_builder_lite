@@ -15,7 +15,7 @@ class Unterminated<I, O> extends ParserBuilder<I, O> {
     final handle2 = handle.calculate(context, ['{{0}}', '{{1}}']);
     return HandleError(
       p,
-      Expr('{{0}} == {{1}} ? (false, null) : (false, $handle2)'),
+      Expr('{{0}} == {{1}} ? (false, []) : (false, $handle2)'),
     ).buildBody(context);
   }
 }

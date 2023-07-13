@@ -5,26 +5,27 @@ import '../parser_builder.dart';
 class HandleError<I, O> extends ParserBuilder<I, O> {
   static const _template = r'''
 final errors = state.errors.toList();
-final failPos = state.failPos;
+final previous = state.failPos;
 state.errors = [];
 state.failPos = 0;
 final r1 = {{p1}}(state);
-final failPos2 = state.failPos;
-if (failPos2 < failPos) {
+final current = state.failPos;
+if (current < previous) {
   state.errors = errors;
-  state.failPos = failPos;
+  state.failPos = previous;
 }
 if (r1 != null) {
-  if (failPos2 == failPos) {
+  if (current == previous) {
     state.errors.addAll(errors);
   }
   return r1;
 }
-if (failPos2 < failPos) {
+if (current < previous) {
   return null;
 }
-final v = {{handle}};
-if (failPos2 == failPos) {
+final (bool, List<ParseError>)? v;
+v = {{handle}};
+if (current == previous) {
   if (v.$1) {
     state.errors = errors;
   } else {
@@ -35,12 +36,9 @@ if (failPos2 == failPos) {
     state.errors = [];
   }
 }
-final error = v.$2 as ParseError?;
-if (error != null) {
-  return state.failAt(state.failPos, error);
-}
+state.errors.addAll(v.$2);
 return null;''';
-  final Calculable<(bool replace, Object? error)> handle;
+  final Calculable<(bool replace, List<Object?> errors)> handle;
 
   final ParserBuilder<I, O> p;
 
@@ -50,7 +48,7 @@ return null;''';
   String buildBody(BuildContext context) {
     return render(_template, {
       'p1': p.build(context).name,
-      'handle': handle.calculate(context, ['state.pos', 'failPos2']),
+      'handle': handle.calculate(context, ['state.pos', 'current']),
     });
   }
 }

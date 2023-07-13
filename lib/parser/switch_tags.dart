@@ -1,4 +1,4 @@
-import '../helper.dart' as helper;
+import '../helper.dart';
 import '../parser_builder.dart';
 
 class SwitchTags<O> extends ParserBuilder<String, O> {
@@ -8,20 +8,21 @@ final input = state.input;
 if (pos < input.length) {
   final c = input.codeUnitAt(pos);
   {{tests}}
+  return state.failAll({{errors}});
 }
-return state.fail({{error}});''';
+return state.fail(const ErrorUnexpectedEof());''';
 
-  final String error;
+  final List<String> errors;
 
   final Map<String, String> table;
 
-  const SwitchTags(this.table, this.error);
+  const SwitchTags(this.table, this.errors);
 
   @override
   String buildBody(BuildContext context) {
     if (table.isEmpty) {
       throw ArgumentError.value(
-          table, 'table', 'The map of tags must not be empty: $this');
+          table, 'table', 'The map of tags must not be empty: $table');
     }
 
     final map = <int, List<String>>{};
@@ -47,7 +48,7 @@ return state.fail({{error}});''';
       tags.sort((x, y) => y.length.compareTo(x.length));
       final tests = <String, String>{};
       for (final tag in tags) {
-        final escaped = helper.escapeString(tag);
+        final escaped = escapeString(tag);
         final result = table[tag]!;
         final length = tag.length;
         final isLong = length > 1;
@@ -57,13 +58,33 @@ return state.fail({{error}});''';
         tests[condition] = branch;
       }
 
-      final branch = helper.buildConditional(tests);
+      final branch = buildConditional(tests);
       branches['c == $c'] = branch;
     }
 
-    return helper.render(_template, {
-      'error': error,
-      'tests': helper.buildConditional(branches),
+    return render(_template, {
+      'errors': '[${errors.join(', ')}]',
+      'tests': buildConditional(branches),
     });
+  }
+
+  @override
+  List<(int, int)> getStartCharacters(BuildContext context) {
+    final runes = table.keys.map((e) => e.runes.toList());
+    if (runes.any((e) => e.isEmpty)) {
+      return const [];
+    }
+
+    return runes.map((e) => (e[0], e[0])).toList();
+  }
+
+  @override
+  List<String> getStartErrors(BuildContext context) {
+    final runes = table.keys.map((e) => e.runes.toList());
+    if (runes.any((e) => e.isEmpty)) {
+      return const [];
+    }
+
+    return errors;
   }
 }

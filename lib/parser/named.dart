@@ -12,4 +12,9 @@ class Named<I, O> extends ParserBuilder<I, O> {
   String buildBody(BuildContext context) {
     return p.buildBody(context);
   }
+
+  @override
+  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
+    return p;
+  }
 }

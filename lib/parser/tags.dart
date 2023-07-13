@@ -11,7 +11,7 @@ class Tags extends ParserBuilder<String, String> {
   String buildBody(BuildContext context) {
     return SwitchTags<String>(
       {for (final tag in tags) tag: 'const Result(${escapeString(tag)})'},
-      'const ErrorExpectedTags([${tags.map(escapeString).join(', ')}])',
+      ['const ErrorExpectedTags([${tags.map(escapeString).join(', ')}])'],
     ).buildBody(context);
   }
 }

@@ -36,4 +36,14 @@ return state.fail(const ErrorUnexpectedEof());''';
       'char': getAsCode(char),
     });
   }
+
+  @override
+  List<String> getStartErrors(BuildContext context) {
+    return ['const ErrorExpectedChar($char)'];
+  }
+
+  @override
+  List<(int, int)> getStartCharacters(BuildContext context) {
+    return [(char, char)];
+  }
 }

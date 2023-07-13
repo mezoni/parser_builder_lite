@@ -27,4 +27,9 @@ return null;''';
       'p1': p.build(context).name,
     });
   }
+
+  @override
+  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
+    return p;
+  }
 }

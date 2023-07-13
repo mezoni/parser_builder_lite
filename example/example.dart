@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:parser_builder_lite/allocator.dart';
 import 'package:parser_builder_lite/expr.dart';
 import 'package:parser_builder_lite/fast_build.dart';
-import 'package:parser_builder_lite/parser/choice.dart';
 import 'package:parser_builder_lite/parser/delimited.dart';
 import 'package:parser_builder_lite/parser/eof.dart';
 import 'package:parser_builder_lite/parser/fast_satisfy16.dart';
@@ -19,6 +18,7 @@ import 'package:parser_builder_lite/parser/separated_list.dart';
 import 'package:parser_builder_lite/parser/skip.dart';
 import 'package:parser_builder_lite/parser/skip16_while.dart';
 import 'package:parser_builder_lite/parser/skip16_while1.dart';
+import 'package:parser_builder_lite/parser/smart_choice.dart';
 import 'package:parser_builder_lite/parser/string_chars.dart';
 import 'package:parser_builder_lite/parser/switch_tags.dart';
 import 'package:parser_builder_lite/parser/tag.dart';
@@ -109,7 +109,9 @@ const _escapeChar = Named(
       'n': r"const Result('\n')",
       'r': r"const Result('\r')",
       't': r"const Result('\t')",
-    }, r'''const ErrorExpectedTags(['"', '/', '\\', 'b', 'f', 'n', 'r', 't'])'''));
+    }, [
+      r'''const ErrorExpectedTags(['"', '/', '\\', 'b', 'f', 'n', 'r', 't'])'''
+    ]));
 
 const _escapeHex = Named('_escapeHex', Preceded(Tag('u'), _hexValueChecked));
 
@@ -138,10 +140,10 @@ const _hexValueChecked = Named(
 
 const _integer = Named(
     '_integer',
-    Choice2(
+    SmartChoice<Object?>([
       Tag('0'),
       Skip2(FastSatisfy16(Expr('{{0}} >= 49 && {{0}} <= 57')), _digit0),
-    ));
+    ]));
 
 const _keyValue = Named(
     '_keyValue',
@@ -200,7 +202,7 @@ const _stringChars = Named(
     StringChars(
       _normalChars,
       0x5c,
-      Choice2(_escapeChar, _escapeHex),
+      SmartChoice([_escapeChar, _escapeHex]),
     ));
 
 const _true =
@@ -209,16 +211,17 @@ const _true =
 const _value = Ref<String, Object?>('_value');
 
 const _value_ = Named(
-    '_value',
-    Choice7(
-      _object,
-      _array,
-      _string,
-      _number,
-      _true,
-      _false,
-      _null,
-    ));
+  '_value',
+  SmartChoice([
+    _object,
+    _string,
+    _array,
+    _null,
+    _false,
+    _true,
+    _number,
+  ]),
+);
 
 const _values = Named('_values', SeparatedList(_value, _comma));
 

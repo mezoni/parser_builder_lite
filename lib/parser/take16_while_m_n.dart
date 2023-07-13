@@ -1,5 +1,4 @@
 import '../calculable.dart';
-import '../helper.dart' as helper;
 import '../helper.dart';
 import '../parser_builder.dart';
 
@@ -61,8 +60,8 @@ return state.pos != pos ?
     }
 
     return render(m == 0 ? _template0 : _template, {
-      'm': helper.getAsCode(m),
-      'n': helper.getAsCode(n),
+      'm': getAsCode(m),
+      'n': getAsCode(n),
       'predicate': predicate.calculate(context, ['c']),
     });
   }

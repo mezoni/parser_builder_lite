@@ -1,6 +1,6 @@
-import '../helper.dart' as helper;
 import 'calculable.dart';
 import 'function_builder.dart';
+import 'helper.dart';
 import 'parser_builder.dart';
 
 class InRange extends _Range {
@@ -73,9 +73,9 @@ abstract class _Range implements Calculable<bool> {
   @override
   String calculate(BuildContext context, List<String> arguments) {
     final binarySearch = const _BinarySearch().build(context);
-    return helper.render(_template, {
+    return render(_template, {
       'op': negate ? '==' : '!=',
-      'ranges': helper.getAsCode(helper.normalizeRanges(ranges)),
+      'ranges': getAsCode(normalizeRanges(ranges)),
       'search': binarySearch,
     });
   }

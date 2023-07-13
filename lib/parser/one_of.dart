@@ -51,4 +51,14 @@ return state.fail(const ErrorUnexpectedEof());''';
       'length': getAsCode(chars.runes.toList().length),
     });
   }
+
+  @override
+  List<(int, int)> getStartCharacters(BuildContext context) {
+    return chars.runes.map((e) => (e, e)).toList();
+  }
+
+  @override
+  List<String> getStartErrors(BuildContext context) {
+    return const ['const ErrorUnexpectedChar()'];
+  }
 }

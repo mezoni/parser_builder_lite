@@ -31,4 +31,9 @@ return null;''';
       'value': value,
     });
   }
+
+  @override
+  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
+    return p;
+  }
 }

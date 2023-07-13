@@ -212,4 +212,10 @@ abstract class _Tuple<I, O> extends ParserBuilder<I, O> {
   String buildBody(BuildContext context) {
     return Sequence<I, O>(_ps).buildBody(context);
   }
+
+  @override
+  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
+    final ps = _ps;
+    return ps.isEmpty ? null : ps[0].$1;
+  }
 }

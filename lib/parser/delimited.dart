@@ -1,7 +1,7 @@
 import '../parser_builder.dart';
 import 'sequence.dart';
 
-class Delimited<I, O> extends ParserBuilder<I, O> {
+class Delimited<I, O> extends SequenceBase<I, O> {
   final ParserBuilder<I, Object?> end;
 
   final ParserBuilder<I, O> p;
@@ -11,11 +11,12 @@ class Delimited<I, O> extends ParserBuilder<I, O> {
   const Delimited(this.start, this.p, this.end);
 
   @override
-  String buildBody(BuildContext context) {
-    return Sequence<I, O>([
+  List<(ParserBuilder<I, Object?>, bool)> getParserSequence(
+      BuildContext context) {
+    return [
       (start, false),
       (p, true),
       (end, false),
-    ]).buildBody(context);
+    ];
   }
 }

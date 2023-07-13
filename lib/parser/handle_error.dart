@@ -38,6 +38,7 @@ if (current == previous) {
 }
 state.errors.addAll(v.$2);
 return null;''';
+
   final Calculable<(bool replace, List<Object?> errors)> handle;
 
   final ParserBuilder<I, O> p;

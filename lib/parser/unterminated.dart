@@ -18,4 +18,9 @@ class Unterminated<I, O> extends ParserBuilder<I, O> {
       Expr('{{0}} == {{1}} ? (false, []) : (false, $handle2)'),
     ).buildBody(context);
   }
+
+  @override
+  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
+    return p;
+  }
 }

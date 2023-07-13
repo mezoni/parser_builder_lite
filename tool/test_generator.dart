@@ -1015,7 +1015,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorExpectedTags],
+      errors: [errorUnexpectedEof],
     );
     t1.testFailure(
       input: '2',
@@ -1045,7 +1045,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorExpectedTags],
+      errors: [errorUnexpectedEof],
     );
     t1.testFailure(
       input: '2',
@@ -1057,8 +1057,8 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest(
-      'Tags (16-bit)', const Tags(['a', 'ab', 'abc', 'b', 'bc', 'c', _rune]),
+  tester.addTest('Tags',
+      const Tags(['a', 'ab', 'abc', 'b', 'bc', 'c', _rune, '$_rune$_rune']),
       (parserName, parser) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
@@ -1103,11 +1103,16 @@ Future<void> _generate() async {
       result: _rune,
       pos: 2,
     );
+    t1.testSuccess(
+      input: '$_rune$_rune',
+      result: '$_rune$_rune',
+      pos: 4,
+    );
     t1.testFailure(
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorExpectedTags],
+      errors: [errorUnexpectedEof],
     );
     t1.testFailure(
       input: 'x',
@@ -1472,10 +1477,10 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorExpectedTags],
+      errors: [errorUnexpectedEof],
     );
     t1.testFailure(input: '"123', failPos: 4, pos: 0, errors: [
-      errorExpectedTags,
+      errorUnexpectedEof,
       errorMessage
     ], errorTests: [
       (

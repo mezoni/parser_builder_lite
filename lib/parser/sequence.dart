@@ -1,7 +1,19 @@
 import '../helper.dart';
 import '../parser_builder.dart';
 
-class Sequence<I, O> extends ParserBuilder<I, O> {
+class Sequence<I, O> extends SequenceBase<I, O> {
+  final List<(ParserBuilder<I, Object?>, bool)> ps;
+
+  const Sequence(this.ps);
+
+  @override
+  List<(ParserBuilder<I, Object?>, bool)> getParserSequence(
+      BuildContext context) {
+    return ps;
+  }
+}
+
+abstract class SequenceBase<I, O> extends ParserBuilder<I, O> {
   static const _template = '''
 final pos = state.pos;
 {{next}}
@@ -20,12 +32,11 @@ if ({{r1}} != null) {
   {{next}}
 }''';
 
-  final List<(ParserBuilder<I, Object?>, bool)> ps;
-
-  const Sequence(this.ps);
+  const SequenceBase();
 
   @override
   String buildBody(BuildContext context) {
+    final ps = getParserSequence(context);
     if (ps.isEmpty) {
       throw ArgumentError.value(ps, 'ps', 'Must not be empty');
     }
@@ -67,5 +78,14 @@ if ({{r1}} != null) {
       'r': result,
     });
     return render(template, values);
+  }
+
+  List<(ParserBuilder<I, Object?>, bool)> getParserSequence(
+      BuildContext context);
+
+  @override
+  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
+    final ps = getParserSequence(context);
+    return ps.isEmpty ? null : ps[0].$1;
   }
 }

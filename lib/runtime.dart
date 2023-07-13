@@ -306,6 +306,30 @@ class State<T> {
   }
 
   @pragma('vm:prefer-inline')
+  Result<R>? failAll<R>(List<ParseError> errors) {
+    if (pos < failPos) {
+      return null;
+    } else if (failPos < pos) {
+      failPos = pos;
+      this.errors = [];
+    }
+    this.errors.addAll(errors);
+    return null;
+  }
+
+  @pragma('vm:prefer-inline')
+  Result<R>? failAllAt<R>(int offset, List<ParseError> errors) {
+    if (offset < failPos) {
+      return null;
+    } else if (failPos < offset) {
+      failPos = offset;
+      this.errors = [];
+    }
+    this.errors.addAll(errors);
+    return null;
+  }
+
+  @pragma('vm:prefer-inline')
   Result<R>? failAt<R>(int offset, ParseError error) {
     if (offset < failPos) {
       return null;

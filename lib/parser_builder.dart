@@ -34,6 +34,28 @@ abstract class ParserBuilder<I, O> {
     return (isNullable ? name : '$name!');
   }
 
+  List<(int, int)> getStartCharacters(BuildContext context) {
+    final parser = getStartParser(context);
+    if (parser == null) {
+      return const [];
+    }
+
+    return parser.getStartCharacters(context);
+  }
+
+  List<String> getStartErrors(BuildContext context) {
+    final parser = getStartParser(context);
+    if (parser == null) {
+      return const [];
+    }
+
+    return parser.getStartErrors(context);
+  }
+
+  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
+    return null;
+  }
+
   bool isNullableResultType() {
     final result = isNullableType<O>();
     return result;

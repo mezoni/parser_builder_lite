@@ -19,4 +19,14 @@ class Expected<I, O> extends ParserBuilder<I, O> {
                 '{{0}} != {{1}} ? (false, []) : (true, [const ErrorExpectedTags([$text])])'))
         .buildBody(context);
   }
+
+  @override
+  List<(int, int)> getStartCharacters(BuildContext context) {
+    return p.getStartCharacters(context);
+  }
+
+  @override
+  List<String> getStartErrors(BuildContext context) {
+    return ['const ErrorExpectedTags([${escapeString(tag)}])'];
+  }
 }

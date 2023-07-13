@@ -1,4 +1,3 @@
-import '../helper.dart' as helper;
 import '../helper.dart';
 import '../parser_builder.dart';
 
@@ -47,9 +46,14 @@ return Result(list);''';
 
     return render(m == 0 ? _template0 : _template, {
       'O': '$O',
-      'm': helper.getAsCode(m),
-      'n': helper.getAsCode(n),
+      'm': getAsCode(m),
+      'n': getAsCode(n),
       'p1': p.build(context).name,
     });
+  }
+
+  @override
+  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
+    return m < 1 ? null : p;
   }
 }

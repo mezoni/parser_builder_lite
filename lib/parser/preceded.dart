@@ -1,7 +1,7 @@
 import '../parser_builder.dart';
 import 'sequence.dart';
 
-class Preceded<I, O> extends ParserBuilder<I, O> {
+class Preceded<I, O> extends SequenceBase<I, O> {
   final ParserBuilder<I, O> p;
 
   final ParserBuilder<I, Object?> start;
@@ -9,10 +9,11 @@ class Preceded<I, O> extends ParserBuilder<I, O> {
   const Preceded(this.start, this.p);
 
   @override
-  String buildBody(BuildContext context) {
-    return Sequence<I, O>([
+  List<(ParserBuilder<I, Object?>, bool)> getParserSequence(
+      BuildContext context) {
+    return [
       (start, false),
       (p, true),
-    ]).buildBody(context);
+    ];
   }
 }

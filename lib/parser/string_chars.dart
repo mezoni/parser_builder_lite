@@ -18,7 +18,8 @@ final list = <String>[];
 var str = '';
 while (state.pos < input.length) {
   final pos = state.pos;
-  var c = 0;
+  str = '';
+  var c = -1;
   while (state.pos < input.length) {
     c = input.runeAt(state.pos);
     final ok = {{normalChar}};
@@ -27,9 +28,11 @@ while (state.pos < input.length) {
     }
     state.pos += c < 0xffff ? 1 : 2;
   }
-  str = state.pos != pos ? input.substring(pos, state.pos) : '';
-  if (str != '' && list.isNotEmpty) {
-    list.add(str);
+  if (state.pos != pos) {
+    str = input.substring(pos, state.pos);
+    if (list.isNotEmpty) {
+      list.add(str);
+    }
   }
   if (c != {{controlChar}}) {
     break;

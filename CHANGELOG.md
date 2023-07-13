@@ -1,3 +1,8 @@
+## 0.6.4
+
+- The functionality for determining start characters and start errors has been implemented.
+- The `SmartChoice` parser builder has been implemented. It increases the performance of parsing by looking one character ahead. Now the overall performance of the generated parsers has become even higher.
+
 ## 0.6.3
 
 - Changes in parser builder `HandleError`.

@@ -59,8 +59,8 @@ void _test() {
   _test_Tagshort$0();
   // Tag (long)
   _test_Taglong$0();
-  // Tags (16-bit)
-  _test_Tags16bit$0();
+  // Tags
+  _test_Tags$0();
   // TakeWhileMN (0..3)
   _test_TakeWhileMN03$0();
   // TakeWhileMN (1..2)
@@ -1053,7 +1053,7 @@ void _test_Tagshort$0() {
         reason: 'Testing \'state.failPos\' failed, input: ');
     expect($state$1.errors.length, 1,
         reason: 'Testing \'state.errors.length\' failed, input: ');
-    expect($state$1.errors[0], isA<ErrorExpectedTags>(),
+    expect($state$1.errors[0], isA<ErrorUnexpectedEof>(),
         reason: 'Testing \'state.error\' failed, input: ');
     final $state$2 = State('2');
     final $result$2 = _Tagshort$0($state$2);
@@ -1089,7 +1089,7 @@ void _test_Taglong$0() {
         reason: 'Testing \'state.failPos\' failed, input: ');
     expect($state$1.errors.length, 1,
         reason: 'Testing \'state.errors.length\' failed, input: ');
-    expect($state$1.errors[0], isA<ErrorExpectedTags>(),
+    expect($state$1.errors[0], isA<ErrorUnexpectedEof>(),
         reason: 'Testing \'state.error\' failed, input: ');
     final $state$2 = State('2');
     final $result$2 = _Taglong$0($state$2);
@@ -1105,11 +1105,11 @@ void _test_Taglong$0() {
   });
 }
 
-void _test_Tags16bit$0() {
-  // Tags (16-bit)
-  test('Tags (16-bit)', () {
+void _test_Tags$0() {
+  // Tags
+  test('Tags', () {
     final $state$0 = State('abcd');
-    final $result$0 = _Tags16bit$0($state$0);
+    final $result$0 = _Tags$0($state$0);
     expect($result$0 != null, true,
         reason: 'Testing \'result != null\' failed, input: abcd');
     final $value$0 = $result$0!.value;
@@ -1118,7 +1118,7 @@ void _test_Tags16bit$0() {
     expect($state$0.pos, 3,
         reason: 'Testing \'state.pos\' failed, input: abcd');
     final $state$1 = State('abd');
-    final $result$1 = _Tags16bit$0($state$1);
+    final $result$1 = _Tags$0($state$1);
     expect($result$1 != null, true,
         reason: 'Testing \'result != null\' failed, input: abd');
     final $value$1 = $result$1!.value;
@@ -1126,14 +1126,14 @@ void _test_Tags16bit$0() {
         reason: 'Testing \'result.value\' failed, input: abd');
     expect($state$1.pos, 2, reason: 'Testing \'state.pos\' failed, input: abd');
     final $state$2 = State('ad');
-    final $result$2 = _Tags16bit$0($state$2);
+    final $result$2 = _Tags$0($state$2);
     expect($result$2 != null, true,
         reason: 'Testing \'result != null\' failed, input: ad');
     final $value$2 = $result$2!.value;
     expect($value$2, 'a', reason: 'Testing \'result.value\' failed, input: ad');
     expect($state$2.pos, 1, reason: 'Testing \'state.pos\' failed, input: ad');
     final $state$3 = State('bcd');
-    final $result$3 = _Tags16bit$0($state$3);
+    final $result$3 = _Tags$0($state$3);
     expect($result$3 != null, true,
         reason: 'Testing \'result != null\' failed, input: bcd');
     final $value$3 = $result$3!.value;
@@ -1141,48 +1141,57 @@ void _test_Tags16bit$0() {
         reason: 'Testing \'result.value\' failed, input: bcd');
     expect($state$3.pos, 2, reason: 'Testing \'state.pos\' failed, input: bcd');
     final $state$4 = State('bd');
-    final $result$4 = _Tags16bit$0($state$4);
+    final $result$4 = _Tags$0($state$4);
     expect($result$4 != null, true,
         reason: 'Testing \'result != null\' failed, input: bd');
     final $value$4 = $result$4!.value;
     expect($value$4, 'b', reason: 'Testing \'result.value\' failed, input: bd');
     expect($state$4.pos, 1, reason: 'Testing \'state.pos\' failed, input: bd');
     final $state$5 = State('cd');
-    final $result$5 = _Tags16bit$0($state$5);
+    final $result$5 = _Tags$0($state$5);
     expect($result$5 != null, true,
         reason: 'Testing \'result != null\' failed, input: cd');
     final $value$5 = $result$5!.value;
     expect($value$5, 'c', reason: 'Testing \'result.value\' failed, input: cd');
     expect($state$5.pos, 1, reason: 'Testing \'state.pos\' failed, input: cd');
     final $state$6 = State('😀');
-    final $result$6 = _Tags16bit$0($state$6);
+    final $result$6 = _Tags$0($state$6);
     expect($result$6 != null, true,
         reason: 'Testing \'result != null\' failed, input: 😀');
     final $value$6 = $result$6!.value;
     expect($value$6, '😀',
         reason: 'Testing \'result.value\' failed, input: 😀');
     expect($state$6.pos, 2, reason: 'Testing \'state.pos\' failed, input: 😀');
-    final $state$7 = State('');
-    final $result$7 = _Tags16bit$0($state$7);
-    expect($result$7 == null, true,
-        reason: 'Testing \'result == null\' failed, input: ');
-    expect($state$7.pos, 0, reason: 'Testing \'state.pos\' failed, input: ');
-    expect($state$7.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, input: ');
-    expect($state$7.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, input: ');
-    expect($state$7.errors[0], isA<ErrorExpectedTags>(),
-        reason: 'Testing \'state.error\' failed, input: ');
-    final $state$8 = State('x');
-    final $result$8 = _Tags16bit$0($state$8);
+    final $state$7 = State('😀😀');
+    final $result$7 = _Tags$0($state$7);
+    expect($result$7 != null, true,
+        reason: 'Testing \'result != null\' failed, input: 😀😀');
+    final $value$7 = $result$7!.value;
+    expect($value$7, '😀😀',
+        reason: 'Testing \'result.value\' failed, input: 😀😀');
+    expect($state$7.pos, 4,
+        reason: 'Testing \'state.pos\' failed, input: 😀😀');
+    final $state$8 = State('');
+    final $result$8 = _Tags$0($state$8);
     expect($result$8 == null, true,
-        reason: 'Testing \'result == null\' failed, input: x');
-    expect($state$8.pos, 0, reason: 'Testing \'state.pos\' failed, input: x');
+        reason: 'Testing \'result == null\' failed, input: ');
+    expect($state$8.pos, 0, reason: 'Testing \'state.pos\' failed, input: ');
     expect($state$8.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, input: x');
+        reason: 'Testing \'state.failPos\' failed, input: ');
     expect($state$8.errors.length, 1,
+        reason: 'Testing \'state.errors.length\' failed, input: ');
+    expect($state$8.errors[0], isA<ErrorUnexpectedEof>(),
+        reason: 'Testing \'state.error\' failed, input: ');
+    final $state$9 = State('x');
+    final $result$9 = _Tags$0($state$9);
+    expect($result$9 == null, true,
+        reason: 'Testing \'result == null\' failed, input: x');
+    expect($state$9.pos, 0, reason: 'Testing \'state.pos\' failed, input: x');
+    expect($state$9.failPos, 0,
+        reason: 'Testing \'state.failPos\' failed, input: x');
+    expect($state$9.errors.length, 1,
         reason: 'Testing \'state.errors.length\' failed, input: x');
-    expect($state$8.errors[0], isA<ErrorExpectedTags>(),
+    expect($state$9.errors[0], isA<ErrorExpectedTags>(),
         reason: 'Testing \'state.error\' failed, input: x');
   });
 }
@@ -1591,7 +1600,7 @@ void _test_Unterminated$0() {
         reason: 'Testing \'state.failPos\' failed, input: ');
     expect($state$1.errors.length, 1,
         reason: 'Testing \'state.errors.length\' failed, input: ');
-    expect($state$1.errors[0], isA<ErrorExpectedTags>(),
+    expect($state$1.errors[0], isA<ErrorUnexpectedEof>(),
         reason: 'Testing \'state.error\' failed, input: ');
     final $state$2 = State('"123');
     final $result$2 = _Unterminated$0($state$2);
@@ -1603,7 +1612,7 @@ void _test_Unterminated$0() {
         reason: 'Testing \'state.failPos\' failed, input: "123');
     expect($state$2.errors.length, 2,
         reason: 'Testing \'state.errors.length\' failed, input: "123');
-    expect($state$2.errors[0], isA<ErrorExpectedTags>(),
+    expect($state$2.errors[0], isA<ErrorUnexpectedEof>(),
         reason: 'Testing \'state.error\' failed, input: "123');
     expect($state$2.errors[1], isA<ErrorMessage>(),
         reason: 'Testing \'state.error\' failed, input: "123');
@@ -2062,12 +2071,14 @@ Result<String>? _ReplaceErrors$0(State<String> state) {
 
 Result<String>? _$27(State<String> state) {
   const tag = 'n';
-  if (state.pos < state.input.length &&
-      state.input.codeUnitAt(state.pos) == 110) {
-    state.pos++;
-    return const Result(tag);
+  if (state.pos < state.input.length) {
+    if (state.input.codeUnitAt(state.pos) == 110) {
+      state.pos++;
+      return const Result(tag);
+    }
+    return state.fail(const ErrorExpectedTags([tag]));
   }
-  return state.fail(const ErrorExpectedTags([tag]));
+  return state.fail(const ErrorUnexpectedEof());
 }
 
 Result<String>? _$26(State<String> state) {
@@ -2084,7 +2095,8 @@ Result<String>? _StringChars$0(State<String> state) {
   var str = '';
   while (state.pos < input.length) {
     final pos = state.pos;
-    var c = 0;
+    str = '';
+    var c = -1;
     while (state.pos < input.length) {
       c = input.runeAt(state.pos);
       final ok = c >= 48 && c <= 57;
@@ -2093,9 +2105,11 @@ Result<String>? _StringChars$0(State<String> state) {
       }
       state.pos += c < 0xffff ? 1 : 2;
     }
-    str = state.pos != pos ? input.substring(pos, state.pos) : '';
-    if (str != '' && list.isNotEmpty) {
-      list.add(str);
+    if (state.pos != pos) {
+      str = input.substring(pos, state.pos);
+      if (list.isNotEmpty) {
+        list.add(str);
+      }
     }
     if (c != 92) {
       break;
@@ -2120,24 +2134,29 @@ Result<String>? _StringChars$0(State<String> state) {
 
 Result<String>? _Tagshort$0(State<String> state) {
   const tag = '0';
-  if (state.pos < state.input.length &&
-      state.input.codeUnitAt(state.pos) == 48) {
-    state.pos++;
-    return const Result(tag);
+  if (state.pos < state.input.length) {
+    if (state.input.codeUnitAt(state.pos) == 48) {
+      state.pos++;
+      return const Result(tag);
+    }
+    return state.fail(const ErrorExpectedTags([tag]));
   }
-  return state.fail(const ErrorExpectedTags([tag]));
+  return state.fail(const ErrorUnexpectedEof());
 }
 
 Result<String>? _Taglong$0(State<String> state) {
   const tag = '😀';
-  if (state.input.startsWith(tag, state.pos)) {
-    state.pos += 2;
-    return const Result(tag);
+  if (state.pos < state.input.length) {
+    if (state.input.startsWith(tag, state.pos)) {
+      state.pos += 2;
+      return const Result(tag);
+    }
+    return state.fail(const ErrorExpectedTags([tag]));
   }
-  return state.fail(const ErrorExpectedTags([tag]));
+  return state.fail(const ErrorUnexpectedEof());
 }
 
-Result<String>? _Tags16bit$0(State<String> state) {
+Result<String>? _Tags$0(State<String> state) {
   final pos = state.pos;
   final input = state.input;
   if (pos < input.length) {
@@ -2165,14 +2184,19 @@ Result<String>? _Tags16bit$0(State<String> state) {
       state.pos += 1;
       return const Result('c');
     } else if (c == 55357) {
-      if (input.startsWith('😀', pos)) {
+      if (input.startsWith('😀😀', pos)) {
+        state.pos += 4;
+        return const Result('😀😀');
+      } else if (input.startsWith('😀', pos)) {
         state.pos += 2;
         return const Result('😀');
       }
     }
+    return state.failAll([
+      const ErrorExpectedTags(['a', 'ab', 'abc', 'b', 'bc', 'c', '😀', '😀😀'])
+    ]);
   }
-  return state
-      .fail(const ErrorExpectedTags(['a', 'ab', 'abc', 'b', 'bc', 'c', '😀']));
+  return state.fail(const ErrorUnexpectedEof());
 }
 
 Result<String>? _TakeWhileMN03$0(State<String> state) {
@@ -2348,12 +2372,14 @@ Result<int>? _Terminated$0(State<String> state) {
 
 Result<String>? _$31(State<String> state) {
   const tag = '"';
-  if (state.pos < state.input.length &&
-      state.input.codeUnitAt(state.pos) == 34) {
-    state.pos++;
-    return const Result(tag);
+  if (state.pos < state.input.length) {
+    if (state.input.codeUnitAt(state.pos) == 34) {
+      state.pos++;
+      return const Result(tag);
+    }
+    return state.fail(const ErrorExpectedTags([tag]));
   }
-  return state.fail(const ErrorExpectedTags([tag]));
+  return state.fail(const ErrorUnexpectedEof());
 }
 
 Result<String>? _$32(State<String> state) {
@@ -2648,6 +2674,30 @@ class State<T> {
       errors = [];
     }
     errors.add(error);
+    return null;
+  }
+
+  @pragma('vm:prefer-inline')
+  Result<R>? failAll<R>(List<ParseError> errors) {
+    if (pos < failPos) {
+      return null;
+    } else if (failPos < pos) {
+      failPos = pos;
+      this.errors = [];
+    }
+    this.errors.addAll(errors);
+    return null;
+  }
+
+  @pragma('vm:prefer-inline')
+  Result<R>? failAllAt<R>(int offset, List<ParseError> errors) {
+    if (offset < failPos) {
+      return null;
+    } else if (failPos < offset) {
+      failPos = offset;
+      this.errors = [];
+    }
+    this.errors.addAll(errors);
     return null;
   }
 

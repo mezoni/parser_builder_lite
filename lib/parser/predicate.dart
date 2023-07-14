@@ -1,12 +1,9 @@
-import '../expr.dart';
+import '../ranges.dart';
 
-const isAlpha =
-    Expr<bool>('({{0}} >= 65 && {{0}} <= 90) || ({{0}} >= 97 && {{0}} <= 122)');
+const isAlpha = InRange([('A', 'Z'), ('a', 'z')]);
 
-const isAlphanumeric = Expr<bool>(
-    '({{0}} >= 48 && {{0}} <= 57) || ({{0}} >= 65 && {{0}} <= 90) || ({{0}} >= 97 && {{0}} <= 122)');
+const isAlphanumeric = InRange([('0', '9'), ('A', 'Z'), ('a', 'z')]);
 
-const isDigit = Expr<bool>('{{0}} >= 48 && {{0}} <= 57');
+const isDigit = InRange([('0', '9')]);
 
-const isHexDigit = Expr<bool>(
-    '({{0}} >= 48 && {{0}} <= 57) || ({{0}} >= 65 && {{0}} <= 70) || ({{0}} >= 97 && {{0}} <= 102)');
+const isHexDigit = InRange([('0', '9'), ('A', 'F'), ('a', 'f')]);

@@ -1,5 +1,5 @@
 import 'calculable.dart';
-import 'function_builder.dart';
+import 'expr.dart';
 import 'helper.dart';
 import 'parser_builder.dart';
 
@@ -17,54 +17,17 @@ class NotInRange extends _Range {
   bool get negate => true;
 }
 
-class _BinarySearch {
-  static const _template = '''
-if (list.isEmpty) {
-  return null;
-}
-var right = list.length >> 1;
-if (right == 1) {
-  final start = list[0];
-  final end = list[1];
-  if (value <= end && value >= start) {
-    return value;
-  }
-  return null;
-}
-var left = 0;
-int? result;
-while (left < right) {
-  final middle = (left + right) >> 1;
-  final index = middle << 1;
-  final start = list[index];
-  final end = list[index + 1];
-  if (value > end) {
-    left = middle + 1;
-  } else {
-    if (value >= start) {
-      return value;
-    }
-    right = middle;
-  }
-}
-return result;''';
-
-  const _BinarySearch();
-
-  String build(BuildContext context) {
-    final name = context.allocator.allocate();
-    return FunctionBuilder()
-        .build(
-            context, this, 'int?', name, 'int value, List<int> list', _template)
-        .name;
-  }
-}
-
 abstract class _Range implements Calculable<bool> {
-  static const _template = '''
-(int c) => {{search}}(c, const {{ranges}}) {{op}} null;''';
-
-  final List<(int, int)> ranges;
+  /// The list of ranges. Elements can have the following values:
+  /// - int
+  /// - String
+  /// - (String, String)
+  /// - (String, int)
+  /// - (int, String)
+  /// - (int, int)
+  ///
+  /// String values must be one character long.
+  final List<Object> ranges;
 
   const _Range(this.ranges);
 
@@ -72,11 +35,39 @@ abstract class _Range implements Calculable<bool> {
 
   @override
   String calculate(BuildContext context, List<String> arguments) {
-    final binarySearch = const _BinarySearch().build(context);
-    return render(_template, {
-      'op': negate ? '==' : '!=',
-      'ranges': getAsCode(normalizeRanges(ranges)),
-      'search': binarySearch,
-    });
+    var newRanges = <(int, int)>[];
+    for (final range in ranges) {
+      int toInt(String value) {
+        final runes = value.runes.toList();
+        if (runes.length == 1) {
+          return runes[0];
+        }
+
+        throw ArgumentError.value(range, 'range', ' Invalid range');
+      }
+
+      final newRange = switch (range) {
+        final int i => (i, i),
+        final String i => (toInt(i), toInt(i)),
+        final (String, String) i => (toInt(i.$1), toInt(i.$2)),
+        final (String, int) i => (toInt(i.$1), i.$2),
+        final (int, String) i => (i.$1, toInt(i.$2)),
+        final (int, int) i => (i, i),
+        _ => throw '',
+      } as (int, int);
+      newRanges.add(newRange);
+    }
+
+    newRanges = normalizeRanges(newRanges);
+    var source = newRanges
+        .map((e) => e.$1 == e.$2
+            ? '{{0}} == ${e.$1}'
+            : '{{0}} >= ${e.$1} && {{0}} <= ${e.$2}')
+        .join(' || ');
+    if (negate) {
+      source = '!($source)';
+    }
+
+    return Expr<bool>(source).calculate(context, arguments);
   }
 }

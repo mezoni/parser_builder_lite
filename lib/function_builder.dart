@@ -10,8 +10,17 @@ class FunctionBuilder {
 
   const FunctionBuilder();
 
-  BuildResult build(BuildContext context, Object key, String type, String name,
-      String parameters, String body) {
+  BuildResult build(
+      BuildContext context,
+      Object key,
+      ({
+        String body,
+        String name,
+        String parameters,
+        String type,
+      })
+              Function()
+          buildBody) {
     final cache = context.initializeCache(
         'parser_builder_lite.parser_builder.function_builder',
         <Object?, BuildResult>{});
@@ -20,13 +29,14 @@ class FunctionBuilder {
       return found;
     }
 
+    final x = buildBody();
     final source = render(_template, {
-      'body': body,
-      'name': name,
-      'parameters': parameters,
-      'type': type,
+      'body': x.body,
+      'name': x.name,
+      'parameters': x.parameters,
+      'type': x.type,
     });
-    final result = BuildResult(name: name, source: source);
+    final result = BuildResult(name: x.name, source: source);
     cache[key] = result;
     context.output.writeln(source);
     return result;

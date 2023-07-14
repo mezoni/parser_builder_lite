@@ -17,4 +17,9 @@ class Named<I, O> extends ParserBuilder<I, O> {
   ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
     return p;
   }
+
+  @override
+  String toString() {
+    return '$name($p)';
+  }
 }

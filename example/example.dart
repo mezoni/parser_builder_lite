@@ -5,28 +5,24 @@ import 'package:parser_builder_lite/expr.dart';
 import 'package:parser_builder_lite/fast_build.dart';
 import 'package:parser_builder_lite/parser/delimited.dart';
 import 'package:parser_builder_lite/parser/eof.dart';
-import 'package:parser_builder_lite/parser/fast_satisfy16.dart';
 import 'package:parser_builder_lite/parser/mapped.dart';
 import 'package:parser_builder_lite/parser/named.dart';
-import 'package:parser_builder_lite/parser/opt.dart';
 import 'package:parser_builder_lite/parser/preceded.dart';
 import 'package:parser_builder_lite/parser/predicate.dart';
 import 'package:parser_builder_lite/parser/ref.dart';
 import 'package:parser_builder_lite/parser/replace_errors.dart';
 import 'package:parser_builder_lite/parser/separated_list.dart';
-import 'package:parser_builder_lite/parser/skip.dart';
 import 'package:parser_builder_lite/parser/skip16_while.dart';
-import 'package:parser_builder_lite/parser/skip16_while1.dart';
 import 'package:parser_builder_lite/parser/smart_choice.dart';
 import 'package:parser_builder_lite/parser/string_chars.dart';
 import 'package:parser_builder_lite/parser/switch_tags.dart';
 import 'package:parser_builder_lite/parser/tag.dart';
-import 'package:parser_builder_lite/parser/tags.dart';
 import 'package:parser_builder_lite/parser/take16_while_m_n.dart';
 import 'package:parser_builder_lite/parser/terminated.dart';
 import 'package:parser_builder_lite/parser/tuple.dart';
 import 'package:parser_builder_lite/parser/value.dart';
 import 'package:parser_builder_lite/parser_builder.dart';
+import 'package:parser_builder_lite/ranges.dart';
 
 import '../tool/build_json_number_parser.dart';
 
@@ -92,11 +88,6 @@ const _closeBracket = Named('_closeBracket', Terminated(Tag(']'), _ws));
 
 const _comma = Named('_comma', Terminated(Tag(','), _ws));
 
-const _digit0 = Named('_digit0', Skip16While(isDigit));
-
-const _digit1 =
-    Named('_digit1', Skip16While1(Expr('{{0}} >= 48 && {{0}} <= 57')));
-
 const _doubleQuote = Named('_doubleQuote', Terminated(Tag('"'), _ws));
 
 const _escapeChar = Named(
@@ -116,15 +107,8 @@ const _escapeChar = Named(
 
 const _escapeHex = Named('_escapeHex', Preceded(Tag('u'), _hexValueChecked));
 
-const _exp = Named(
-    '_exp',
-    Opt<String, Object?>(
-        Skip3(Tags(['e', 'E']), Opt(Tags(['+', '-'])), _digit1)));
-
 const _false = Named<String, bool>(
     '_false', Value('false', Terminated(Tag('false'), _ws)));
-
-const _frac = Named('_frac', Opt<String, Object?>(Skip2(Tag('.'), _digit1)));
 
 const _hexValue = Named(
     '_hexValue',
@@ -139,13 +123,6 @@ const _hexValueChecked = Named(
           '''[ErrorMessage({{1}} - {{0}}, 'Expected 4 digit hexadecimal number')]'''),
     ));
 
-const _integer = Named(
-    '_integer',
-    SmartChoice<Object?>([
-      Tag('0'),
-      Skip2(FastSatisfy16(Expr('{{0}} >= 49 && {{0}} <= 57')), _digit0),
-    ]));
-
 const _keyValue = Named(
     '_keyValue',
     Mapped(
@@ -154,8 +131,6 @@ const _keyValue = Named(
     ));
 
 const _keyValues = Named('_keyValues', SeparatedList(_keyValue, _comma));
-
-const _minus = Named('_minus', Opt(Tag('-')));
 
 const _normalChars = Expr<bool>(
     '{{0}} <= 91 ? {{0}} <= 33 ? {{0}} >= 32 : {{0}} >= 35 : {{0}} <= 1114111 && {{0}} >= 93');
@@ -213,7 +188,4 @@ const _value_ = Named(
 
 const _values = Named('_values', SeparatedList(_value, _comma));
 
-const _ws = Named(
-    '_ws',
-    Skip16While(
-        Expr('{{0}} == 9 || {{0}} == 10 || {{0}} == 13 || {{0}} == 32')));
+const _ws = Named('_ws', Skip16While(InRange(['\t', '\r', '\n', ' '])));

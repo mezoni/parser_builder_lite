@@ -4,20 +4,32 @@ import 'function_builder.dart';
 
 export 'build_context.dart';
 
+/// The [ParserBuilder] is the main class for declaring parser builders.
 abstract class ParserBuilder<I, O> {
   const ParserBuilder();
 
+  /// Returns the name of the parser.
   String? get name => null;
 
+  /// Builds a parser and returns the build result.
   BuildResult build(BuildContext context) {
-    final name = this.name ?? context.allocator.allocate();
-    final body = buildBody(context);
-    return const FunctionBuilder()
-        .build(context, this, 'Result<$O>?', name, 'State<$I> state', body);
+    return const FunctionBuilder().build(context, this, () {
+      final name = this.name ?? context.allocator.allocate();
+      final body = buildBody(context);
+      return (
+        body: body,
+        name: name,
+        parameters: 'State<$I> state',
+        type: 'Result<$O>?',
+      );
+    });
   }
 
+  /// Builds a parser function body and returns the source code of the function
+  /// body.
   String buildBody(BuildContext context);
 
+  /// Returns a textual representation of the parser result type.
   String getResultType() {
     final name = '$O';
     final isNullable = isNullableResultType();
@@ -25,15 +37,7 @@ abstract class ParserBuilder<I, O> {
     return result;
   }
 
-  String getResultValue(String name) {
-    if (name.isEmpty) {
-      throw StateError('The name must not be empty');
-    }
-
-    final isNullable = isNullableResultType();
-    return (isNullable ? name : '$name!');
-  }
-
+  /// Returns the starting characters of the parser.
   List<(int, int)> getStartCharacters(BuildContext context) {
     final parser = getStartParser(context);
     if (parser == null) {
@@ -43,6 +47,7 @@ abstract class ParserBuilder<I, O> {
     return parser.getStartCharacters(context);
   }
 
+  /// Returns the starting errors of the parser.
   List<String> getStartErrors(BuildContext context) {
     final parser = getStartParser(context);
     if (parser == null) {
@@ -52,15 +57,19 @@ abstract class ParserBuilder<I, O> {
     return parser.getStartErrors(context);
   }
 
+  /// Returns the starting parser of the parser.
   ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
     return null;
   }
 
+  /// Returns `true` if the parser result type is nullable; otherwise returns
+  /// `false`.
   bool isNullableResultType() {
     final result = isNullableType<O>();
     return result;
   }
 
+  /// Returns `true` if type [T] is nullable; otherwise returns `false`.
   bool isNullableType<T>() {
     try {
       // ignore: unused_local_variable
@@ -70,5 +79,10 @@ abstract class ParserBuilder<I, O> {
     }
 
     return true;
+  }
+
+  @override
+  String toString() {
+    return '$runtimeType';
   }
 }

@@ -1,3 +1,11 @@
+## 0.6.7
+
+- Improved implementation of `InRange` and `NotInRange` predicates.
+
+## 0.6.6
+
+- Added some API documentation.
+
 ## 0.6.5
 
 - Added `Number` parser builder.

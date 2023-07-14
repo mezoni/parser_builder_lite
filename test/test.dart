@@ -1716,7 +1716,7 @@ Result<int>? _Choice2variants$0(State<String> state) {
   return null;
 }
 
-Result<int>? _$7(State<String> state) {
+Result<int>? _$3(State<String> state) {
   if (state.pos < state.input.length) {
     final c = state.input.codeUnitAt(state.pos);
     if (c == 50) {
@@ -1737,7 +1737,7 @@ Result<int>? _Choice3variants$0(State<String> state) {
   if (r2 != null) {
     return r2;
   }
-  final r3 = _$7(state);
+  final r3 = _$3(state);
   if (r3 != null) {
     return r3;
   }
@@ -1769,7 +1769,7 @@ Result<int>? _Char$0(State<String> state) {
   return state.fail(const ErrorUnexpectedEof());
 }
 
-Result<int>? _$10(State<String> state) {
+Result<int>? _$4(State<String> state) {
   if (state.pos < state.input.length) {
     final c = state.input.codeUnitAt(state.pos);
     if (c == 51) {
@@ -1785,9 +1785,9 @@ Result<int>? _Delimited$0(State<String> state) {
   final pos = state.pos;
   final r1 = _$2(state);
   if (r1 != null) {
-    final r2 = _$7(state);
+    final r2 = _$3(state);
     if (r2 != null) {
-      final r3 = _$10(state);
+      final r3 = _$4(state);
       if (r3 != null) {
         return r2;
       }
@@ -1804,11 +1804,11 @@ Result<Object?>? _Eof$0(State<String> state) {
   return state.fail(const ErrorExpectedEof());
 }
 
-Result<(int, int)>? _$11(State<String> state) {
+Result<(int, int)>? _$5(State<String> state) {
   final pos = state.pos;
   final r1 = _$2(state);
   if (r1 != null) {
-    final r2 = _$7(state);
+    final r2 = _$3(state);
     if (r2 != null) {
       return Result((r1.value, r2.value));
     }
@@ -1822,7 +1822,7 @@ Result<(int, int)>? _Expected$0(State<String> state) {
   final previous = state.failPos;
   state.errors = [];
   state.failPos = 0;
-  final r1 = _$11(state);
+  final r1 = _$5(state);
   final current = state.failPos;
   if (current < previous) {
     state.errors = errors;
@@ -1970,7 +1970,7 @@ Result<List<int>>? _ManyMN23$0(State<String> state) {
   return null;
 }
 
-Result<Object?>? _$21(State<String> state) {
+Result<Object?>? _$6(State<String> state) {
   final pos = state.pos;
   final r1 = _$2(state);
   if (r1 == null) {
@@ -1985,7 +1985,7 @@ Result<int>? _Not$0(State<String> state) {
   final pos = state.pos;
   final r1 = _$0(state);
   if (r1 != null) {
-    final r2 = _$21(state);
+    final r2 = _$6(state);
     if (r2 != null) {
       return r1;
     }
@@ -1998,7 +1998,7 @@ Result<int>? _Preceded$0(State<String> state) {
   final pos = state.pos;
   final r1 = _$2(state);
   if (r1 != null) {
-    final r2 = _$7(state);
+    final r2 = _$3(state);
     if (r2 != null) {
       return r2;
     }
@@ -2007,7 +2007,7 @@ Result<int>? _Preceded$0(State<String> state) {
   return null;
 }
 
-Result<String>? _$25(State<String> state) {
+Result<String>? _$7(State<String> state) {
   final input = state.input;
   final pos = state.pos;
   var count = 0;
@@ -2037,7 +2037,7 @@ Result<String>? _ReplaceErrors$0(State<String> state) {
   final previous = state.failPos;
   state.errors = [];
   state.failPos = 0;
-  final r1 = _$25(state);
+  final r1 = _$7(state);
   final current = state.failPos;
   if (current < previous) {
     state.errors = errors;
@@ -2069,7 +2069,7 @@ Result<String>? _ReplaceErrors$0(State<String> state) {
   return null;
 }
 
-Result<String>? _$27(State<String> state) {
+Result<String>? _$9(State<String> state) {
   const tag = 'n';
   if (state.pos < state.input.length) {
     if (state.input.codeUnitAt(state.pos) == 110) {
@@ -2081,8 +2081,8 @@ Result<String>? _$27(State<String> state) {
   return state.fail(const ErrorUnexpectedEof());
 }
 
-Result<String>? _$26(State<String> state) {
-  final r1 = _$27(state);
+Result<String>? _$8(State<String> state) {
+  final r1 = _$9(state);
   if (r1 != null) {
     return Result('\n');
   }
@@ -2115,7 +2115,7 @@ Result<String>? _StringChars$0(State<String> state) {
       break;
     }
     state.pos += 1;
-    final r1 = _$26(state);
+    final r1 = _$8(state);
     if (r1 == null) {
       state.pos = pos;
       break;
@@ -2361,7 +2361,7 @@ Result<int>? _Terminated$0(State<String> state) {
   final pos = state.pos;
   final r1 = _$2(state);
   if (r1 != null) {
-    final r2 = _$7(state);
+    final r2 = _$3(state);
     if (r2 != null) {
       return r1;
     }
@@ -2370,7 +2370,7 @@ Result<int>? _Terminated$0(State<String> state) {
   return null;
 }
 
-Result<String>? _$31(State<String> state) {
+Result<String>? _$11(State<String> state) {
   const tag = '"';
   if (state.pos < state.input.length) {
     if (state.input.codeUnitAt(state.pos) == 34) {
@@ -2382,7 +2382,7 @@ Result<String>? _$31(State<String> state) {
   return state.fail(const ErrorUnexpectedEof());
 }
 
-Result<String>? _$32(State<String> state) {
+Result<String>? _$12(State<String> state) {
   final input = state.input;
   final start = state.pos;
   while (state.pos < input.length) {
@@ -2398,13 +2398,13 @@ Result<String>? _$32(State<String> state) {
       : const Result('');
 }
 
-Result<String>? _$30(State<String> state) {
+Result<String>? _$10(State<String> state) {
   final pos = state.pos;
-  final r1 = _$31(state);
+  final r1 = _$11(state);
   if (r1 != null) {
-    final r2 = _$32(state);
+    final r2 = _$12(state);
     if (r2 != null) {
-      final r3 = _$31(state);
+      final r3 = _$11(state);
       if (r3 != null) {
         return r2;
       }
@@ -2419,7 +2419,7 @@ Result<String>? _Unterminated$0(State<String> state) {
   final previous = state.failPos;
   state.errors = [];
   state.failPos = 0;
-  final r1 = _$30(state);
+  final r1 = _$10(state);
   final current = state.failPos;
   if (current < previous) {
     state.errors = errors;

@@ -28,5 +28,3 @@ doc/api/
 
 config.yaml
 *.exe
-
-test/test.dart

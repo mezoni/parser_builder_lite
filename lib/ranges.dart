@@ -52,9 +52,9 @@ abstract class _Range implements Calculable<bool> {
         final (String, String) i => (toInt(i.$1), toInt(i.$2)),
         final (String, int) i => (toInt(i.$1), i.$2),
         final (int, String) i => (i.$1, toInt(i.$2)),
-        final (int, int) i => (i, i),
+        final (int, int) i => (i.$1, i.$2),
         _ => throw '',
-      } as (int, int);
+      };
       newRanges.add(newRange);
     }
 

@@ -205,34 +205,24 @@ Result<String>? _p$4(State<String> state) {
     c = state.input.codeUnitAt(state.pos);
   }
   var flag = 0x0;
-  switch (c) {
-    case 34: // '"'
-      flag = 0x1;
-      break;
-    case 47: // '/'
-      flag = 0x1;
-      break;
-    case 92: // '\\'
-      flag = 0x1;
-      break;
-    case 98: // 'b'
-      flag = 0x1;
-      break;
-    case 102: // 'f'
-      flag = 0x1;
-      break;
-    case 110: // 'n'
-      flag = 0x1;
-      break;
-    case 114: // 'r'
-      flag = 0x1;
-      break;
-    case 116: // 't'
-      flag = 0x1;
-      break;
-    case 117: // 'u'
-      flag = 0x2;
-      break;
+  if (c == 34) {
+    flag = 0x1;
+  } else if (c == 47) {
+    flag = 0x1;
+  } else if (c == 92) {
+    flag = 0x1;
+  } else if (c == 98) {
+    flag = 0x1;
+  } else if (c == 102) {
+    flag = 0x1;
+  } else if (c == 110) {
+    flag = 0x1;
+  } else if (c == 114) {
+    flag = 0x1;
+  } else if (c == 116) {
+    flag = 0x1;
+  } else if (c == 117) {
+    flag = 0x2;
   }
   if (flag & 0x1 != 0) {
     final r1 = _escapeChar(state);
@@ -945,28 +935,21 @@ Result<num>? _number(State<String> state) {
 Result<Object?>? _value(State<String> state) {
   int? c;
   if (state.pos < state.input.length) {
-    c = state.input.codeUnitAt(state.pos);
+    c = state.input.runeAt(state.pos);
   }
   var flag = 0x40;
-  switch (c) {
-    case 34: // '"'
-      flag = 0x42;
-      break;
-    case 91: // '['
-      flag = 0x44;
-      break;
-    case 102: // 'f'
-      flag = 0x50;
-      break;
-    case 110: // 'n'
-      flag = 0x48;
-      break;
-    case 116: // 't'
-      flag = 0x60;
-      break;
-    case 123: // '{'
-      flag = 0x41;
-      break;
+  if (c == 34) {
+    flag = 0x42;
+  } else if (c == 91) {
+    flag = 0x44;
+  } else if (c == 102) {
+    flag = 0x50;
+  } else if (c == 110) {
+    flag = 0x48;
+  } else if (c == 116) {
+    flag = 0x60;
+  } else if (c == 123) {
+    flag = 0x41;
   }
   if (flag & 0x1 != 0) {
     final r1 = _object(state);

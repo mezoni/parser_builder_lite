@@ -35,30 +35,7 @@ abstract class _Range implements Calculable<bool> {
 
   @override
   String calculate(BuildContext context, List<String> arguments) {
-    var newRanges = <(int, int)>[];
-    for (final range in ranges) {
-      int toInt(String value) {
-        final runes = value.runes.toList();
-        if (runes.length == 1) {
-          return runes[0];
-        }
-
-        throw ArgumentError.value(range, 'range', ' Invalid range');
-      }
-
-      final newRange = switch (range) {
-        final int i => (i, i),
-        final String i => (toInt(i), toInt(i)),
-        final (String, String) i => (toInt(i.$1), toInt(i.$2)),
-        final (String, int) i => (toInt(i.$1), i.$2),
-        final (int, String) i => (i.$1, toInt(i.$2)),
-        final (int, int) i => (i.$1, i.$2),
-        _ => throw '',
-      };
-      newRanges.add(newRange);
-    }
-
-    newRanges = normalizeRanges(newRanges);
+    final newRanges = toRanges(ranges);
     var source = newRanges
         .map((e) => e.$1 == e.$2
             ? '{{0}} == ${e.$1}'

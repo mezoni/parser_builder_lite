@@ -9,19 +9,12 @@ if (state.pos < state.input.length) {
   c = state.input.{{reader}}(state.pos);
 }
 var flag = {{flag}};
-switch (c) {
-  {{cases}}
-}
+{{cases}}
 {{choices}}
 if (state.pos >= state.input.length) {
   state.fail<{{O}}>(const ErrorUnexpectedEof());
 }
 return state.failAll({{errors}});''';
-
-  static const _templateCase = '''
-case {{char}}: // {{comment}}
-  flag = {{flag}};
-  break;''';
 
   static const _templateNext = '''
 if (flag & {{flag}} != 0) {
@@ -47,10 +40,9 @@ if (flag & {{flag}} != 0) {
 
   String? _generate(BuildContext context) {
     if (ps.length > 64) {
-      return null;
+      throw StateError('Too many parsers');
     }
 
-    var allRanges = <(int, int)>[];
     final allErrors = <String>[];
     final bad = <ParserBuilder<String, O>>{};
     final good = <ParserBuilder<String, O>>{};
@@ -65,62 +57,50 @@ if (flag & {{flag}} != 0) {
         bad.add(p);
       } else {
         good.add(p);
-        allRanges.addAll(ranges);
         allErrors.addAll(errors);
         parserRanges[p] = normalizeRanges(ranges);
       }
     }
 
-    allRanges = normalizeRanges(allRanges);
-    final chars = <int>[];
-    for (var i = 0; i < allRanges.length; i++) {
-      final range = allRanges[i];
-      final start = range.$1;
-      final end = range.$2;
-      for (var k = start; k <= end; k++) {
-        chars.add(k);
-        if (chars.length > 24) {
-          return null;
-        }
-      }
-    }
-
-    if (chars.isEmpty) {
+    if (good.isEmpty) {
       return null;
     }
 
+    final map = <ParserBuilder<String, O>, List<(int, int)>>{};
+    for (final p in good) {
+      map[p] = parserRanges[p]!;
+    }
+
+    final transitions = makeTransitions(map);
     var badFlag = 0;
     for (final p in bad) {
       final index = parserIndexes[p]!;
       badFlag |= 1 << index;
     }
 
-    final cases = StringBuffer();
-    for (var i = 0; i < chars.length; i++) {
-      final char = chars[i];
+    var is32bit = bad.isNotEmpty;
+    final branches = <String, String>{};
+    for (final transition in transitions) {
+      final range = transition.$1;
+      final ps = transition.$2;
+      final start = range.$1;
+      final end = range.$2;
+      if (start > 0xffff || end > 0xffff) {
+        is32bit = true;
+      }
+      final condition =
+          start == end ? 'c == $start' : 'c >= $start && c <= $end';
       var flag = 0;
-      for (final p in good) {
+      for (final p in ps) {
         final index = parserIndexes[p]!;
-        for (final range in parserRanges[p]!) {
-          if (char >= range.$1 && char <= range.$2) {
-            flag |= 1 << index;
-            break;
-          }
-        }
+        flag |= 1 << index;
       }
 
       flag |= badFlag;
-      final source = render(_templateCase, {
-        'char': getAsCode(char),
-        'comment': getAsCode(String.fromCharCode(char)),
-        'flag': '0x${flag.toRadixString(16)}',
-      });
-      cases.write(source);
-      if (i < ps.length - 1) {
-        cases.writeln();
-      }
+      branches[condition] = 'flag = 0x${flag.toRadixString(16)};';
     }
 
+    final cases = buildConditional(branches);
     final values = {
       'errors': '[${allErrors.join(', ')}]',
       'flag': '0x${badFlag.toRadixString(16)}',
@@ -141,7 +121,6 @@ if (flag & {{flag}} != 0) {
       }
     }
 
-    final is32bit = chars.any((e) => e > 0xffff);
     final template = render(_template, {
       'O': '$O',
       'cases': cases.toString(),

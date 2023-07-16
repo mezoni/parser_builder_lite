@@ -1,8 +1,9 @@
 import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
+import 'satisfy_mixin.dart';
 
-class Satisfy16 extends ParserBuilder<String, int> {
+class Satisfy16 extends ParserBuilder<String, int> with SatisfyMixin {
   static const _template = '''
 if (state.pos < state.input.length) {
   final c = state.input.codeUnitAt(state.pos);
@@ -15,6 +16,7 @@ if (state.pos < state.input.length) {
 }
 return state.fail(const ErrorUnexpectedEof());''';
 
+  @override
   final Calculable<bool> predicate;
 
   const Satisfy16(this.predicate);

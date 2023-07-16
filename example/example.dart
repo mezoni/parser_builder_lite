@@ -69,6 +69,7 @@ void main() {
   final r = parse( '{"rocket": "🚀 flies to the stars"}');
   print(r);
 }
+
 Object? parse(String input) {
   final state = State(input);
   final result = json(state);

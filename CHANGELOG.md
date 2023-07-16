@@ -1,3 +1,7 @@
+## 0.6.8
+
+- Improved implementation of `SmartChoice`. The restriction on the type and number of starting characters has been removed.
+
 ## 0.6.7
 
 - Improved implementation of `InRange` and `NotInRange` predicates.

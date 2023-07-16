@@ -1,8 +1,9 @@
 import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
+import 'satisfy_mixin.dart';
 
-class TakeWhile1 extends ParserBuilder<String, String> {
+class TakeWhile1 extends ParserBuilder<String, String> with SatisfyMixin {
   static const _template = '''
 final input = state.input;
 final start = state.pos;
@@ -22,6 +23,7 @@ if (state.pos != input.length) {
 }
 return state.fail(const ErrorUnexpectedEof());''';
 
+  @override
   final Calculable<bool> predicate;
 
   const TakeWhile1(this.predicate);

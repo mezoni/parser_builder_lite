@@ -323,10 +323,25 @@ class Number extends ParserBuilder<String, num> {
   }
   return state.failAt(failPos, const ErrorUnexpectedEof());''';
 
-  const Number();
+  final String error;
+
+  const Number([this.error = "const ErrorExpectedTags(['number'])"]);
 
   @override
   String buildBody(BuildContext context) {
     return render(_template, {});
+  }
+
+  @override
+  List<(int, int)> getStartCharacters(BuildContext context) {
+    return toRanges([
+      '-',
+      ('0', '9'),
+    ]);
+  }
+
+  @override
+  List<String> getStartErrors(BuildContext context) {
+    return [error];
   }
 }

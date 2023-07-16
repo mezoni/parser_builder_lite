@@ -205,24 +205,26 @@ Result<String>? _p$4(State<String> state) {
     c = state.input.codeUnitAt(state.pos);
   }
   var flag = 0x0;
-  if (c == 34) {
-    flag = 0x1;
-  } else if (c == 47) {
-    flag = 0x1;
-  } else if (c == 92) {
-    flag = 0x1;
-  } else if (c == 98) {
-    flag = 0x1;
-  } else if (c == 102) {
-    flag = 0x1;
-  } else if (c == 110) {
-    flag = 0x1;
-  } else if (c == 114) {
-    flag = 0x1;
-  } else if (c == 116) {
-    flag = 0x1;
-  } else if (c == 117) {
-    flag = 0x2;
+  if (c != null) {
+    if (c == 34) {
+      flag = 0x1;
+    } else if (c == 47) {
+      flag = 0x1;
+    } else if (c == 92) {
+      flag = 0x1;
+    } else if (c == 98) {
+      flag = 0x1;
+    } else if (c == 102) {
+      flag = 0x1;
+    } else if (c == 110) {
+      flag = 0x1;
+    } else if (c == 114) {
+      flag = 0x1;
+    } else if (c == 116) {
+      flag = 0x1;
+    } else if (c == 117) {
+      flag = 0x2;
+    }
   }
   if (flag & 0x1 != 0) {
     final r1 = _escapeChar(state);
@@ -935,21 +937,27 @@ Result<num>? _number(State<String> state) {
 Result<Object?>? _value(State<String> state) {
   int? c;
   if (state.pos < state.input.length) {
-    c = state.input.runeAt(state.pos);
+    c = state.input.codeUnitAt(state.pos);
   }
-  var flag = 0x40;
-  if (c == 34) {
-    flag = 0x42;
-  } else if (c == 91) {
-    flag = 0x44;
-  } else if (c == 102) {
-    flag = 0x50;
-  } else if (c == 110) {
-    flag = 0x48;
-  } else if (c == 116) {
-    flag = 0x60;
-  } else if (c == 123) {
-    flag = 0x41;
+  var flag = 0x0;
+  if (c != null) {
+    if (c == 34) {
+      flag = 0x2;
+    } else if (c == 45) {
+      flag = 0x40;
+    } else if (c >= 48 && c <= 57) {
+      flag = 0x40;
+    } else if (c == 91) {
+      flag = 0x4;
+    } else if (c == 102) {
+      flag = 0x10;
+    } else if (c == 110) {
+      flag = 0x8;
+    } else if (c == 116) {
+      flag = 0x20;
+    } else if (c == 123) {
+      flag = 0x1;
+    }
   }
   if (flag & 0x1 != 0) {
     final r1 = _object(state);
@@ -1002,7 +1010,8 @@ Result<Object?>? _value(State<String> state) {
     const ErrorExpectedTags(['[']),
     const ErrorExpectedTags(['null']),
     const ErrorExpectedTags(['false']),
-    const ErrorExpectedTags(['true'])
+    const ErrorExpectedTags(['true']),
+    const ErrorExpectedTags(['number'])
   ]);
 }
 

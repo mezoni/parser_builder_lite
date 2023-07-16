@@ -9,7 +9,9 @@ if (state.pos < state.input.length) {
   c = state.input.{{reader}}(state.pos);
 }
 var flag = {{flag}};
-{{cases}}
+if (c != null) {
+  {{cases}}
+}
 {{choices}}
 if (state.pos >= state.input.length) {
   state.fail<{{O}}>(const ErrorUnexpectedEof());
@@ -38,9 +40,39 @@ if (flag & {{flag}} != 0) {
     return Choice(ps).buildBody(context);
   }
 
+  @override
+  List<(int, int)> getStartCharacters(BuildContext context) {
+    final list = <(int, int)>[];
+    for (final p in ps) {
+      final chars = p.getStartCharacters(context);
+      if (chars.isEmpty) {
+        return const [];
+      }
+
+      list.addAll(chars);
+    }
+
+    return list;
+  }
+
+  @override
+  List<String> getStartErrors(BuildContext context) {
+    final list = <String>[];
+    for (final p in ps) {
+      final errors = p.getStartErrors(context);
+      if (errors.isEmpty) {
+        return const [];
+      }
+
+      list.addAll(errors);
+    }
+
+    return list;
+  }
+
   String? _generate(BuildContext context) {
     if (ps.length > 64) {
-      throw StateError('Too many parsers');
+      throw StateError('The number of parsers must not exceed 64');
     }
 
     final allErrors = <String>[];

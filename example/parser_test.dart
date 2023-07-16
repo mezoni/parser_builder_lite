@@ -113,7 +113,7 @@ Result<List<int>>? _Many$0(State<String> state) {
   return Result(list);
 }
 
-Result<int>? _$2(State<String> state) {
+Result<int>? _$1(State<String> state) {
   if (state.pos < state.input.length) {
     final c = state.input.codeUnitAt(state.pos);
     if (c == 50) {
@@ -129,7 +129,7 @@ Result<int>? _Preceded$0(State<String> state) {
   final pos = state.pos;
   final r1 = _$0(state);
   if (r1 != null) {
-    final r2 = _$2(state);
+    final r2 = _$1(state);
     if (r2 != null) {
       return r2;
     }
@@ -359,6 +359,30 @@ class State<T> {
       errors = [];
     }
     errors.add(error);
+    return null;
+  }
+
+  @pragma('vm:prefer-inline')
+  Result<R>? failAll<R>(List<ParseError> errors) {
+    if (pos < failPos) {
+      return null;
+    } else if (failPos < pos) {
+      failPos = pos;
+      this.errors = [];
+    }
+    this.errors.addAll(errors);
+    return null;
+  }
+
+  @pragma('vm:prefer-inline')
+  Result<R>? failAllAt<R>(int offset, List<ParseError> errors) {
+    if (offset < failPos) {
+      return null;
+    } else if (failPos < offset) {
+      failPos = offset;
+      this.errors = [];
+    }
+    this.errors.addAll(errors);
     return null;
   }
 

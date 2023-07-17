@@ -200,29 +200,27 @@ Result<String>? _escapeHex(State<String> state) {
 }
 
 Result<String>? _p$4(State<String> state) {
-  int? c;
-  if (state.pos < state.input.length) {
-    c = state.input.codeUnitAt(state.pos);
-  }
+  final int? v =
+      state.pos < state.input.length ? state.input.codeUnitAt(state.pos) : null;
   var flag = 0x0;
-  if (c != null) {
-    if (c == 34) {
+  if (v != null) {
+    if (v == 34) {
       flag = 0x1;
-    } else if (c == 47) {
+    } else if (v == 47) {
       flag = 0x1;
-    } else if (c == 92) {
+    } else if (v == 92) {
       flag = 0x1;
-    } else if (c == 98) {
+    } else if (v == 98) {
       flag = 0x1;
-    } else if (c == 102) {
+    } else if (v == 102) {
       flag = 0x1;
-    } else if (c == 110) {
+    } else if (v == 110) {
       flag = 0x1;
-    } else if (c == 114) {
+    } else if (v == 114) {
       flag = 0x1;
-    } else if (c == 116) {
+    } else if (v == 116) {
       flag = 0x1;
-    } else if (c == 117) {
+    } else if (v == 117) {
       flag = 0x2;
     }
   }
@@ -935,27 +933,25 @@ Result<num>? _number(State<String> state) {
 }
 
 Result<Object?>? _value(State<String> state) {
-  int? c;
-  if (state.pos < state.input.length) {
-    c = state.input.codeUnitAt(state.pos);
-  }
+  final int? v =
+      state.pos < state.input.length ? state.input.codeUnitAt(state.pos) : null;
   var flag = 0x0;
-  if (c != null) {
-    if (c == 34) {
+  if (v != null) {
+    if (v == 34) {
       flag = 0x2;
-    } else if (c == 45) {
+    } else if (v == 45) {
       flag = 0x40;
-    } else if (c >= 48 && c <= 57) {
+    } else if (v >= 48 && v <= 57) {
       flag = 0x40;
-    } else if (c == 91) {
+    } else if (v == 91) {
       flag = 0x4;
-    } else if (c == 102) {
+    } else if (v == 102) {
       flag = 0x10;
-    } else if (c == 110) {
+    } else if (v == 110) {
       flag = 0x8;
-    } else if (c == 116) {
+    } else if (v == 116) {
       flag = 0x20;
-    } else if (c == 123) {
+    } else if (v == 123) {
       flag = 0x1;
     }
   }

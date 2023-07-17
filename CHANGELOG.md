@@ -1,3 +1,7 @@
+## 0.6.9
+
+- Added parser builder `SmartChoiceEx`. It can be used not only with string data, but with any data type, which allows you to specify the type of starting characters as integer values (e.g. `TokenKind`). The `SmartChoice` parser builder is based on this builder.
+
 ## 0.6.8
 
 - Improved implementation of `SmartChoice`. The restriction on the type and number of starting characters has been removed.

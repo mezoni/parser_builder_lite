@@ -1,5 +1,6 @@
 import '../helper.dart';
 import '../parser_builder.dart';
+import 'marked.dart';
 
 class Sequence<I, O> extends SequenceBase<I, O> {
   final List<(ParserBuilder<I, Object?>, bool)> ps;
@@ -16,19 +17,17 @@ class Sequence<I, O> extends SequenceBase<I, O> {
 abstract class SequenceBase<I, O> extends ParserBuilder<I, O> {
   static const _template = '''
 final pos = state.pos;
-{{next}}
+{{sequence}}
 state.pos = pos;
 return null;''';
 
   static const _templateLast = '''
-final {{r1}} = {{p1}}(state);
-if ({{r1}} != null) {
-  return {{r}};
-}''';
+final r{{index}} = {{value}};
+{{next}}''';
 
   static const _templateNext = '''
-final {{r1}} = {{p1}}(state);
-if ({{r1}} != null) {
+final r{{index}} = {{value}};
+if (r{{index}} != null) {
   {{next}}
 }''';
 
@@ -36,48 +35,7 @@ if ({{r1}} != null) {
 
   @override
   String buildBody(BuildContext context) {
-    final ps = getParserSequence(context);
-    if (ps.isEmpty) {
-      throw ArgumentError.value(ps, 'ps', 'Must not be empty');
-    }
-
-    final values = <String, String>{};
-    final results = <String>[];
-    for (var i = 0; i < ps.length; i++) {
-      final element = ps[i];
-      final p = element.$1;
-      values['p${i + 1}'] = p.build(context).name;
-      if (element.$2) {
-        results.add('r${i + 1}');
-      }
-    }
-
-    final result = switch (results.length) {
-      0 => 'Result<${getResultType()}>(null)',
-      1 => results[0],
-      _ => 'Result((${results.map((e) => '$e.value').join(', ')}))',
-    };
-
-    String plunge(int i) {
-      if (i < ps.length - 1) {
-        return render(_templateNext, {
-          'next': plunge(i + 1),
-          'p1': '{{p${i + 1}}}',
-          'r1': 'r${i + 1}',
-        });
-      } else {
-        return render(_templateLast, {
-          'p1': '{{p${i + 1}}}',
-          'r1': 'r${i + 1}',
-        });
-      }
-    }
-
-    final template = render(_template, {
-      'next': plunge(0),
-      'r': result,
-    });
-    return render(template, values);
+    return _buildBody(context);
   }
 
   List<(ParserBuilder<I, Object?>, bool)> getParserSequence(
@@ -87,5 +45,86 @@ if ({{r1}} != null) {
   ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
     final ps = getParserSequence(context);
     return ps.isEmpty ? null : ps[0].$1;
+  }
+
+  String _buildBody(BuildContext context) {
+    final sequence = _buildSequence(context, []);
+    String plunge(int i) {
+      final element = sequence[i];
+      final value = element.$1;
+      final isLast = element.$2;
+      if (i == 0) {
+        return render(_templateNext, {
+          'index': getAsCode(i + 1),
+          'next': plunge(i + 1),
+          'value': value,
+        });
+      }
+
+      if (isLast) {
+        if (i == sequence.length - 1) {
+          return 'return $value;';
+        } else {
+          return render(_templateLast, {
+            'index': getAsCode(i + 1),
+            'next': plunge(i + 1),
+            'value': value,
+          });
+        }
+      } else {
+        return render(_templateNext, {
+          'index': getAsCode(i + 1),
+          'next': plunge(i + 1),
+          'value': value,
+        });
+      }
+    }
+
+    return render(_template, {
+      'sequence': plunge(0),
+    });
+  }
+
+  List<(String, bool)> _buildSequence(
+      BuildContext context, List<(String, bool)> sequence) {
+    final ps = getParserSequence(context);
+    if (ps.isEmpty) {
+      throw ArgumentError.value(ps, 'ps', 'Must not be empty');
+    }
+
+    final results = <int>[];
+    for (var i = 0; i < ps.length; i++) {
+      final element = ps[i];
+      final p = element.$1;
+      if (p is SequenceBase) {
+        final p2 = p as SequenceBase;
+        sequence = p2._buildSequence(context, sequence);
+      } else if (p is Marked) {
+        final p2 = p as Marked;
+        if (p2.p is SequenceBase) {
+          final p3 = p2.p as SequenceBase;
+          sequence = p3._buildSequence(context, sequence);
+        }
+      } else {
+        final name = p.build(context).name;
+        final value = '$name(state)';
+        sequence.add((value, false));
+      }
+
+      if (element.$2) {
+        results.add(sequence.length);
+      }
+
+      if (i == ps.length - 1) {
+        final value = switch (results.length) {
+          0 => 'Result<${getResultType()}>(null)',
+          1 => 'r${results[0]}',
+          _ => 'Result((${results.map((e) => 'r$e.value').join(', ')}))',
+        };
+        sequence.add((value, true));
+      }
+    }
+
+    return sequence;
   }
 }

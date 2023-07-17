@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:parser_builder_lite/allocator.dart';
 import 'package:parser_builder_lite/expr.dart';
 import 'package:parser_builder_lite/fast_build.dart';
+import 'package:parser_builder_lite/parser/const_value.dart';
 import 'package:parser_builder_lite/parser/delimited.dart';
 import 'package:parser_builder_lite/parser/eof.dart';
 import 'package:parser_builder_lite/parser/mapped.dart';
@@ -20,6 +21,7 @@ import 'package:parser_builder_lite/parser/tag.dart';
 import 'package:parser_builder_lite/parser/take16_while_m_n.dart';
 import 'package:parser_builder_lite/parser/terminated.dart';
 import 'package:parser_builder_lite/parser/tuple.dart';
+import 'package:parser_builder_lite/parser/marked.dart';
 import 'package:parser_builder_lite/parser/value.dart';
 import 'package:parser_builder_lite/parser_builder.dart';
 import 'package:parser_builder_lite/ranges.dart';
@@ -83,13 +85,15 @@ Object? parse(String input) {
 
 const _array = Named('_array', Delimited(_openBracket, _values, _closeBracket));
 
-const _closeBrace = Named('_closeBrace', Terminated(Tag('}'), _ws));
+const _closeBrace = Marked('_closeBrace', Terminated(Tag('}'), _ws));
 
-const _closeBracket = Named('_closeBracket', Terminated(Tag(']'), _ws));
+const _closeBracket = Marked('_closeBracket', Terminated(Tag(']'), _ws));
+
+const _colon = Marked('_colon', Terminated(Tag(':'), _ws));
 
 const _comma = Named('_comma', Terminated(Tag(','), _ws));
 
-const _doubleQuote = Named('_doubleQuote', Terminated(Tag('"'), _ws));
+const _doubleQuote = Marked('_doubleQuote', Terminated(Tag('"'), _ws));
 
 const _escapeChar = Named(
     '_escapeChar',
@@ -109,7 +113,7 @@ const _escapeChar = Named(
 const _escapeHex = Named('_escapeHex', Preceded(Tag('u'), _hexValueChecked));
 
 const _false = Named<String, bool>(
-    '_false', Value('false', Terminated(Tag('false'), _ws)));
+    '_false', ConstValue('false', Terminated(Tag('false'), _ws)));
 
 const _hexValue = Named(
     '_hexValue',
@@ -127,7 +131,7 @@ const _hexValueChecked = Named(
 const _keyValue = Named(
     '_keyValue',
     Mapped(
-      Tuple3(_string, _semicolon, _value),
+      Tuple3(_string, _colon, _value),
       Expr<MapEntry<String, Object?>>(r'MapEntry({{0}}.$1, {{0}}.$3)'),
     ));
 
@@ -152,11 +156,9 @@ const _object = Named(
       Expr<Map<String, Object?>>(r'Map.fromEntries({{0}}.$2)'),
     ));
 
-const _openBrace = Named('_openBrace', Terminated(Tag('{'), _ws));
+const _openBrace = Marked('_openBrace ', Terminated(Tag('{'), _ws));
 
-const _openBracket = Named('_openBracket', Terminated(Tag('['), _ws));
-
-const _semicolon = Named('_semicolon', Terminated(Tag(':'), _ws));
+const _openBracket = Marked('_openBracket', Terminated(Tag('['), _ws));
 
 const _string =
     Named('_string', Delimited(Tag('"'), _stringChars, _doubleQuote));
@@ -169,8 +171,8 @@ const _stringChars = Named(
       SmartChoice([_escapeChar, _escapeHex]),
     ));
 
-const _true =
-    Named<String, bool>('_true', Value('true', Terminated(Tag('true'), _ws)));
+const _true = Named<String, bool>(
+    '_true', ConstValue('true', Terminated(Tag('true'), _ws)));
 
 const _value = Ref<String, Object?>('_value');
 

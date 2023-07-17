@@ -2,21 +2,21 @@ import '../helper.dart';
 import '../parser_builder.dart';
 
 class Tag extends ParserBuilder<String, String> {
-  static const _template16 = '''
+  static const _template = '''
 const tag = {{tag}};
 if (state.pos < state.input.length) {
-  if (state.input.codeUnitAt(state.pos) == {{char}}) {
-    state.pos++;
+  if (state.input.startsWith(tag, state.pos)) {
+    state.pos += {{length}};
     return const Result(tag);
   }
   return state.fail(const ErrorExpectedTags([tag]));
 }
 return state.fail(const ErrorUnexpectedEof());''';
 
-  static const _template32 = '''
+  static const _templateShort = '''
 const tag = {{tag}};
 if (state.pos < state.input.length) {
-  if (state.input.startsWith(tag, state.pos)) {
+  if ({{test}}) {
     state.pos += {{length}};
     return const Result(tag);
   }
@@ -34,8 +34,21 @@ return state.fail(const ErrorUnexpectedEof());''';
       throw ArgumentError.value(tag, 'tag', 'Must not be empty');
     }
 
-    final template = tag.length == 1 ? _template16 : _template32;
-    return render(template, {
+    final length = tag.length;
+    if (length < 7) {
+      final test = List.generate(
+          length,
+          (i) => i == 0
+              ? 'state.input.codeUnitAt(state.pos) == ${tag.codeUnitAt(i)}'
+              : 'state.input.codeUnitAt(state.pos + $i) == ${tag.codeUnitAt(i)}');
+      return render(_templateShort, {
+        'length': getAsCode(tag.length),
+        'tag': escapeString(tag),
+        'test': test.join(' && '),
+      });
+    }
+
+    return render(_template, {
       'char': getAsCode(tag.codeUnitAt(0)),
       'length': getAsCode(tag.length),
       'tag': escapeString(tag),

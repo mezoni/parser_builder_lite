@@ -7,7 +7,7 @@ final r1 = {{p1}}(state);
 if (r1 != null) {
   return r1;
 }
-return const Result<{{O}}>(null);''';
+return const Result(null);''';
 
   final ParserBuilder<I, O> p;
 
@@ -16,7 +16,6 @@ return const Result<{{O}}>(null);''';
   @override
   String buildBody(BuildContext context) {
     return render(_template, {
-      'O': getResultType(),
       'p1': p.build(context).name,
     });
   }

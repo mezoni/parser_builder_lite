@@ -2073,7 +2073,7 @@ Result<String>? _$9(State<String> state) {
   const tag = 'n';
   if (state.pos < state.input.length) {
     if (state.input.codeUnitAt(state.pos) == 110) {
-      state.pos++;
+      state.pos += 1;
       return const Result(tag);
     }
     return state.fail(const ErrorExpectedTags([tag]));
@@ -2136,7 +2136,7 @@ Result<String>? _Tagshort$0(State<String> state) {
   const tag = '0';
   if (state.pos < state.input.length) {
     if (state.input.codeUnitAt(state.pos) == 48) {
-      state.pos++;
+      state.pos += 1;
       return const Result(tag);
     }
     return state.fail(const ErrorExpectedTags([tag]));
@@ -2147,7 +2147,8 @@ Result<String>? _Tagshort$0(State<String> state) {
 Result<String>? _Taglong$0(State<String> state) {
   const tag = '😀';
   if (state.pos < state.input.length) {
-    if (state.input.startsWith(tag, state.pos)) {
+    if (state.input.codeUnitAt(state.pos) == 55357 &&
+        state.input.codeUnitAt(state.pos + 1) == 56832) {
       state.pos += 2;
       return const Result(tag);
     }
@@ -2374,7 +2375,7 @@ Result<String>? _$11(State<String> state) {
   const tag = '"';
   if (state.pos < state.input.length) {
     if (state.input.codeUnitAt(state.pos) == 34) {
-      state.pos++;
+      state.pos += 1;
       return const Result(tag);
     }
     return state.fail(const ErrorExpectedTags([tag]));

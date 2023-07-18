@@ -24,12 +24,12 @@ return null;''';
   }
 
   @override
-  ParserBuilder<String, Object?>? getStartParser(BuildContext context) {
-    return p;
+  bool getIsOptional(BuildContext context) {
+    return p.getIsOptional(context);
   }
 
   @override
-  bool isOptional(BuildContext context) {
-    return p.isOptional(context);
+  ParserBuilder<String, Object?>? getStartParser(BuildContext context) {
+    return p;
   }
 }

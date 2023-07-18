@@ -21,7 +21,7 @@ return const Result(null);''';
   }
 
   @override
-  bool isOptional(BuildContext context) {
+  bool getIsOptional(BuildContext context) {
     return true;
   }
 }

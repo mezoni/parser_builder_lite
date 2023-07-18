@@ -30,7 +30,7 @@ return state.pos != start ?
   }
 
   @override
-  bool isOptional(BuildContext context) {
+  bool getIsOptional(BuildContext context) {
     return true;
   }
 }

@@ -54,12 +54,12 @@ return Result(list);''';
   }
 
   @override
-  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
-    return m < 1 ? null : p;
+  bool getIsOptional(BuildContext context) {
+    return m == 0 ? true : false;
   }
 
   @override
-  bool isOptional(BuildContext context) {
-    return m == 0 ? true : false;
+  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
+    return m < 1 ? null : p;
   }
 }

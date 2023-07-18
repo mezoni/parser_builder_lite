@@ -26,7 +26,7 @@ return Result(count);''';
   }
 
   @override
-  bool isOptional(BuildContext context) {
+  bool getIsOptional(BuildContext context) {
     return true;
   }
 }

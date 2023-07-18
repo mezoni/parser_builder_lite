@@ -27,7 +27,7 @@ return Result(list);''';
   }
 
   @override
-  bool isOptional(BuildContext context) {
+  bool getIsOptional(BuildContext context) {
     return true;
   }
 }

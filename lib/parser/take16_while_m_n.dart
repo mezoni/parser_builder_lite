@@ -67,7 +67,7 @@ return state.pos != pos ?
   }
 
   @override
-  bool isOptional(BuildContext context) {
+  bool getIsOptional(BuildContext context) {
     return m == 0 ? true : false;
   }
 }

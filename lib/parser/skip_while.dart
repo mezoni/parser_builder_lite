@@ -3,10 +3,6 @@ import '../helper.dart';
 import '../parser_builder.dart';
 
 class SkipWhile extends ParserBuilder<String, Object?> {
-  final Calculable<bool> predicate;
-
-  const SkipWhile(this.predicate);
-
   static const _template = '''
 final input = state.input;
 while (state.pos < input.length) {
@@ -19,6 +15,10 @@ while (state.pos < input.length) {
 }
 return const Result(null);''';
 
+  final Calculable<bool> predicate;
+
+  const SkipWhile(this.predicate);
+
   @override
   String buildBody(BuildContext context) {
     return render(_template, {
@@ -27,7 +27,7 @@ return const Result(null);''';
   }
 
   @override
-  bool isOptional(BuildContext context) {
+  bool getIsOptional(BuildContext context) {
     return true;
   }
 }

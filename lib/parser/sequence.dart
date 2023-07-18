@@ -42,6 +42,12 @@ if (r{{index}} != null) {
     return _buildBody(context);
   }
 
+  @override
+  bool getIsOptional(BuildContext context) {
+    final ps = getParserSequence(context);
+    return !ps.any((e) => !e.$1.getIsOptional(context));
+  }
+
   List<(ParserBuilder<I, Object?>, bool)> getParserSequence(
       BuildContext context);
 
@@ -49,12 +55,6 @@ if (r{{index}} != null) {
   ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
     final ps = getParserSequence(context);
     return ps.isEmpty ? null : ps[0].$1;
-  }
-
-  @override
-  bool isOptional(BuildContext context) {
-    final ps = getParserSequence(context);
-    return !ps.any((e) => !e.$1.isOptional(context));
   }
 
   String _buildBody(BuildContext context) {
@@ -136,7 +136,7 @@ if (r{{index}} != null) {
           value,
           isFast: isFast,
           isLast: false,
-          isOptional: isOptional(context)
+          isOptional: getIsOptional(context)
         ));
       }
 
@@ -154,7 +154,7 @@ if (r{{index}} != null) {
           value,
           isFast: isFast,
           isLast: true,
-          isOptional: isOptional(context)
+          isOptional: getIsOptional(context)
         ));
       }
     }

@@ -1,6 +1,7 @@
 import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
+import 'take16_while_m_n.dart';
 
 class TakeWhileMN extends ParserBuilder<String, String> {
   static const _template = '''
@@ -57,6 +58,10 @@ return state.pos != pos ?
     RangeError.checkNotNegative(m, 'm');
     if (n < m) {
       throw ArgumentError.value(n, 'n', 'Must be greater than or equal to $m');
+    }
+
+    if (is16BitPredicate(predicate)) {
+      return Take16WhileMN(m, n, predicate).buildBody(context);
     }
 
     return render(m == 0 ? _template0 : _template, {

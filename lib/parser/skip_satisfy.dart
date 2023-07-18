@@ -1,9 +1,10 @@
 import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
-import 'satisfy_mixin.dart';
+import '../parser_mixins.dart';
 
-class SkipSatisfy extends ParserBuilder<String, Object?> with SatisfyMixin {
+class SkipSatisfy extends ParserBuilder<String, Object?>
+    with SatisfyMixin<String, Object?> {
   static const _template = '''
 if (state.pos < state.input.length) {
   final c = state.input.runeAt(state.pos);

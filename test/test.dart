@@ -2392,7 +2392,7 @@ Result<String>? _$12(State<String> state) {
     if (!v) {
       break;
     }
-    state.pos += c <= 0xffff ? 1 : 2;
+    state.pos++;
   }
   return state.pos != start
       ? Result(input.substring(start, state.pos))

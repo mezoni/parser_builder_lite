@@ -1,6 +1,7 @@
 import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
+import 'take16_while.dart';
 
 class TakeWhile extends ParserBuilder<String, String> {
   static const _template = '''
@@ -24,6 +25,10 @@ return state.pos != start ?
 
   @override
   String buildBody(BuildContext context) {
+    if (is16BitPredicate(predicate)) {
+      return Take16While(predicate).buildBody(context);
+    }
+
     return render(_template, {
       'predicate': predicate.calculate(context, ['c']),
     });

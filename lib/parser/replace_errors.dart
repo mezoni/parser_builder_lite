@@ -12,6 +12,7 @@ class ReplaceErrors<I, O> extends ParserBuilder<I, O> {
 
   @override
   String buildBody(BuildContext context) {
+    checkIsNotOptional(context, p);
     final handle2 = handle.calculate(context, ['{{0}}', '{{1}}']);
     return HandleError(
       p,

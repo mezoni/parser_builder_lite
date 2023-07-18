@@ -1,6 +1,7 @@
 import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
+import 'skip16_while.dart';
 
 class SkipWhile extends ParserBuilder<String, Object?> {
   static const _template = '''
@@ -21,6 +22,10 @@ return const Result(null);''';
 
   @override
   String buildBody(BuildContext context) {
+    if (is16BitPredicate(predicate)) {
+      return Skip16While(predicate).buildBody(context);
+    }
+
     return render(_template, {
       'predicate': predicate.calculate(context, ['c']),
     });

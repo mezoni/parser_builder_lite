@@ -30,7 +30,7 @@ Result<Object?>? _ws(State<String> state) {
   return const Result(null);
 }
 
-Result<num>? _$1(State<String> state) {
+Result<num>? _$0(State<String> state) {
   final start = state.pos;
   final input = state.input;
   num? v;
@@ -299,20 +299,7 @@ Result<num>? _$1(State<String> state) {
   return state.failAt(failPos, const ErrorUnexpectedEof());
 }
 
-Result<num>? _$0(State<String> state) {
-  final pos = state.pos;
-  final r1 = _$1(state);
-  if (r1 != null) {
-    final r2 = _ws(state);
-    if (r2 != null) {
-      return r1;
-    }
-  }
-  state.pos = pos;
-  return null;
-}
-
-Result<Object?>? _$2(State<String> state) {
+Result<Object?>? _$1(State<String> state) {
   if (state.pos >= state.input.length) {
     return const Result(null);
   }
@@ -325,9 +312,13 @@ Result<num>? number(State<String> state) {
   if (r1 != null) {
     final r2 = _$0(state);
     if (r2 != null) {
-      final r3 = _$2(state);
+      final r3 = _ws(state);
       if (r3 != null) {
-        return r2;
+        final r4 = r2;
+        final r5 = _$1(state);
+        if (r5 != null) {
+          return r4;
+        }
       }
     }
   }

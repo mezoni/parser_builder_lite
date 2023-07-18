@@ -1,9 +1,11 @@
 import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
-import 'satisfy_mixin.dart';
+import '../parser_mixins.dart';
+import 'satisfy16.dart';
 
-class Satisfy extends ParserBuilder<String, int> with SatisfyMixin {
+class Satisfy extends ParserBuilder<String, int>
+    with SatisfyMixin<String, int> {
   static const _template = '''
 if (state.pos < state.input.length) {
   final c = state.input.runeAt(state.pos);
@@ -23,6 +25,10 @@ return state.fail(const ErrorUnexpectedEof());''';
 
   @override
   String buildBody(BuildContext context) {
+    if (is16BitPredicate(predicate)) {
+      return Satisfy16(predicate).buildBody(context);
+    }
+
     return render(_template, {
       'predicate': predicate.calculate(context, ['c']),
     });

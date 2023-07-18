@@ -45,6 +45,7 @@ if (flag & {{flag}} != 0) {
       throw StateError('The number of parsers must not exceed 64');
     }
 
+    ps.take(ps.length - 1).map((e) => checkIsNotOptional(context, e));
     final allErrors = <String>[];
     final known = <ParserBuilder<I, O>>{};
     final unknown = <ParserBuilder<I, O>>{};

@@ -1,9 +1,10 @@
 import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
-import 'satisfy_mixin.dart';
+import '../parser_mixins.dart';
 
-class Satisfy16 extends ParserBuilder<String, int> with SatisfyMixin {
+class Satisfy16 extends ParserBuilder<String, int>
+    with SatisfyMixin<String, int> {
   static const _template = '''
 if (state.pos < state.input.length) {
   final c = state.input.codeUnitAt(state.pos);

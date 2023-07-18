@@ -1,6 +1,9 @@
 import 'dart:collection';
 import 'dart:math';
 
+import 'calculable.dart';
+import 'ranges.dart';
+
 String buildConditional(Map<String, String> branches) {
   if (branches.isEmpty) {
     throw ArgumentError.value(branches, 'branches', 'Must not be empty');
@@ -84,6 +87,14 @@ String getAsCode(Object? value) {
 
 (int, int) getUnicodeRange() {
   return const (0, 0x10ffff);
+}
+
+bool is16BitPredicate(Calculable<bool> predicate) {
+  if (predicate is! InRange) {
+    return false;
+  }
+
+  return !toRanges(predicate.ranges).any((e) => e.$1 > 0xffff || e.$2 > 0xffff);
 }
 
 List<((int, int), Set<T>)> makeTransitions<T>(Map<T, List<(int, int)>> map) {
@@ -341,10 +352,10 @@ String? tryGetAsCode(Object? value) {
   return null;
 }
 
+typedef _Transition<T> = _ListEntry<((int, int), Set<T>)>;
+
 final class _ListEntry<T> extends LinkedListEntry<_ListEntry<T>> {
   final T value;
 
   _ListEntry(this.value);
 }
-
-typedef _Transition<T> = _ListEntry<((int, int), Set<T>)>;

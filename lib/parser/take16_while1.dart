@@ -1,9 +1,10 @@
 import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
-import 'satisfy_mixin.dart';
+import '../parser_mixins.dart';
 
-class Take16While1 extends ParserBuilder<String, String> with SatisfyMixin {
+class Take16While1 extends ParserBuilder<String, String>
+    with SatisfyMixin<String, String> {
   static const _template = '''
 final input = state.input;
 final start = state.pos;

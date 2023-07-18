@@ -12,7 +12,6 @@ class Expected<I, O> extends ParserBuilder<I, O> {
 
   @override
   String buildBody(BuildContext context) {
-    checkIsNotOptional(context, p);
     final text = escapeString(tag);
     return HandleError(
             p,

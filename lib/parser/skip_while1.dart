@@ -1,9 +1,11 @@
 import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
-import 'satisfy_mixin.dart';
+import '../parser_mixins.dart';
+import 'skip16_while1.dart';
 
-class SkipWhile1 extends ParserBuilder<String, Object?> with SatisfyMixin {
+class SkipWhile1 extends ParserBuilder<String, Object?>
+    with SatisfyMixin<String, Object?> {
   static const _template = '''
 final input = state.input;
 final start = state.pos;
@@ -28,6 +30,10 @@ return state.pos != start ?
 
   @override
   String buildBody(BuildContext context) {
+    if (is16BitPredicate(predicate)) {
+      return Skip16While1(predicate).buildBody(context);
+    }
+
     return render(_template, {
       'predicate': predicate.calculate(context, ['c']),
     });

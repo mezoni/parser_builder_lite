@@ -1,17 +1,18 @@
 # parser_builder_lite
 
-Parser Builder Lite is a lightweight and uncomplicated parser combinator builder (source code generator).
+Parser Builder Lite is a source code generator of high performance parsers.
 
-Version: 0.6.9
+Version: 0.6.10
 
 ## What is it and what is it for?
 
 Parser Builder is intended to quickly implement (and test) parsers through source code templates.  
 The main features and advantage:
 - A very simple builder is used to build parsers
-- Parsers are generated into source code
-- The generated parsers are very fast and efficient
+- Parsers are generated as source code
+- The generated parsers are very fast and efficient (as if they were written by hand)
 - The `SmartChoice` parser builder increases the performance of parsing by looking one character ahead.
+- The `SequenceBase` can efficiently generate an unlimited number of combinations of parser sequences.
 - The error reporting system is very flexible and informative
 - Convenient and easy debugging of the parsing process
 - A simple and convenient test generator is included

@@ -1,9 +1,11 @@
 import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
-import 'satisfy_mixin.dart';
+import '../parser_mixins.dart';
+import 'take16_while1.dart';
 
-class TakeWhile1 extends ParserBuilder<String, String> with SatisfyMixin {
+class TakeWhile1 extends ParserBuilder<String, String>
+    with SatisfyMixin<String, String> {
   static const _template = '''
 final input = state.input;
 final start = state.pos;
@@ -30,6 +32,10 @@ return state.fail(const ErrorUnexpectedEof());''';
 
   @override
   String buildBody(BuildContext context) {
+    if (is16BitPredicate(predicate)) {
+      return Take16While1(predicate).buildBody(context);
+    }
+
     return render(_template, {
       'predicate': predicate.calculate(context, ['c']),
     });

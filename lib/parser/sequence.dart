@@ -62,8 +62,8 @@ if (r{{index}} != null) {
     String plunge(int i) {
       final element = sequence[i];
       final value = element.$1;
-      final isLast = element.$2;
-      final isFast = element.$3;
+      final isFast = element.isFast;
+      final isLast = element.isLast;
       if (i == 0) {
         return render(_templateNext, {
           'index': getAsCode(i + 1),
@@ -106,8 +106,10 @@ if (r{{index}} != null) {
     });
   }
 
-  List<(String, bool, bool)> _buildSequence(
-      BuildContext context, List<(String, bool, bool)> sequence, bool isFast) {
+  List<(String, {bool isLast, bool isFast, bool isOptional})> _buildSequence(
+      BuildContext context,
+      List<(String, {bool isLast, bool isFast, bool isOptional})> sequence,
+      bool isFast) {
     final ps = getParserSequence(context);
     if (ps.isEmpty) {
       throw ArgumentError.value(ps, 'ps', 'Must not be empty');
@@ -130,7 +132,12 @@ if (r{{index}} != null) {
       } else {
         final name = p.build(context).name;
         final value = '$name(state)';
-        sequence.add((value, false, isFast));
+        sequence.add((
+          value,
+          isFast: isFast,
+          isLast: false,
+          isOptional: isOptional(context)
+        ));
       }
 
       if (isResultUsed) {
@@ -143,7 +150,12 @@ if (r{{index}} != null) {
           1 => 'r${results[0]}',
           _ => 'Result((${results.map((e) => 'r$e.value').join(', ')}))',
         };
-        sequence.add((value, true, isFast));
+        sequence.add((
+          value,
+          isFast: isFast,
+          isLast: true,
+          isOptional: isOptional(context)
+        ));
       }
     }
 

@@ -25,4 +25,9 @@ return const Result(null);''';
       'predicate': predicate.calculate(context, ['c']),
     });
   }
+
+  @override
+  bool isOptional(BuildContext context) {
+    return true;
+  }
 }

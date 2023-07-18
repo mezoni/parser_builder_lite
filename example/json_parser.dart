@@ -289,7 +289,7 @@ Result<String>? _string(State<String> state) {
       if (r3 != null) {
         final r4 = _ws(state);
         if (r4 != null) {
-          final r5 = r3;
+          // final r5 = r3;
           return r2;
         }
       }
@@ -479,14 +479,14 @@ Result<List<Object?>>? _array(State<String> state) {
   if (r1 != null) {
     final r2 = _ws(state);
     if (r2 != null) {
-      final r3 = r1;
+      // final r3 = r1;
       final r4 = _values(state);
       if (r4 != null) {
         final r5 = _p$11(state);
         if (r5 != null) {
           final r6 = _ws(state);
           if (r6 != null) {
-            final r7 = r5;
+            // final r7 = r5;
             return r4;
           }
         }

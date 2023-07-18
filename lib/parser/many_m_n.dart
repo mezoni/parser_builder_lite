@@ -44,6 +44,7 @@ return Result(list);''';
       throw ArgumentError.value(n, 'n', 'Must be greater than or equal to $m');
     }
 
+    checkIsNotOptional(context, p);
     return render(m == 0 ? _template0 : _template, {
       'O': '$O',
       'm': getAsCode(m),
@@ -55,5 +56,10 @@ return Result(list);''';
   @override
   ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
     return m < 1 ? null : p;
+  }
+
+  @override
+  bool isOptional(BuildContext context) {
+    return m == 0 ? true : false;
   }
 }

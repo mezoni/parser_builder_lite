@@ -128,6 +128,7 @@ if ({{r1}} != null) {
       throw ArgumentError.value(_ps, '_ps', 'Must not be empty');
     }
 
+    ps.take(ps.length - 1).map((e) => checkIsNotOptional(context, e));
     final buffer = StringBuffer();
     final values = <String, String>{};
     for (var i = 0; i < ps.length; i++) {

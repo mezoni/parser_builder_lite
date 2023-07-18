@@ -19,9 +19,15 @@ return Result(list);''';
 
   @override
   String buildBody(BuildContext context) {
+    checkIsNotOptional(context, p);
     return render(_template, {
       'O': '$O',
       'p1': p.build(context).name,
     });
+  }
+
+  @override
+  bool isOptional(BuildContext context) {
+    return true;
   }
 }

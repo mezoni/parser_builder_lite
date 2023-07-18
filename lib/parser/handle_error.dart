@@ -47,6 +47,7 @@ return null;''';
 
   @override
   String buildBody(BuildContext context) {
+    checkIsNotOptional(context, p);
     return render(_template, {
       'p1': p.build(context).name,
       'handle': handle.calculate(context, ['state.pos', 'current']),

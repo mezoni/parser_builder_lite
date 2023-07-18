@@ -29,6 +29,12 @@ abstract class ParserBuilder<I, O> {
   /// body.
   String buildBody(BuildContext context);
 
+  void checkIsNotOptional(BuildContext context, ParserBuilder<I, Object?> p) {
+    if (p.isOptional(context)) {
+      throw ArgumentError.value(p, 'p', 'Must not be optional');
+    }
+  }
+
   /// Returns a textual representation of the parser result type.
   String getResultType() {
     final name = '$O';
@@ -79,6 +85,12 @@ abstract class ParserBuilder<I, O> {
     }
 
     return true;
+  }
+
+  /// Returns `true` if the generated parser is optional; otherwise returns
+  /// `false`.
+  bool isOptional(BuildContext context) {
+    return false;
   }
 
   @override

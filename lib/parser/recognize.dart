@@ -27,4 +27,9 @@ return null;''';
   ParserBuilder<String, Object?>? getStartParser(BuildContext context) {
     return p;
   }
+
+  @override
+  bool isOptional(BuildContext context) {
+    return p.isOptional(context);
+  }
 }

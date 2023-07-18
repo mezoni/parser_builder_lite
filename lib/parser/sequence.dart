@@ -21,8 +21,12 @@ final pos = state.pos;
 state.pos = pos;
 return null;''';
 
-  static const _templateLast = '''
+  static const _templateChecked = '''
 final r{{index}} = {{value}};
+{{next}}''';
+
+  static const _templateFast = '''
+// final r{{index}} = {{value}};
 {{next}}''';
 
   static const _templateNext = '''
@@ -47,12 +51,19 @@ if (r{{index}} != null) {
     return ps.isEmpty ? null : ps[0].$1;
   }
 
+  @override
+  bool isOptional(BuildContext context) {
+    final ps = getParserSequence(context);
+    return !ps.any((e) => !e.$1.isOptional(context));
+  }
+
   String _buildBody(BuildContext context) {
-    final sequence = _buildSequence(context, []);
+    final sequence = _buildSequence(context, [], false);
     String plunge(int i) {
       final element = sequence[i];
       final value = element.$1;
       final isLast = element.$2;
+      final isFast = element.$3;
       if (i == 0) {
         return render(_templateNext, {
           'index': getAsCode(i + 1),
@@ -65,11 +76,21 @@ if (r{{index}} != null) {
         if (i == sequence.length - 1) {
           return 'return $value;';
         } else {
-          return render(_templateLast, {
-            'index': getAsCode(i + 1),
-            'next': plunge(i + 1),
-            'value': value,
-          });
+          if (isFast) {
+            final next = plunge(i + 1);
+            return render(_templateFast, {
+              'index': getAsCode(i + 1),
+              'next': next,
+              'value': value,
+            });
+          } else {
+            final next = plunge(i + 1);
+            return render(_templateChecked, {
+              'index': getAsCode(i + 1),
+              'next': next,
+              'value': value,
+            });
+          }
         }
       } else {
         return render(_templateNext, {
@@ -85,8 +106,8 @@ if (r{{index}} != null) {
     });
   }
 
-  List<(String, bool)> _buildSequence(
-      BuildContext context, List<(String, bool)> sequence) {
+  List<(String, bool, bool)> _buildSequence(
+      BuildContext context, List<(String, bool, bool)> sequence, bool isFast) {
     final ps = getParserSequence(context);
     if (ps.isEmpty) {
       throw ArgumentError.value(ps, 'ps', 'Must not be empty');
@@ -96,22 +117,23 @@ if (r{{index}} != null) {
     for (var i = 0; i < ps.length; i++) {
       final element = ps[i];
       final p = element.$1;
+      final isResultUsed = element.$2;
       if (p is SequenceBase) {
         final p2 = p as SequenceBase;
-        sequence = p2._buildSequence(context, sequence);
+        sequence = p2._buildSequence(context, sequence, !isResultUsed);
       } else if (p is Marked) {
         final p2 = p as Marked;
         if (p2.p is SequenceBase) {
           final p3 = p2.p as SequenceBase;
-          sequence = p3._buildSequence(context, sequence);
+          sequence = p3._buildSequence(context, sequence, !isResultUsed);
         }
       } else {
         final name = p.build(context).name;
         final value = '$name(state)';
-        sequence.add((value, false));
+        sequence.add((value, false, isFast));
       }
 
-      if (element.$2) {
+      if (isResultUsed) {
         results.add(sequence.length);
       }
 
@@ -121,7 +143,7 @@ if (r{{index}} != null) {
           1 => 'r${results[0]}',
           _ => 'Result((${results.map((e) => 'r$e.value').join(', ')}))',
         };
-        sequence.add((value, true));
+        sequence.add((value, true, isFast));
       }
     }
 

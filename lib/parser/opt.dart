@@ -19,4 +19,9 @@ return const Result(null);''';
       'p1': p.build(context).name,
     });
   }
+
+  @override
+  bool isOptional(BuildContext context) {
+    return true;
+  }
 }

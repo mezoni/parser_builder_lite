@@ -19,6 +19,11 @@ class Marked<I, O> extends ParserBuilder<I, O> {
   }
 
   @override
+  bool isOptional(BuildContext context) {
+    return p.isOptional(context);
+  }
+
+  @override
   String toString() {
     return p.toString();
   }

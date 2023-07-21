@@ -8,10 +8,15 @@ class Tags extends ParserBuilder<String, String> {
   const Tags(this.tags);
 
   @override
-  String buildBody(BuildContext context) {
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
     return SwitchTags<String>(
-      {for (final tag in tags) tag: 'const Result(${escapeString(tag)})'},
+      {for (final tag in tags) tag: escapeString(tag)},
       ['const ErrorExpectedTags([${tags.map(escapeString).join(', ')}])'],
-    ).buildBody(context);
+    ).buildBody(context, hasResult);
+  }
+
+  @override
+  String toString() {
+    return '$runtimeType(${tags.map(getAsCode).join(', ')})';
   }
 }

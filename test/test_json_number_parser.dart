@@ -7,328 +7,337 @@ void main() {
   print(r);
 }
 
-num? parse(String input) {
+num parse(String input) {
   final state = State(input);
-  final r = number(state);
-  if (r == null) {
-    final message = _errorMessage(input, state.pos, state.errors);
+  final result = number(state);
+  if (!state.ok) {
+    final message = _errorMessage(input, state.pos, state.getErrors());
     throw FormatException('\n$message');
   }
-  return r.value;
+  return result!;
 }
 
-Result<Object?>? _ws(State<String> state) {
-  final input = state.input;
-  while (state.pos < input.length) {
-    final c = input.runeAt(state.pos);
+Object? _ws(State<String> state) {
+  Object? $0;
+  final input$0 = state.input;
+  while (state.pos < input$0.length) {
+    final c = input$0.runeAt(state.pos);
     final v = c == 0x9 || c == 0xa || c == 0xd || c == 0x20;
     if (!v) {
       break;
     }
-    state.pos += c <= 0xffff ? 1 : 2;
+    state.pos += c < 0xffff ? 1 : 2;
   }
-  return const Result(null);
+  state.ok = true;
+  return $0;
 }
 
-Result<num>? _$0(State<String> state) {
-  final start = state.pos;
-  final input = state.input;
-  num? v;
-  while (true) {
-    //  '-'?('0'|[1-9][0-9]*)('.'[0-9]+)?([eE][+-]?[0-9]+)?
-    const eof = 0x110000;
-    const mask = 0x30;
-    const powersOfTen = [
-      1.0,
-      1e1,
-      1e2,
-      1e3,
-      1e4,
-      1e5,
-      1e6,
-      1e7,
-      1e8,
-      1e9,
-      1e10,
-      1e11,
-      1e12,
-      1e13,
-      1e14,
-      1e15,
-      1e16,
-      1e17,
-      1e18,
-      1e19,
-      1e20,
-      1e21,
-      1e22,
-    ];
-    final length = input.length;
-    var pos = state.pos;
-    var c = eof;
-    if (pos < length) {
-      c = input.codeUnitAt(pos);
-    } else {
-      c = eof;
-    }
-    var hasSign = false;
-    if (c == 0x2d) {
-      pos++;
-      if (pos < length) {
-        c = input.codeUnitAt(pos);
-      } else {
-        c = eof;
-      }
-      hasSign = true;
-    }
-    var digit = c ^ mask;
-    if (digit > 9) {
-      v = null;
-      state.pos = pos;
-      break;
-    }
-    final intPartPos = pos;
-    var intPartLen = 0;
-    intPartLen = 1;
-    var intValue = 0;
-    if (digit == 0) {
-      pos++;
-      if (pos < length) {
-        c = input.codeUnitAt(pos);
-      } else {
-        c = eof;
-      }
-    } else {
-      pos++;
-      if (pos < length) {
-        c = input.codeUnitAt(pos);
-      } else {
-        c = eof;
-      }
-      intValue = digit;
+num? number(State<String> state) {
+  num? $0;
+  final pos$0 = state.pos;
+  _ws(state);
+  if (state.ok) {
+    num? $2;
+    final pos$1 = state.pos;
+    num? $3;
+    {
+      final start = state.pos;
+      final input = state.input;
+      num? v;
       while (true) {
-        digit = c ^ mask;
-        if (digit > 9) {
-          break;
-        }
-        pos++;
+        //  '-'?('0'|[1-9][0-9]*)('.'[0-9]+)?([eE][+-]?[0-9]+)?
+        const eof = 0x110000;
+        const mask = 0x30;
+        const powersOfTen = [
+          1.0,
+          1e1,
+          1e2,
+          1e3,
+          1e4,
+          1e5,
+          1e6,
+          1e7,
+          1e8,
+          1e9,
+          1e10,
+          1e11,
+          1e12,
+          1e13,
+          1e14,
+          1e15,
+          1e16,
+          1e17,
+          1e18,
+          1e19,
+          1e20,
+          1e21,
+          1e22,
+        ];
+        final length = input.length;
+        var pos = state.pos;
+        var c = eof;
         if (pos < length) {
           c = input.codeUnitAt(pos);
         } else {
           c = eof;
         }
-        if (intPartLen++ < 18) {
-          intValue = intValue * 10 + digit;
-        }
-      }
-    }
-    var hasDot = false;
-    var decPartLen = 0;
-    var decValue = 0;
-    if (c == 0x2e) {
-      pos++;
-      if (pos < length) {
-        c = input.codeUnitAt(pos);
-      } else {
-        c = eof;
-      }
-      hasDot = true;
-      digit = c ^ mask;
-      if (digit > 9) {
-        v = null;
-        state.pos = pos;
-        break;
-      }
-      pos++;
-      if (pos < length) {
-        c = input.codeUnitAt(pos);
-      } else {
-        c = eof;
-      }
-      decPartLen = 1;
-      decValue = digit;
-      while (true) {
-        digit = c ^ mask;
-        if (digit > 9) {
-          break;
-        }
-        pos++;
-        if (pos < length) {
-          c = input.codeUnitAt(pos);
-        } else {
-          c = eof;
-        }
-        if (decPartLen++ < 18) {
-          decValue = decValue * 10 + digit;
-        }
-      }
-    }
-    var hasExp = false;
-    var hasExpSign = false;
-    var expPartLen = 0;
-    var exp = 0;
-    if (c == 0x45 || c == 0x65) {
-      pos++;
-      if (pos < length) {
-        c = input.codeUnitAt(pos);
-      } else {
-        c = eof;
-      }
-      hasExp = true;
-      switch (c) {
-        case 0x2b:
+        var hasSign = false;
+        if (c == 0x2d) {
           pos++;
           if (pos < length) {
             c = input.codeUnitAt(pos);
           } else {
             c = eof;
           }
+          hasSign = true;
+        }
+        var digit = c ^ mask;
+        if (digit > 9) {
+          v = null;
+          state.pos = pos;
           break;
-        case 0x2d:
+        }
+        final intPartPos = pos;
+        var intPartLen = 0;
+        intPartLen = 1;
+        var intValue = 0;
+        if (digit == 0) {
           pos++;
           if (pos < length) {
             c = input.codeUnitAt(pos);
           } else {
             c = eof;
           }
-          hasExpSign = true;
-          break;
-      }
-      digit = c ^ mask;
-      if (digit > 9) {
-        v = null;
-        state.pos = pos;
-        break;
-      }
-      pos++;
-      if (pos < length) {
-        c = input.codeUnitAt(pos);
-      } else {
-        c = eof;
-      }
-      expPartLen = 1;
-      exp = digit;
-      while (true) {
-        digit = c ^ mask;
-        if (digit > 9) {
-          break;
-        }
-        pos++;
-        if (pos < length) {
-          c = input.codeUnitAt(pos);
         } else {
-          c = eof;
+          pos++;
+          if (pos < length) {
+            c = input.codeUnitAt(pos);
+          } else {
+            c = eof;
+          }
+          intValue = digit;
+          while (true) {
+            digit = c ^ mask;
+            if (digit > 9) {
+              break;
+            }
+            pos++;
+            if (pos < length) {
+              c = input.codeUnitAt(pos);
+            } else {
+              c = eof;
+            }
+            if (intPartLen++ < 18) {
+              intValue = intValue * 10 + digit;
+            }
+          }
         }
-        if (expPartLen++ < 18) {
-          exp = exp * 10 + digit;
+        var hasDot = false;
+        var decPartLen = 0;
+        var decValue = 0;
+        if (c == 0x2e) {
+          pos++;
+          if (pos < length) {
+            c = input.codeUnitAt(pos);
+          } else {
+            c = eof;
+          }
+          hasDot = true;
+          digit = c ^ mask;
+          if (digit > 9) {
+            v = null;
+            state.pos = pos;
+            break;
+          }
+          pos++;
+          if (pos < length) {
+            c = input.codeUnitAt(pos);
+          } else {
+            c = eof;
+          }
+          decPartLen = 1;
+          decValue = digit;
+          while (true) {
+            digit = c ^ mask;
+            if (digit > 9) {
+              break;
+            }
+            pos++;
+            if (pos < length) {
+              c = input.codeUnitAt(pos);
+            } else {
+              c = eof;
+            }
+            if (decPartLen++ < 18) {
+              decValue = decValue * 10 + digit;
+            }
+          }
         }
-      }
-      if (expPartLen > 18) {
+        var hasExp = false;
+        var hasExpSign = false;
+        var expPartLen = 0;
+        var exp = 0;
+        if (c == 0x45 || c == 0x65) {
+          pos++;
+          if (pos < length) {
+            c = input.codeUnitAt(pos);
+          } else {
+            c = eof;
+          }
+          hasExp = true;
+          switch (c) {
+            case 0x2b:
+              pos++;
+              if (pos < length) {
+                c = input.codeUnitAt(pos);
+              } else {
+                c = eof;
+              }
+              break;
+            case 0x2d:
+              pos++;
+              if (pos < length) {
+                c = input.codeUnitAt(pos);
+              } else {
+                c = eof;
+              }
+              hasExpSign = true;
+              break;
+          }
+          digit = c ^ mask;
+          if (digit > 9) {
+            v = null;
+            state.pos = pos;
+            break;
+          }
+          pos++;
+          if (pos < length) {
+            c = input.codeUnitAt(pos);
+          } else {
+            c = eof;
+          }
+          expPartLen = 1;
+          exp = digit;
+          while (true) {
+            digit = c ^ mask;
+            if (digit > 9) {
+              break;
+            }
+            pos++;
+            if (pos < length) {
+              c = input.codeUnitAt(pos);
+            } else {
+              c = eof;
+            }
+            if (expPartLen++ < 18) {
+              exp = exp * 10 + digit;
+            }
+          }
+          if (expPartLen > 18) {
+            state.pos = pos;
+            v = double.parse(input.substring(start, pos));
+            break;
+          }
+          if (hasExpSign) {
+            exp = -exp;
+          }
+        }
         state.pos = pos;
-        v = double.parse(input.substring(start, pos));
-        break;
-      }
-      if (hasExpSign) {
-        exp = -exp;
-      }
-    }
-    state.pos = pos;
-    final singlePart = !hasDot && !hasExp;
-    if (singlePart && intPartLen <= 18) {
-      v = hasSign ? -intValue : intValue;
-      break;
-    }
-    if (singlePart && intPartLen == 19) {
-      if (intValue == 922337203685477580) {
-        final digit = input.codeUnitAt(intPartPos + 18) - 0x30;
-        if (digit <= 7) {
-          intValue = intValue * 10 + digit;
+        final singlePart = !hasDot && !hasExp;
+        if (singlePart && intPartLen <= 18) {
           v = hasSign ? -intValue : intValue;
           break;
         }
-      }
-    }
-    var doubleValue = intValue * 1.0;
-    var expRest = intPartLen - 18;
-    expRest = expRest < 0 ? 0 : expRest;
-    exp = expRest + exp;
-    final modExp = exp < 0 ? -exp : exp;
-    if (modExp > 22) {
-      state.pos = pos;
-      v = double.parse(input.substring(start, pos));
-      break;
-    }
-    final k = powersOfTen[modExp];
-    if (exp > 0) {
-      doubleValue *= k;
-    } else {
-      doubleValue /= k;
-    }
-    if (decValue != 0) {
-      var value = decValue * 1.0;
-      final diff = exp - decPartLen;
-      final modDiff = diff < 0 ? -diff : diff;
-      final sign = diff < 0;
-      var rest = modDiff;
-      while (rest != 0) {
-        var i = rest;
-        if (i > 20) {
-          i = 20;
+        if (singlePart && intPartLen == 19) {
+          if (intValue == 922337203685477580) {
+            final digit = input.codeUnitAt(intPartPos + 18) - 0x30;
+            if (digit <= 7) {
+              intValue = intValue * 10 + digit;
+              v = hasSign ? -intValue : intValue;
+              break;
+            }
+          }
         }
-        rest -= i;
-        final k = powersOfTen[i];
-        if (sign) {
-          value /= k;
+        var doubleValue = intValue * 1.0;
+        var expRest = intPartLen - 18;
+        expRest = expRest < 0 ? 0 : expRest;
+        exp = expRest + exp;
+        final modExp = exp < 0 ? -exp : exp;
+        if (modExp > 22) {
+          state.pos = pos;
+          v = double.parse(input.substring(start, pos));
+          break;
+        }
+        final k = powersOfTen[modExp];
+        if (exp > 0) {
+          doubleValue *= k;
         } else {
-          value *= k;
+          doubleValue /= k;
         }
+        if (decValue != 0) {
+          var value = decValue * 1.0;
+          final diff = exp - decPartLen;
+          final modDiff = diff < 0 ? -diff : diff;
+          final sign = diff < 0;
+          var rest = modDiff;
+          while (rest != 0) {
+            var i = rest;
+            if (i > 20) {
+              i = 20;
+            }
+            rest -= i;
+            final k = powersOfTen[i];
+            if (sign) {
+              value /= k;
+            } else {
+              value *= k;
+            }
+          }
+          doubleValue += value;
+        }
+        v = hasSign ? -doubleValue : doubleValue;
+        break;
       }
-      doubleValue += value;
-    }
-    v = hasSign ? -doubleValue : doubleValue;
-    break;
-  }
-  if (v != null) {
-    return Result(v);
-  }
-  final failPos = state.pos;
-  state.pos = start;
-  if (failPos < input.length) {
-    return state.failAt(failPos, const ErrorUnexpectedChar());
-  }
-  return state.failAt(failPos, const ErrorUnexpectedEof());
-}
-
-Result<Object?>? _$1(State<String> state) {
-  if (state.pos >= state.input.length) {
-    return const Result(null);
-  }
-  return state.fail(const ErrorExpectedEof());
-}
-
-Result<num>? number(State<String> state) {
-  final pos = state.pos;
-  final r1 = _ws(state);
-  if (r1 != null) {
-    final r2 = _$0(state);
-    if (r2 != null) {
-      final r3 = _ws(state);
-      if (r3 != null) {
-        final r4 = r2;
-        final r5 = _$1(state);
-        if (r5 != null) {
-          return r4;
-        }
+      state.ok = v != null;
+      if (state.ok) {
+        $3 = v;
+      } else {
+        final failPos = state.pos;
+        state.pos = start;
+        state.failAt(failPos, const ErrorUnexpectedChar());
       }
     }
+    if (state.ok) {
+      _ws(state);
+      if (state.ok) {
+        $2 = $3;
+      } else {
+        state.pos = pos$1;
+      }
+    }
+    if (state.ok) {
+      if (!(state.ok = state.pos >= state.input.length)) {
+        state.fail(const ErrorExpectedEof());
+      }
+      if (state.ok) {
+        $0 = $2;
+      }
+    }
   }
-  state.pos = pos;
-  return null;
+  if (!state.ok) {
+    state.pos = pos$0;
+  }
+  return $0;
 }
 
 String _errorMessage(String input, int offset, List<ParseError> errors) {
   final sb = StringBuffer();
   final errorList = errors.toList();
+  if (offset >= input.length) {
+    errorList.add(const ErrorUnexpectedEof());
+    errorList.removeWhere((e) => e is ErrorUnexpectedChar);
+  }
+
   final expectedTags = errorList.whereType<ErrorExpectedTags>().toList();
   if (expectedTags.isNotEmpty) {
     errorList.removeWhere((e) => e is ErrorExpectedTags);
@@ -607,62 +616,78 @@ class Result<T> {
 }
 
 class State<T> {
-  List<ParseError> errors = [];
+  Object? context;
+
+  List<ParseError?> errors = List.filled(512, null, growable: false);
+
+  int errorCount = 0;
 
   int failPos = 0;
 
   final T input;
+
+  bool ok = false;
 
   int pos = 0;
 
   State(this.input);
 
   @pragma('vm:prefer-inline')
-  Result<R>? fail<R>(ParseError error) {
-    if (pos < failPos) {
-      return null;
-    } else if (failPos < pos) {
-      failPos = pos;
-      errors = [];
+  void fail(ParseError error) {
+    ok = false;
+    if (pos >= failPos) {
+      if (failPos < pos) {
+        failPos = pos;
+        errorCount = 0;
+      }
+      errors[errorCount++] = error;
     }
-    errors.add(error);
-    return null;
   }
 
   @pragma('vm:prefer-inline')
-  Result<R>? failAll<R>(List<ParseError> errors) {
-    if (pos < failPos) {
-      return null;
-    } else if (failPos < pos) {
-      failPos = pos;
-      this.errors = [];
+  void failAll(List<ParseError> errors) {
+    ok = false;
+    if (pos >= failPos) {
+      if (failPos < pos) {
+        failPos = pos;
+        errorCount = 0;
+      }
+      for (var i = 0; i < errors.length; i++) {
+        final error = errors[i];
+        this.errors[errorCount++] = error;
+      }
     }
-    this.errors.addAll(errors);
-    return null;
   }
 
   @pragma('vm:prefer-inline')
-  Result<R>? failAllAt<R>(int offset, List<ParseError> errors) {
-    if (offset < failPos) {
-      return null;
-    } else if (failPos < offset) {
-      failPos = offset;
-      this.errors = [];
+  void failAllAt(int offset, List<ParseError> errors) {
+    ok = false;
+    if (offset >= failPos) {
+      if (failPos < offset) {
+        failPos = offset;
+        errorCount = 0;
+      }
+      for (var i = 0; i < errors.length; i++) {
+        final error = errors[i];
+        this.errors[errorCount++] = error;
+      }
     }
-    this.errors.addAll(errors);
-    return null;
   }
 
   @pragma('vm:prefer-inline')
-  Result<R>? failAt<R>(int offset, ParseError error) {
-    if (offset < failPos) {
-      return null;
-    } else if (failPos < offset) {
-      failPos = offset;
-      errors = [];
+  void failAt(int offset, ParseError error) {
+    ok = false;
+    if (offset >= failPos) {
+      if (failPos < offset) {
+        failPos = offset;
+        errorCount = 0;
+      }
+      errors[errorCount++] = error;
     }
-    errors.add(error);
-    return null;
+  }
+
+  List<ParseError> getErrors() {
+    return List.generate(errorCount, (i) => errors[i]!);
   }
 
   @override

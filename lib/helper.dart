@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:math';
 
 import 'calculable.dart';
+import 'parser_builder.dart';
 import 'ranges.dart';
 
 String buildConditional(Map<String, String> branches) {
@@ -83,6 +84,14 @@ String getAsCode(Object? value) {
   }
 
   throw StateError('Unsupported type: ${value.runtimeType}');
+}
+
+({String name, String size}) getCharReader(bool is16Bit, String name) {
+  if (is16Bit) {
+    return (name: 'codeUnitAt', size: '1');
+  }
+
+  return (name: 'runeAt', size: '$name < 0xffff ? 1 : 2');
 }
 
 (int, int) getUnicodeRange() {
@@ -254,13 +263,117 @@ List<(int, int)> normalizeRanges(List<(int, int)> ranges) {
 }
 
 String render(String template, Map<String, String> values) {
+  final re = RegExp(r'@([_a-zA-Z][_a-zA-Z0-9]*)');
+  var keys = re.allMatches(template).map((m) => m[1]!).toSet().toList();
+  keys.sort();
+  keys = keys.reversed.toList();
   var result = template;
-  for (var key in values.keys) {
-    final value = values[key]!;
-    result = result.replaceAll('{{$key}}', value);
+  for (final key in keys) {
+    if (values.containsKey(key)) {
+      final value = values[key]!;
+      result = result.replaceAll('@$key', value);
+    }
   }
 
   return result;
+}
+
+BuildBodyResult renderBody<I, O>(
+    ParserBuilder<I, O> parser,
+    BuildContext context,
+    bool hasResult,
+    String template,
+    String templateNoResult,
+    Map<String, String> values,
+    {List<(ParserBuilder<I, Object?>, bool?)>? parsers}) {
+  parsers ??= parser.getCombinedParsers().toList();
+  final allocator = context.localAllocator;
+  final result = hasResult ? allocator.allocate() : 'unused';
+  values = {...values};
+  values['r'] = result;
+  for (var i = 0; i < parsers.length; i++) {
+    final k = i + 1;
+    values['p$k'] = '';
+    values['r$k'] = '';
+    values['rv$k'] = '';
+  }
+
+  final re = RegExp(r'@([_a-zA-Z][_a-zA-Z0-9]*)');
+  var source = hasResult ? template : templateNoResult;
+  var keys = re.allMatches(source).map((m) => m[1]!).toSet().toList();
+  for (final key in keys) {
+    if (!values.containsKey(key)) {
+      values[key] = allocator.allocate(key);
+    }
+  }
+
+  for (var i = 0; i < parsers.length; i++) {
+    final element = parsers[i];
+    final parser = element.$1;
+    final mode = element.$2 ?? hasResult;
+    final r = parser.build(context, mode);
+    final k = i + 1;
+    values['p$k'] = r.source;
+    values['r$k'] = r.result;
+    values['rv$k'] = r.value;
+  }
+
+  keys.sort();
+  keys = keys.reversed.toList();
+  for (final key in keys) {
+    final value = values[key]!;
+    source = source.replaceAll('@$key', value);
+  }
+
+  return BuildBodyResult(
+    result: result,
+    source: source,
+  );
+}
+
+String renderWithPlunge(
+  int count,
+  bool hasResult, {
+  String? first,
+  String? firstNoResult,
+  String? last,
+  String? lastNoResult,
+  required String next,
+  required String nextNoResult,
+  required String Function(
+    int index,
+    String template,
+    Map<String, String> values,
+    String Function(int index) next,
+  ) fillValues,
+}) {
+  String plunge(int index) {
+    String? template;
+    if (index == 0) {
+      template = hasResult ? first : firstNoResult;
+    }
+
+    if (index == count - 1 && template == null) {
+      template = hasResult ? last : lastNoResult;
+    }
+
+    if (index >= 0 && index <= count - 1) {
+      template ??= hasResult ? next : nextNoResult;
+    } else {
+      throw RangeError.range(count, 0, count - 1);
+    }
+
+    final k = index + 1;
+    final values = {
+      'p1': '@p$k',
+      'r1': '@r$k',
+      'rv1': '@rv$k',
+    };
+    template = fillValues(index, template, values, plunge);
+    return render(template, values);
+  }
+
+  return plunge(0);
 }
 
 List<(int, int)> toRanges(List<Object> ranges) {

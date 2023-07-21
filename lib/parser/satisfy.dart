@@ -2,21 +2,32 @@ import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
 import '../parser_mixins.dart';
-import 'satisfy16.dart';
 
-class Satisfy extends ParserBuilder<String, int>
-    with SatisfyMixin<String, int> {
+class Satisfy extends ParserBuilder<String, int> with SatisfyMixin<int> {
   static const _template = '''
-if (state.pos < state.input.length) {
-  final c = state.input.runeAt(state.pos);
-  final ok = {{predicate}};
-  if (ok) {
-    state.pos += c <= 0xffff ? 1 : 2;
-    return Result(c);
+if (state.ok = state.pos < state.input.length) {
+  final c = state.input.@read(state.pos);
+  state.ok = @predicate;
+  if (state.ok) {
+    state.pos += @size;
+    @r = c;
   }
-  return state.fail(const ErrorUnexpectedChar());
 }
-return state.fail(const ErrorUnexpectedEof());''';
+if (!state.ok) {
+  state.fail(const ErrorUnexpectedChar());
+}''';
+
+  static const _templateNoResult = '''
+if (state.ok = state.pos < state.input.length) {
+  final c = state.input.@read(state.pos);
+  state.ok = @predicate;
+  if (state.ok) {
+    state.pos += @size;
+  }
+}
+if (!state.ok) {
+  state.fail(const ErrorUnexpectedChar());
+}''';
 
   @override
   final Calculable<bool> predicate;
@@ -24,13 +35,19 @@ return state.fail(const ErrorUnexpectedEof());''';
   const Satisfy(this.predicate);
 
   @override
-  String buildBody(BuildContext context) {
-    if (is16BitPredicate(predicate)) {
-      return Satisfy16(predicate).buildBody(context);
-    }
-
-    return render(_template, {
-      'predicate': predicate.calculate(context, ['c']),
-    });
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    final reader = getCharReader(is16BitPredicate(predicate), 'c');
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      _template,
+      _templateNoResult,
+      {
+        'predicate': predicate.calculate(context, ['c']),
+        'read': reader.name,
+        'size': reader.size,
+      },
+    );
   }
 }

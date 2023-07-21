@@ -3,33 +3,48 @@ import '../parser_builder.dart';
 
 class Many1<I, O> extends ParserBuilder<I, List<O>> {
   static const _template = '''
-final list = <{{O}}>[];
+final @list = <@O>[];
 while (true) {
-  final r1 = {{p1}}(state);
-  if (r1 == null) {
+  @p1
+  if (!state.ok) {
     break;
   }
-  list.add(r1.value);
+  @list.add(@rv1);
 }
-if (list.isNotEmpty) {
-  return Result(list);
+if (state.ok = @list.isNotEmpty) {
+  @r = @list;
+}''';
+
+  static const _templateNoResult = '''
+var @count = 0;
+while (true) {
+  @p1
+  if (!state.ok) {
+    break;
+  }
+  @count++;
 }
-return null;''';
+state.ok = @count != 0;''';
 
   final ParserBuilder<I, O> p;
 
   const Many1(this.p);
 
   @override
-  String buildBody(BuildContext context) {
-    return render(_template, {
-      'O': '$O',
-      'p1': p.build(context).name,
-    });
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    checkIsNotOptional(p);
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      _template,
+      _templateNoResult,
+      {'O': '$O'},
+    );
   }
 
   @override
-  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
-    return p;
+  Iterable<(ParserBuilder<I, Object?>, bool?)> getCombinedParsers() {
+    return [(p, null)];
   }
 }

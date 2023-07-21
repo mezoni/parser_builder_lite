@@ -3,31 +3,58 @@ import '../parser_builder.dart';
 
 class ManyMN<I, O> extends ParserBuilder<I, List<O>> {
   static const _template = '''
-final pos = state.pos;
-final list = <{{O}}>[];
-while (list.length < {{n}}) {
-  final r1 = {{p1}}(state);
-  if (r1 == null) {
+final @pos = state.pos;
+final @list = <@O>[];
+while (@list.length < @n) {
+  @p1
+  if (!state.ok) {
     break;
   }
-  list.add(r1.value);
+  @list.add(@rv1);
 }
-if (list.length >= {{m}}) {
-  return Result(list);
+if (state.ok = @list.length >= @m) {
+  @r = @list;
+} else {
+  state.pos = @pos;
+}''';
+
+  static const _templateNoResult = '''
+final @pos = state.pos;
+var @count = 0;
+while (@count < @n) {
+  @p1
+  if (!state.ok) {
+    break;
+  }
+  @count++;
 }
-state.pos = pos;
-return null;''';
+if (!(state.ok = @count >= @m)) {
+  state.pos = @pos;
+}''';
 
   static const _template0 = '''
-final list = <{{O}}>[];
-while (list.length < {{n}}) {
-  final r1 = {{p1}}(state);
-  if (r1 == null) {
+final @list = <@O>[];
+while (@list.length < @n) {
+  @p1
+  if (!state.ok) {
     break;
   }
-  list.add(r1.value);
+  @list.add(@rv1);
 }
-return Result(list);''';
+if (state.ok = true) {
+  @r = @list;
+}''';
+
+  static const _template0NoResult = '''
+var @count = 0;
+while (@count < @n) {
+  @p1
+  if (!state.ok) {
+    break;
+  }
+  @count++;
+}
+state.ok = true;''';
 
   final int m;
 
@@ -38,28 +65,34 @@ return Result(list);''';
   const ManyMN(this.m, this.n, this.p);
 
   @override
-  String buildBody(BuildContext context) {
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
     RangeError.checkNotNegative(m, 'm');
     if (n < m) {
       throw ArgumentError.value(n, 'n', 'Must be greater than or equal to $m');
     }
 
-    checkIsNotOptional(context, p);
-    return render(m == 0 ? _template0 : _template, {
-      'O': '$O',
-      'm': getAsCode(m),
-      'n': getAsCode(n),
-      'p1': p.build(context).name,
-    });
+    checkIsNotOptional(p);
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      m == 0 ? _template0 : _template,
+      m == 0 ? _template0NoResult : _templateNoResult,
+      {
+        'O': '$O',
+        'm': getAsCode(m),
+        'n': getAsCode(n),
+      },
+    );
   }
 
   @override
-  bool getIsOptional(BuildContext context) {
+  bool get isOptional {
     return m == 0 ? true : false;
   }
 
   @override
-  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
-    return m < 1 ? null : p;
+  Iterable<(ParserBuilder<I, Object?>, bool?)> getCombinedParsers() {
+    return [(p, null)];
   }
 }

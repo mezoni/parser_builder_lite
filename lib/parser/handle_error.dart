@@ -4,53 +4,67 @@ import '../parser_builder.dart';
 
 class HandleError<I, O> extends ParserBuilder<I, O> {
   static const _template = r'''
-final errors = state.errors.toList();
-final previous = state.failPos;
-state.errors = [];
-state.failPos = 0;
-final r1 = {{p1}}(state);
-final current = state.failPos;
-if (current < previous) {
-  state.errors = errors;
-  state.failPos = previous;
-}
-if (r1 != null) {
-  if (current == previous) {
-    state.errors.addAll(errors);
-  }
-  return r1;
-}
-if (current < previous) {
-  return null;
-}
-final (bool, List<ParseError>)? v;
-v = {{handle}};
-if (current == previous) {
+final @failPos = state.failPos;
+final @errorCount = state.errorCount;
+@p1
+if (state.ok) {
+  @r = @r1;
+} else if (state.failPos >= @failPos) {
+  final (bool, List<ParseError>?) v;
+  v = @handle;
   if (v.$1) {
-    state.errors = errors;
-  } else {
-    state.errors.addAll(errors);
+    state.errorCount = state.failPos > @failPos ? 0 : @errorCount;
   }
-} else {
-  if (v.$1) {
-    state.errors = [];
+  if (v.$2 != null) {
+    final list = v.$2!;
+    for (var i = 0; i < list.length; i++) {
+      state.errors[state.errorCount++] = list[i];
+    }
   }
-}
-state.errors.addAll(v.$2);
-return null;''';
+}''';
 
-  final Calculable<(bool replace, List<Object?> errors)> handle;
+  static const _templateNoResult = r'''
+final @failPos = state.failPos;
+final @errorCount = state.errorCount;
+@p1
+if (!state.ok && state.failPos >= @failPos) {
+  final (bool, List<ParseError>?) v;
+  v = @handle;
+  if (v.$1) {
+    state.errorCount = state.failPos > @failPos ? 0 : @errorCount;
+  }
+  if (v.$2 != null) {
+    final list = v.$2!;
+    for (var i = 0; i < list.length; i++) {
+      state.errors[state.errorCount++] = list[i];
+    }
+  }
+}''';
+
+  final Calculable<List<Object?>> handle;
 
   final ParserBuilder<I, O> p;
 
   const HandleError(this.p, this.handle);
 
   @override
-  String buildBody(BuildContext context) {
-    checkIsNotOptional(context, p);
-    return render(_template, {
-      'p1': p.build(context).name,
-      'handle': handle.calculate(context, ['state.pos', 'current']),
-    });
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    checkIsNotOptional(p);
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      _template,
+      _templateNoResult,
+      {
+        'handle': handle
+            .calculate(context, ['state.pos', 'state.failPos', 'newErrors']),
+      },
+    );
+  }
+
+  @override
+  Iterable<(ParserBuilder<I, Object?>, bool?)> getCombinedParsers() {
+    return [(p, null)];
   }
 }

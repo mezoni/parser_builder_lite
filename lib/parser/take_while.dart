@@ -1,41 +1,58 @@
 import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
-import 'take16_while.dart';
 
 class TakeWhile extends ParserBuilder<String, String> {
   static const _template = '''
-final input = state.input;
-final start = state.pos;
-while (state.pos < input.length) {
-  final c = input.runeAt(state.pos);
-  final v = {{predicate}};
+final @input = state.input;
+final @pos = state.pos;
+while (state.pos < @input.length) {
+  final c = @input.@read(state.pos);
+  final v = @predicate;
   if (!v) {
     break;
   }
-  state.pos += c <= 0xffff ? 1 : 2;
+  state.pos += @size;
 }
-return state.pos != start ?
-    Result(input.substring(start, state.pos))
-    :  const Result('');''';
+if (state.ok = true) {
+  @r = state.pos != @pos ?
+      @input.substring(@pos, state.pos)
+      : '';
+}''';
+
+  static const _templateNoResult = '''
+final @input = state.input;
+while (state.pos < @input.length) {
+  final c = @input.@read(state.pos);
+  final v = @predicate;
+  if (!v) {
+    break;
+  }
+  state.pos += @size;
+}
+state.ok = true;''';
 
   final Calculable<bool> predicate;
 
   const TakeWhile(this.predicate);
 
   @override
-  String buildBody(BuildContext context) {
-    if (is16BitPredicate(predicate)) {
-      return Take16While(predicate).buildBody(context);
-    }
-
-    return render(_template, {
-      'predicate': predicate.calculate(context, ['c']),
-    });
-  }
+  bool get isOptional => true;
 
   @override
-  bool getIsOptional(BuildContext context) {
-    return true;
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    final reader = getCharReader(is16BitPredicate(predicate), 'c');
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      _template,
+      _templateNoResult,
+      {
+        'predicate': predicate.calculate(context, ['c']),
+        'read': reader.name,
+        'size': reader.size,
+      },
+    );
   }
 }

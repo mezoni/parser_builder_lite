@@ -25,21 +25,29 @@ const _prefix = '';
 
 Future<void> _generate() async {
   final context = BuildContext(
-    allocator: Allocator('_'),
-    output: StringBuffer(),
+    globalAllocator: Allocator('_'),
+    globalOutput: StringBuffer(),
+    localAllocator: Allocator(''),
   );
   final tester = ParserTester<String>(
     context: context,
     localOutput: StringBuffer(),
   );
-  tester.addTest('Many', const Many(Char(0x31)), (parserName, parser) {
+  tester.addTest('Many', const Many(Char(0x31)), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '1112',
@@ -59,15 +67,21 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('Preceded', const Preceded(Char(0x31), Char(0x32)),
-      (parserName, parser) {
+  tester.addTest('Preceded', const Preceded(Char(0x31), Char(0x32)), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '123',
@@ -78,13 +92,13 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '1',
       failPos: 1,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '2',

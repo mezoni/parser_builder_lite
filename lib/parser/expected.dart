@@ -11,22 +11,22 @@ class Expected<I, O> extends ParserBuilder<I, O> {
   const Expected(this.tag, this.p);
 
   @override
-  String buildBody(BuildContext context) {
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
     final text = escapeString(tag);
     return HandleError(
             p,
             Expr(
-                '{{0}} != {{1}} ? (false, []) : (true, [const ErrorExpectedTags([$text])])'))
-        .buildBody(context);
+                '{{0}} != {{1}} ? const (false, null) : const (true, [ErrorExpectedTags([$text])])'))
+        .buildBody(context, hasResult);
   }
 
   @override
-  List<(int, int)> getStartCharacters(BuildContext context) {
-    return p.getStartCharacters(context);
+  Iterable<(ParserBuilder<I, Object?>, bool?)> getCombinedParsers() {
+    return [(p, null)];
   }
 
   @override
-  List<String> getStartErrors(BuildContext context) {
+  Iterable<String> getStartingErrors() {
     return ['const ErrorExpectedTags([${escapeString(tag)}])'];
   }
 }

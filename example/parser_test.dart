@@ -20,26 +20,49 @@ void _test_Many$0() {
   test('Many', () {
     final state$0 = State('1112');
     final result$0 = _Many$0(state$0);
-    expect(result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, input: 1112');
-    final value$0 = result$0!.value;
+    expect(state$0.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: 1112');
+    final value$0 = result$0!;
     expect(value$0, [49, 49, 49],
-        reason: 'Testing \'result.value\' failed, input: 1112');
+        reason: 'Testing \'result = value\' failed, input: 1112');
     expect(state$0.pos, 3, reason: 'Testing \'state.pos\' failed, input: 1112');
-    final state$1 = State('');
-    final result$1 = _Many$0(state$1);
-    expect(result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, input: ');
-    final value$1 = result$1!.value;
-    expect(value$1, [], reason: 'Testing \'result.value\' failed, input: ');
-    expect(state$1.pos, 0, reason: 'Testing \'state.pos\' failed, input: ');
-    final state$2 = State('2');
+    final state$1 = State('1112');
+    final result$1 = _Many_NoResult$0(state$1);
+    expect(state$1.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: 1112');
+    final value$1 = result$1;
+    expect(value$1, null,
+        reason: 'Testing \'result == null\' failed, input: 1112');
+    expect(state$1.pos, 3, reason: 'Testing \'state.pos\' failed, input: 1112');
+    final state$2 = State('');
     final result$2 = _Many$0(state$2);
-    expect(result$2 != null, true,
-        reason: 'Testing \'result != null\' failed, input: 2');
-    final value$2 = result$2!.value;
-    expect(value$2, [], reason: 'Testing \'result.value\' failed, input: 2');
-    expect(state$2.pos, 0, reason: 'Testing \'state.pos\' failed, input: 2');
+    expect(state$2.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: ');
+    final value$2 = result$2!;
+    expect(value$2, [], reason: 'Testing \'result = value\' failed, input: ');
+    expect(state$2.pos, 0, reason: 'Testing \'state.pos\' failed, input: ');
+    final state$3 = State('');
+    final result$3 = _Many_NoResult$0(state$3);
+    expect(state$3.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: ');
+    final value$3 = result$3;
+    expect(value$3, null, reason: 'Testing \'result == null\' failed, input: ');
+    expect(state$3.pos, 0, reason: 'Testing \'state.pos\' failed, input: ');
+    final state$4 = State('2');
+    final result$4 = _Many$0(state$4);
+    expect(state$4.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: 2');
+    final value$4 = result$4!;
+    expect(value$4, [], reason: 'Testing \'result = value\' failed, input: 2');
+    expect(state$4.pos, 0, reason: 'Testing \'state.pos\' failed, input: 2');
+    final state$5 = State('2');
+    final result$5 = _Many_NoResult$0(state$5);
+    expect(state$5.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: 2');
+    final value$5 = result$5;
+    expect(value$5, null,
+        reason: 'Testing \'result == null\' failed, input: 2');
+    expect(state$5.pos, 0, reason: 'Testing \'state.pos\' failed, input: 2');
   });
 }
 
@@ -48,94 +71,189 @@ void _test_Preceded$0() {
   test('Preceded', () {
     final state$0 = State('123');
     final result$0 = _Preceded$0(state$0);
-    expect(result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, input: 123');
-    final value$0 = result$0!.value;
-    expect(value$0, 50, reason: 'Testing \'result.value\' failed, input: 123');
+    expect(state$0.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: 123');
+    final value$0 = result$0!;
+    expect(value$0, 50,
+        reason: 'Testing \'result = value\' failed, input: 123');
     expect(state$0.pos, 2, reason: 'Testing \'state.pos\' failed, input: 123');
-    final state$1 = State('');
-    final result$1 = _Preceded$0(state$1);
-    expect(result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, input: ');
-    expect(state$1.pos, 0, reason: 'Testing \'state.pos\' failed, input: ');
-    expect(state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, input: ');
-    expect(state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, input: ');
-    expect(state$1.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, input: ');
-    final state$2 = State('1');
+    final state$1 = State('123');
+    final result$1 = _Preceded_NoResult$0(state$1);
+    expect(state$1.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: 123');
+    final value$1 = result$1;
+    expect(value$1, null,
+        reason: 'Testing \'result == null\' failed, input: 123');
+    expect(state$1.pos, 2, reason: 'Testing \'state.pos\' failed, input: 123');
+    final state$2 = State('');
     final result$2 = _Preceded$0(state$2);
-    expect(result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, input: 1');
-    expect(state$2.pos, 0, reason: 'Testing \'state.pos\' failed, input: 1');
-    expect(state$2.failPos, 1,
-        reason: 'Testing \'state.failPos\' failed, input: 1');
-    expect(state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, input: 1');
-    expect(state$2.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, input: 1');
-    final state$3 = State('2');
-    final result$3 = _Preceded$0(state$3);
-    expect(result$3 == null, true,
-        reason: 'Testing \'result == null\' failed, input: 2');
-    expect(state$3.pos, 0, reason: 'Testing \'state.pos\' failed, input: 2');
+    expect(state$2.ok, false,
+        reason: 'Testing \'state.ok == false\' failed, input: ');
+    expect(result$2, null,
+        reason: 'Testing \'result == null\' failed, input: ');
+    expect(state$2.pos, 0, reason: 'Testing \'state.pos\' failed, input: ');
+    expect(state$2.failPos, 0,
+        reason: 'Testing \'state.failPos\' failed, input: ');
+    expect(state$2.errorCount, 1,
+        reason: 'Testing \'state.errorCount\' failed, input: ');
+    expect(state$2.errors[0], isA<ErrorExpectedChar>(),
+        reason: 'Testing \'state.error\' failed, input: ');
+    final state$3 = State('');
+    final result$3 = _Preceded_NoResult$0(state$3);
+    expect(state$3.ok, false,
+        reason: 'Testing \'state.ok == false\' failed, input: ');
+    expect(result$3, null,
+        reason: 'Testing \'result == null\' failed, input: ');
+    expect(state$3.pos, 0, reason: 'Testing \'state.pos\' failed, input: ');
     expect(state$3.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, input: 2');
-    expect(state$3.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, input: 2');
+        reason: 'Testing \'state.failPos\' failed, input: ');
+    expect(state$3.errorCount, 1,
+        reason: 'Testing \'state.errorCount\' failed, input: ');
     expect(state$3.errors[0], isA<ErrorExpectedChar>(),
+        reason: 'Testing \'state.error\' failed, input: ');
+    final state$4 = State('1');
+    final result$4 = _Preceded$0(state$4);
+    expect(state$4.ok, false,
+        reason: 'Testing \'state.ok == false\' failed, input: 1');
+    expect(result$4, null,
+        reason: 'Testing \'result == null\' failed, input: 1');
+    expect(state$4.pos, 0, reason: 'Testing \'state.pos\' failed, input: 1');
+    expect(state$4.failPos, 1,
+        reason: 'Testing \'state.failPos\' failed, input: 1');
+    expect(state$4.errorCount, 1,
+        reason: 'Testing \'state.errorCount\' failed, input: 1');
+    expect(state$4.errors[0], isA<ErrorExpectedChar>(),
+        reason: 'Testing \'state.error\' failed, input: 1');
+    final state$5 = State('1');
+    final result$5 = _Preceded_NoResult$0(state$5);
+    expect(state$5.ok, false,
+        reason: 'Testing \'state.ok == false\' failed, input: 1');
+    expect(result$5, null,
+        reason: 'Testing \'result == null\' failed, input: 1');
+    expect(state$5.pos, 0, reason: 'Testing \'state.pos\' failed, input: 1');
+    expect(state$5.failPos, 1,
+        reason: 'Testing \'state.failPos\' failed, input: 1');
+    expect(state$5.errorCount, 1,
+        reason: 'Testing \'state.errorCount\' failed, input: 1');
+    expect(state$5.errors[0], isA<ErrorExpectedChar>(),
+        reason: 'Testing \'state.error\' failed, input: 1');
+    final state$6 = State('2');
+    final result$6 = _Preceded$0(state$6);
+    expect(state$6.ok, false,
+        reason: 'Testing \'state.ok == false\' failed, input: 2');
+    expect(result$6, null,
+        reason: 'Testing \'result == null\' failed, input: 2');
+    expect(state$6.pos, 0, reason: 'Testing \'state.pos\' failed, input: 2');
+    expect(state$6.failPos, 0,
+        reason: 'Testing \'state.failPos\' failed, input: 2');
+    expect(state$6.errorCount, 1,
+        reason: 'Testing \'state.errorCount\' failed, input: 2');
+    expect(state$6.errors[0], isA<ErrorExpectedChar>(),
+        reason: 'Testing \'state.error\' failed, input: 2');
+    final state$7 = State('2');
+    final result$7 = _Preceded_NoResult$0(state$7);
+    expect(state$7.ok, false,
+        reason: 'Testing \'state.ok == false\' failed, input: 2');
+    expect(result$7, null,
+        reason: 'Testing \'result == null\' failed, input: 2');
+    expect(state$7.pos, 0, reason: 'Testing \'state.pos\' failed, input: 2');
+    expect(state$7.failPos, 0,
+        reason: 'Testing \'state.failPos\' failed, input: 2');
+    expect(state$7.errorCount, 1,
+        reason: 'Testing \'state.errorCount\' failed, input: 2');
+    expect(state$7.errors[0], isA<ErrorExpectedChar>(),
         reason: 'Testing \'state.error\' failed, input: 2');
   });
 }
 
-Result<int>? _$0(State<String> state) {
-  if (state.pos < state.input.length) {
-    final c = state.input.codeUnitAt(state.pos);
-    if (c == 49) {
-      state.pos++;
-      return const Result(49);
-    }
-    return state.fail(const ErrorExpectedChar(49));
-  }
-  return state.fail(const ErrorUnexpectedEof());
-}
-
-Result<List<int>>? _Many$0(State<String> state) {
-  final list = <int>[];
+List<int>? _Many$0(State<String> state) {
+  List<int>? $0;
+  final list$0 = <int>[];
   while (true) {
-    final r1 = _$0(state);
-    if (r1 == null) {
+    int? $1;
+    if (state.ok = state.pos < state.input.length &&
+        state.input.codeUnitAt(state.pos) == 49) {
+      state.pos += 1;
+      $1 = 49;
+    } else {
+      state.fail(const ErrorExpectedChar(49));
+    }
+    if (!state.ok) {
       break;
     }
-    list.add(r1.value);
+    list$0.add($1!);
   }
-  return Result(list);
+  if (state.ok = true) {
+    $0 = list$0;
+  }
+  return $0;
 }
 
-Result<int>? _$1(State<String> state) {
-  if (state.pos < state.input.length) {
-    final c = state.input.codeUnitAt(state.pos);
-    if (c == 50) {
-      state.pos++;
-      return const Result(50);
+Object? _Many_NoResult$0(State<String> state) {
+  Object? $0;
+  while (true) {
+    if (state.ok = state.pos < state.input.length &&
+        state.input.codeUnitAt(state.pos) == 49) {
+      state.pos += 1;
+    } else {
+      state.fail(const ErrorExpectedChar(49));
     }
-    return state.fail(const ErrorExpectedChar(50));
+    if (!state.ok) {
+      break;
+    }
   }
-  return state.fail(const ErrorUnexpectedEof());
+  state.ok = true;
+  return $0;
 }
 
-Result<int>? _Preceded$0(State<String> state) {
-  final pos = state.pos;
-  final r1 = _$0(state);
-  if (r1 != null) {
-    final r2 = _$1(state);
-    if (r2 != null) {
-      return r2;
+int? _Preceded$0(State<String> state) {
+  int? $0;
+  final pos$0 = state.pos;
+  if (state.ok = state.pos < state.input.length &&
+      state.input.codeUnitAt(state.pos) == 49) {
+    state.pos += 1;
+  } else {
+    state.fail(const ErrorExpectedChar(49));
+  }
+  if (state.ok) {
+    int? $1;
+    if (state.ok = state.pos < state.input.length &&
+        state.input.codeUnitAt(state.pos) == 50) {
+      state.pos += 1;
+      $1 = 50;
+    } else {
+      state.fail(const ErrorExpectedChar(50));
+    }
+    if (state.ok) {
+      $0 = $1;
+    } else {
+      state.pos = pos$0;
     }
   }
-  state.pos = pos;
-  return null;
+  return $0;
+}
+
+Object? _Preceded_NoResult$0(State<String> state) {
+  Object? $0;
+  final pos$0 = state.pos;
+  if (state.ok = state.pos < state.input.length &&
+      state.input.codeUnitAt(state.pos) == 49) {
+    state.pos += 1;
+  } else {
+    state.fail(const ErrorExpectedChar(49));
+  }
+  if (state.ok) {
+    if (state.ok = state.pos < state.input.length &&
+        state.input.codeUnitAt(state.pos) == 50) {
+      state.pos += 1;
+    } else {
+      state.fail(const ErrorExpectedChar(50));
+    }
+    if (!state.ok) {
+      state.pos = pos$0;
+    }
+  }
+  return $0;
 }
 
 class ErrorExpectedChar extends ParseError {
@@ -340,62 +458,78 @@ class Result<T> {
 }
 
 class State<T> {
-  List<ParseError> errors = [];
+  Object? context;
+
+  List<ParseError?> errors = List.filled(512, null, growable: false);
+
+  int errorCount = 0;
 
   int failPos = 0;
 
   final T input;
+
+  bool ok = false;
 
   int pos = 0;
 
   State(this.input);
 
   @pragma('vm:prefer-inline')
-  Result<R>? fail<R>(ParseError error) {
-    if (pos < failPos) {
-      return null;
-    } else if (failPos < pos) {
-      failPos = pos;
-      errors = [];
+  void fail(ParseError error) {
+    ok = false;
+    if (pos >= failPos) {
+      if (failPos < pos) {
+        failPos = pos;
+        errorCount = 0;
+      }
+      errors[errorCount++] = error;
     }
-    errors.add(error);
-    return null;
   }
 
   @pragma('vm:prefer-inline')
-  Result<R>? failAll<R>(List<ParseError> errors) {
-    if (pos < failPos) {
-      return null;
-    } else if (failPos < pos) {
-      failPos = pos;
-      this.errors = [];
+  void failAll(List<ParseError> errors) {
+    ok = false;
+    if (pos >= failPos) {
+      if (failPos < pos) {
+        failPos = pos;
+        errorCount = 0;
+      }
+      for (var i = 0; i < errors.length; i++) {
+        final error = errors[i];
+        this.errors[errorCount++] = error;
+      }
     }
-    this.errors.addAll(errors);
-    return null;
   }
 
   @pragma('vm:prefer-inline')
-  Result<R>? failAllAt<R>(int offset, List<ParseError> errors) {
-    if (offset < failPos) {
-      return null;
-    } else if (failPos < offset) {
-      failPos = offset;
-      this.errors = [];
+  void failAllAt(int offset, List<ParseError> errors) {
+    ok = false;
+    if (offset >= failPos) {
+      if (failPos < offset) {
+        failPos = offset;
+        errorCount = 0;
+      }
+      for (var i = 0; i < errors.length; i++) {
+        final error = errors[i];
+        this.errors[errorCount++] = error;
+      }
     }
-    this.errors.addAll(errors);
-    return null;
   }
 
   @pragma('vm:prefer-inline')
-  Result<R>? failAt<R>(int offset, ParseError error) {
-    if (offset < failPos) {
-      return null;
-    } else if (failPos < offset) {
-      failPos = offset;
-      errors = [];
+  void failAt(int offset, ParseError error) {
+    ok = false;
+    if (offset >= failPos) {
+      if (failPos < offset) {
+        failPos = offset;
+        errorCount = 0;
+      }
+      errors[errorCount++] = error;
     }
-    errors.add(error);
-    return null;
+  }
+
+  List<ParseError> getErrors() {
+    return List.generate(errorCount, (i) => errors[i]!);
   }
 
   @override

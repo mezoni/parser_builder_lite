@@ -11,13 +11,14 @@ import 'package:parser_builder_lite/parser_builder.dart';
 
 Future<void> main(List<String> args) async {
   final context = BuildContext(
-    allocator: Allocator('_'),
-    output: StringBuffer(),
+    globalAllocator: Allocator('_'),
+    globalOutput: StringBuffer(),
+    localAllocator: Allocator(''),
   );
   await fastBuild(
     context: context,
     parsers: [_parser],
-    filename: 'test/_json_number_parser.dart',
+    filename: 'test/test_json_number_parser.dart',
     // addErrorMessageCode: false,
     header: __header,
   );
@@ -35,14 +36,14 @@ void main() {
     print(r);
 }
 
-num? parse(String input) {
+num parse(String input) {
   final state = State(input);
-  final r = number(state);
-  if (r == null) {
-    final message = _errorMessage(input, state.pos, state.errors);
+  final result = number(state);
+  if (!state.ok) {
+    final message = _errorMessage(input, state.pos, state.getErrors());
     throw FormatException('\n$message');
   }
-  return r.value;
+  return result!;
 }''';
 
 const _isWhitespace =
@@ -56,9 +57,36 @@ const _ws = Named('_ws', SkipWhile(_isWhitespace));
 
 class Number extends ParserBuilder<String, num> {
   static const _template = '''
+{
   final start = state.pos;
   final input = state.input;
   num? v;
+  @parse
+  state.ok = v != null;
+  if (state.ok) {
+    @r = v;
+  } else {
+    final failPos = state.pos;
+    state.pos = start;
+    state.failAt(failPos, const ErrorUnexpectedChar());
+  }
+}''';
+
+  static const _templateNoResult = '''
+{
+  final start = state.pos;
+  final input = state.input;
+  num? v;
+  @parse
+  state.ok = v != null;
+  if (!state.ok) {
+    final failPos = state.pos;
+    state.pos = start;
+    state.failAt(failPos, const ErrorUnexpectedChar());
+  }
+}''';
+
+  static const _templateParse = '''
   while (true) {
     //  '-'?('0'|[1-9][0-9]*)('.'[0-9]+)?([eE][+-]?[0-9]+)?
     const eof = 0x110000;
@@ -312,36 +340,34 @@ class Number extends ParserBuilder<String, num> {
     }
     v = hasSign ? -doubleValue : doubleValue;
     break;
-  }
-  if (v != null) {
-    return Result(v);
-  }
-  final failPos = state.pos;
-  state.pos = start;
-  if (failPos < input.length) {
-    return state.failAt(failPos, const ErrorUnexpectedChar());
-  }
-  return state.failAt(failPos, const ErrorUnexpectedEof());''';
+  }''';
 
   final String error;
 
   const Number([this.error = "const ErrorExpectedTags(['number'])"]);
 
   @override
-  String buildBody(BuildContext context) {
-    return render(_template, {});
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    final template = render(
+        hasResult ? _template : _templateNoResult, {'parse': _templateParse});
+
+    return renderBody(
+      parser,
+      context,
+      hasResult,
+      template,
+      template,
+      const {},
+    );
   }
 
   @override
-  List<(int, int)> getStartCharacters(BuildContext context) {
-    return toRanges([
-      '-',
-      ('0', '9'),
-    ]);
+  Iterable<(int, int)> getStartingCharacters() {
+    return toRanges(['-', ('0', '9')]);
   }
 
   @override
-  List<String> getStartErrors(BuildContext context) {
+  List<String> getStartingErrors() {
     return [error];
   }
 }

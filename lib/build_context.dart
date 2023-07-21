@@ -2,17 +2,21 @@ import 'allocator.dart';
 
 /// The [BuildContext] is the context for building parsers.
 class BuildContext {
-  // A global name allocator.
-  final Allocator allocator;
-
   final Map<String, Object?> cache = {};
 
+  // A global name allocator.
+  final Allocator globalAllocator;
+
   /// A global output.
-  final StringSink output;
+  final StringSink globalOutput;
+
+  // A local name allocator.
+  Allocator localAllocator;
 
   BuildContext({
-    required this.allocator,
-    required this.output,
+    required this.globalAllocator,
+    required this.globalOutput,
+    required this.localAllocator,
   });
 
   /// Initializes the cache if it has not been initialized and returns the

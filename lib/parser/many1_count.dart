@@ -3,32 +3,47 @@ import '../parser_builder.dart';
 
 class Many1Count<I> extends ParserBuilder<I, int> {
   static const _template = '''
-var count = 0;
+var @count = 0;
 while (true) {
-  final r1 = {{p1}}(state);
-  if (r1 == null) {
+  @p1
+  if (!state.ok) {
     break;
   }
-  count++;
+  @count++;
 }
-if (count != 0) {
-  return Result(count);
+if (state.ok = @count != 0) {
+  @r = @count;
+}''';
+  static const _templateNoResult = '''
+var @count = 0;
+while (true) {
+  @p1
+  if (!state.ok) {
+    break;
+  }
+  @count++;
 }
-return null;''';
+state.ok = @count != 0;''';
 
   final ParserBuilder<I, Object?> p;
 
   const Many1Count(this.p);
 
   @override
-  String buildBody(BuildContext context) {
-    return render(_template, {
-      'p1': p.build(context).name,
-    });
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    checkIsNotOptional(p);
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      _template,
+      _templateNoResult,
+      const {},
+    );
   }
 
   @override
-  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
-    return p;
+  Iterable<(ParserBuilder<I, Object?>, bool?)> getCombinedParsers() {
+    return [(p, false)];
   }
 }

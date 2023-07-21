@@ -2,48 +2,50 @@ import '../helper.dart';
 import '../parser_builder.dart';
 
 class Char extends ParserBuilder<String, int> {
-  static const _template16 = '''
-if (state.pos < state.input.length) {
-  final c = state.input.codeUnitAt(state.pos);
-  if (c == {{char}}) {
-    state.pos++;
-    return const Result({{char}});
-  }
-  return state.fail(const ErrorExpectedChar({{char}}));
-}
-return state.fail(const ErrorUnexpectedEof());''';
+  static const _template = '''
+if (state.ok = state.pos < state.input.length && state.input.@read(state.pos) == @char) {
+  state.pos += @size;
+  @r = @char;
+} else {
+  state.fail(const ErrorExpectedChar(@char));
+}''';
 
-  static const _template32 = '''
-if (state.pos < state.input.length) {
-  final c = state.input.runeAt(state.pos);
-  if (c == {{char}}) {
-    state.pos += c <= 0xffff ? 1 : 2;
-    return const Result({{char}});
-  }
-  return state.fail(const ErrorExpectedChar({{char}}));
-}
-return state.fail(const ErrorUnexpectedEof());''';
+  static const _templateNoResult = '''
+if (state.ok = state.pos < state.input.length && state.input.@read(state.pos) == @char) {
+  state.pos += @size;
+} else {
+  state.fail(const ErrorExpectedChar(@char));
+}''';
 
   final int char;
 
   const Char(this.char);
 
   @override
-  String buildBody(BuildContext context) {
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
     RangeError.checkValidRange(0, char, 0x10ffff, 'char');
-    final template = char <= 0xffff ? _template16 : _template32;
-    return render(template, {
-      'char': getAsCode(char),
-    });
+    final reader = getCharReader(char <= 0xffff, 'c');
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      _template,
+      _templateNoResult,
+      {
+        'char': getAsCode(char),
+        'read': reader.name,
+        'size': getAsCode(char < 0xffff ? 1 : 2),
+      },
+    );
   }
 
   @override
-  List<String> getStartErrors(BuildContext context) {
+  Iterable<String> getStartingErrors() {
     return ['const ErrorExpectedChar($char)'];
   }
 
   @override
-  List<(int, int)> getStartCharacters(BuildContext context) {
+  Iterable<(int, int)> getStartingCharacters() {
     return [(char, char)];
   }
 }

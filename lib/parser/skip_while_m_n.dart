@@ -1,15 +1,19 @@
 import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
-import '../parser_mixins.dart';
-import 'take_while1.dart';
+import 'take_while_m_n.dart';
 
-class SkipWhile1 extends ParserBuilder<String, Object?>
-    with SatisfyMixin<Object?> {
-  @override
+class SkipWhileMN extends ParserBuilder<String, String> {
+  final int m;
+
+  final int n;
+
   final Calculable<bool> predicate;
 
-  const SkipWhile1(this.predicate);
+  const SkipWhileMN(this.m, this.n, this.predicate);
+
+  @override
+  bool get isOptional => m == 0 ? true : false;
 
   @override
   BuildBodyResult buildBody(BuildContext context, bool hasResult) {
@@ -20,7 +24,7 @@ class SkipWhile1 extends ParserBuilder<String, Object?>
       '@p1',
       '@p1',
       const {},
-      parsers: [(TakeWhile1(predicate), false)],
+      parsers: [(TakeWhileMN(m, n, predicate), false)],
     );
   }
 }

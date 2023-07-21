@@ -1,3 +1,12 @@
+## 0.7.0
+
+- New version with breaking changes. Now the generated parsers are faster than ever. Even faster than those that are written by hand.
+
+## 0.6.11
+
+- Added `context` field to `State` class to implement the ability of implementing configurable parsers.
+- Fixed bugs
+
 ## 0.6.10
 
 - Improvements have been made in code generation.

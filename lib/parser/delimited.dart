@@ -11,11 +11,10 @@ class Delimited<I, O> extends SequenceBase<I, O> {
   const Delimited(this.start, this.p, this.end);
 
   @override
-  List<(ParserBuilder<I, Object?>, bool)> getParserSequence(
-      BuildContext context) {
+  Iterable<(ParserBuilder<I, Object?>, bool?)> getCombinedParsers() {
     return [
       (start, false),
-      (p, true),
+      (p, null),
       (end, false),
     ];
   }

@@ -3,27 +3,38 @@ import '../parser_builder.dart';
 
 class Peek<I, O> extends ParserBuilder<I, O> {
   static const _template = '''
-final pos = state.pos;
-final r1 = {{p1}}(state);
-if (r1 != null) {
+final @pos = state.pos;
+@p1
+if (state.ok) {
   state.pos = pos;
-  return r1;
-}
-return null;''';
+  @r = @r1;
+}''';
+
+  static const _templateNoResult = '''
+final @pos = state.pos;
+@p1;
+if (state.ok) {
+  state.pos = pos;
+}''';
 
   final ParserBuilder<I, O> p;
 
   const Peek(this.p);
 
   @override
-  String buildBody(BuildContext context) {
-    return render(_template, {
-      'p1': p.build(context).name,
-    });
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      _template,
+      _templateNoResult,
+      const {},
+    );
   }
 
   @override
-  ParserBuilder<I, O>? getStartParser(BuildContext context) {
-    return p;
+  Iterable<(ParserBuilder<I, Object?>, bool?)> getCombinedParsers() {
+    return [(p, null)];
   }
 }

@@ -3,25 +3,40 @@ import '../parser_builder.dart';
 
 class Opt<I, O> extends ParserBuilder<I, O?> {
   static const _template = '''
-final r1 = {{p1}}(state);
-if (r1 != null) {
-  return r1;
-}
-return const Result(null);''';
+@p1
+if (state.ok) {
+  @r = @r1;
+} else {
+  state.ok = true;
+}''';
+
+  static const _templateNoResult = '''
+@p1
+if (!state.ok) {
+  state.ok = true;
+}''';
 
   final ParserBuilder<I, O> p;
 
   const Opt(this.p);
 
   @override
-  String buildBody(BuildContext context) {
-    return render(_template, {
-      'p1': p.build(context).name,
-    });
+  bool get isOptional => true;
+
+  @override
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      _template,
+      _templateNoResult,
+      const {},
+    );
   }
 
   @override
-  bool getIsOptional(BuildContext context) {
-    return true;
+  Iterable<(ParserBuilder<I, Object?>, bool?)> getCombinedParsers() {
+    return [(p, null)];
   }
 }

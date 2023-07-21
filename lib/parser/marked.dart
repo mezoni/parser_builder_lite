@@ -9,22 +9,21 @@ class Marked<I, O> extends ParserBuilder<I, O> {
   const Marked(this.name, this.p);
 
   @override
-  String buildBody(BuildContext context) {
-    return p.buildBody(context);
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    final body = p.buildBody(context, hasResult);
+    final source = body.source;
+    final buffer = StringBuffer();
+    buffer.writeln(' // => $name');
+    buffer.writeln(source);
+    buffer.write(' // <= $name');
+    return BuildBodyResult(
+      result: body.result,
+      source: buffer.toString(),
+    );
   }
 
   @override
-  bool getIsOptional(BuildContext context) {
-    return p.getIsOptional(context);
-  }
-
-  @override
-  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
-    return p;
-  }
-
-  @override
-  String toString() {
-    return p.toString();
+  Iterable<(ParserBuilder<I, Object?>, bool?)> getCombinedParsers() {
+    return [(p, null)];
   }
 }

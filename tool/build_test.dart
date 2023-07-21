@@ -8,8 +8,6 @@ import 'package:parser_builder_lite/parser/choice.dart';
 import 'package:parser_builder_lite/parser/delimited.dart';
 import 'package:parser_builder_lite/parser/eof.dart';
 import 'package:parser_builder_lite/parser/expected.dart';
-import 'package:parser_builder_lite/parser/fast_satisfy.dart';
-import 'package:parser_builder_lite/parser/fast_satisfy16.dart';
 import 'package:parser_builder_lite/parser/many.dart';
 import 'package:parser_builder_lite/parser/many1.dart';
 import 'package:parser_builder_lite/parser/many1_count.dart';
@@ -18,20 +16,14 @@ import 'package:parser_builder_lite/parser/many_m_n.dart';
 import 'package:parser_builder_lite/parser/not.dart';
 import 'package:parser_builder_lite/parser/preceded.dart';
 import 'package:parser_builder_lite/parser/predicate.dart';
-import 'package:parser_builder_lite/parser/replace_errors.dart';
-import 'package:parser_builder_lite/parser/string_chars.dart';
 import 'package:parser_builder_lite/parser/tag.dart';
 import 'package:parser_builder_lite/parser/tags.dart';
-import 'package:parser_builder_lite/parser/take16_while.dart';
-import 'package:parser_builder_lite/parser/take16_while1.dart';
-import 'package:parser_builder_lite/parser/take16_while_m_n.dart';
 import 'package:parser_builder_lite/parser/take_while.dart';
 import 'package:parser_builder_lite/parser/take_while1.dart';
 import 'package:parser_builder_lite/parser/take_while_m_n.dart';
 import 'package:parser_builder_lite/parser/terminated.dart';
 import 'package:parser_builder_lite/parser/tuple.dart';
 import 'package:parser_builder_lite/parser/unterminated.dart';
-import 'package:parser_builder_lite/parser/value.dart';
 import 'package:parser_builder_lite/parser_builder.dart';
 import 'package:parser_builder_lite/parser_tester.dart';
 
@@ -58,22 +50,30 @@ const _runeCode = 0x1f600;
 
 Future<void> _generate() async {
   final context = BuildContext(
-    allocator: Allocator('_'),
-    output: StringBuffer(),
+    globalAllocator: Allocator('_'),
+    globalOutput: StringBuffer(),
+    localAllocator: Allocator(''),
   );
   final tester = ParserTester<String>(
     context: context,
     localOutput: StringBuffer(),
   );
-  tester.addTest('And', const Terminated(Char(0x30), And(Char(0x31))),
-      (parserName, parser) {
+
+  tester.addTest('And', const Terminated(Char(0x30), And(Char(0x31))), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '01',
@@ -84,7 +84,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '1',
@@ -96,19 +96,26 @@ Future<void> _generate() async {
       input: '0',
       failPos: 1,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     return buffer.toString();
   });
 
-  tester.addTest('And', const AnyChar(), (parserName, parser) {
+  tester.addTest('And', const AnyChar(), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '01',
@@ -129,14 +136,21 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('Char (16-bit)', const Char(0x30), (parserName, parser) {
+  tester.addTest('Char (16-bit)', const Char(0x30), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '01',
@@ -147,7 +161,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: _rune,
@@ -158,14 +172,21 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('Char (32-bit)', const Char(_runeCode), (parserName, parser) {
+  tester.addTest('Char (32-bit)', const Char(_runeCode), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: _rune,
@@ -176,7 +197,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '01',
@@ -188,14 +209,21 @@ Future<void> _generate() async {
   });
 
   tester.addTest('Choice (2 variants)', const Choice([Char(0x30), Char(0x31)]),
-      (parserName, parser) {
+      (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '01',
@@ -211,7 +239,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof, errorUnexpectedEof],
+      errors: [errorExpectedChar, errorExpectedChar],
     );
     t1.testFailure(
       input: '2',
@@ -224,14 +252,21 @@ Future<void> _generate() async {
 
   tester.addTest(
       'Choice (3 variants)', const Choice([Char(0x30), Char(0x31), Char(0x32)]),
-      (parserName, parser) {
+      (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '01',
@@ -252,7 +287,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof, errorUnexpectedEof, errorUnexpectedEof],
+      errors: [errorExpectedChar, errorExpectedChar, errorExpectedChar],
     );
     t1.testFailure(
       input: '3',
@@ -263,14 +298,21 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('Char16', const Char(0x31), (parserName, parser) {
+  tester.addTest('Char (16-bit)', const Char(0x31), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '12',
@@ -281,7 +323,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '2',
@@ -292,14 +334,21 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('Char', const Char(_runeCode), (parserName, parser) {
+  tester.addTest('Char (32-bit)', const Char(_runeCode), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '$_rune`',
@@ -310,7 +359,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '2',
@@ -321,16 +370,22 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester
-      .addTest('Delimited', const Delimited(Char(0x31), Char(0x32), Char(0x33)),
-          (parserName, parser) {
+  tester.addTest(
+      'Delimited', const Delimited(Char(0x31), Char(0x32), Char(0x33)), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '123',
@@ -341,19 +396,19 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '1',
       failPos: 1,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '12',
       failPos: 2,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '2',
@@ -364,14 +419,21 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('Eof', const Eof(), (parserName, parser) {
+  tester.addTest('Eof', const Eof(), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '',
@@ -388,15 +450,21 @@ Future<void> _generate() async {
   });
 
   tester.addTest(
-      'Expected', const Expected('expr', Tuple2(Char(0x31), Char(0x32))),
-      (parserName, parser) {
+      'Expected', const Expected('expr', Tuple2(Char(0x31), Char(0x32))), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '123',
@@ -426,80 +494,7 @@ Future<void> _generate() async {
       input: '1',
       failPos: 1,
       pos: 0,
-      errors: [errorUnexpectedEof],
-    );
-    return buffer.toString();
-  });
-
-  tester.addTest('FastSatisfy16', const FastSatisfy16(isDigit),
-      (parserName, parser) {
-    final buffer = StringBuffer();
-    final t1 = ParserTest(
-      allocator: Allocator(_prefix),
-      context: context,
-      output: buffer,
-      parser: parser,
-      parserName: parserName,
-    );
-    t1.testSuccess(
-      input: '1',
-      resultTests: [
-        (
-          actual: Expr('{{0}}'),
-          expected: Expr('null'),
-          reason: 'result',
-        )
-      ],
-      pos: 1,
-    );
-    t1.testFailure(
-      input: '',
-      failPos: 0,
-      pos: 0,
-      errors: [errorUnexpectedEof],
-    );
-    t1.testFailure(
-      input: 'a',
-      failPos: 0,
-      pos: 0,
-      errors: [errorUnexpectedChar],
-    );
-    return buffer.toString();
-  });
-
-  tester
-      .addTest('FastSatisfy16', const FastSatisfy(Expr('{{0}} == $_runeCode')),
-          (parserName, parser) {
-    final buffer = StringBuffer();
-    final t1 = ParserTest(
-      allocator: Allocator(_prefix),
-      context: context,
-      output: buffer,
-      parser: parser,
-      parserName: parserName,
-    );
-    t1.testSuccess(
-      input: _rune,
-      resultTests: [
-        (
-          actual: Expr('{{0}}'),
-          expected: Expr('null'),
-          reason: 'result',
-        )
-      ],
-      pos: 2,
-    );
-    t1.testFailure(
-      input: '',
-      failPos: 0,
-      pos: 0,
-      errors: [errorUnexpectedEof],
-    );
-    t1.testFailure(
-      input: 'a',
-      failPos: 0,
-      pos: 0,
-      errors: [errorUnexpectedChar],
+      errors: [errorExpectedChar],
     );
     return buffer.toString();
   });
@@ -517,7 +512,7 @@ Future<void> _generate() async {
     final  buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix), context: context,
-      
+
       output: buffer,
       parser: parser, parserName: parserName,
     );
@@ -541,14 +536,21 @@ Future<void> _generate() async {
 
   */
 
-  tester.addTest('Many', const Many(Char(0x31)), (parserName, parser) {
+  tester.addTest('Many', const Many(Char(0x31)), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '1112',
@@ -568,14 +570,21 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('Many1', const Many1(Char(0x31)), (parserName, parser) {
+  tester.addTest('Many1', const Many1(Char(0x31)), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '1112',
@@ -586,7 +595,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '2',
@@ -598,15 +607,21 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('ManyCount', const ManyCount(Char(0x31)),
-      (parserName, parser) {
+  tester.addTest('ManyCount', const ManyCount(Char(0x31)), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '1112',
@@ -626,15 +641,21 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('Many1Count', const Many1Count(Char(0x31)),
-      (parserName, parser) {
+  tester.addTest('Many1Count', const Many1Count(Char(0x31)), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '1112',
@@ -645,7 +666,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '2',
@@ -656,15 +677,21 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('ManyMN (0..3)', const ManyMN(0, 3, Char(0x31)),
-      (parserName, parser) {
+  tester.addTest('ManyMN (0..3)', const ManyMN(0, 3, Char(0x31)), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '12',
@@ -694,15 +721,21 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('ManyMN (2..3)', const ManyMN(2, 3, Char(0x31)),
-      (parserName, parser) {
+  tester.addTest('ManyMN (2..3)', const ManyMN(2, 3, Char(0x31)), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '112',
@@ -718,13 +751,13 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '1',
       failPos: 1,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '2',
@@ -802,15 +835,21 @@ Future<void> _generate() async {
 
   */
 
-  tester.addTest('Not', const Terminated(Char(0x30), Not(Char(0x31))),
-      (parserName, parser) {
+  tester.addTest('Not', const Terminated(Char(0x30), Not(Char(0x31))), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '02',
@@ -826,7 +865,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '1',
@@ -847,15 +886,21 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('Preceded', const Preceded(Char(0x31), Char(0x32)),
-      (parserName, parser) {
+  tester.addTest('Preceded', const Preceded(Char(0x31), Char(0x32)), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '123',
@@ -866,13 +911,13 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '1',
       failPos: 1,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '2',
@@ -883,80 +928,7 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest(
-      'ReplaceErrors',
-      const ReplaceErrors(Take16WhileMN(2, 2, isDigit),
-          Expr("[$errorMessage({{1}} - {{0}}, 'error message')]")),
-      (parserName, parser) {
-    final buffer = StringBuffer();
-    final t1 = ParserTest(
-      allocator: Allocator(_prefix),
-      context: context,
-      output: buffer,
-      parser: parser,
-      parserName: parserName,
-    );
-    t1.testSuccess(
-      input: '12a',
-      result: '12',
-      pos: 2,
-    );
-    t1.testFailure(
-      input: '',
-      failPos: 0,
-      pos: 0,
-      errors: [errorMessage],
-      errorTests: [
-        (
-          actual: Expr('({{0}}[0] as $errorMessage).message'),
-          expected: Expr("'error message'"),
-          reason: 'error.message',
-        ),
-        (
-          actual: Expr('({{0}}[0] as $errorMessage).length'),
-          expected: Expr('0'),
-          reason: '$errorMessage.length',
-        ),
-      ],
-    );
-    t1.testFailure(
-      input: '1',
-      failPos: 1,
-      pos: 0,
-      errors: [errorMessage],
-      errorTests: [
-        (
-          actual: Expr('({{0}}[0] as $errorMessage).message'),
-          expected: Expr("'error message'"),
-          reason: '$errorMessage.message',
-        ),
-        (
-          actual: Expr('({{0}}[0] as $errorMessage).length'),
-          expected: Expr('1'),
-          reason: '$errorMessage.length',
-        ),
-      ],
-    );
-    t1.testFailure(
-      input: 'a',
-      failPos: 0,
-      pos: 0,
-      errors: [errorMessage],
-      errorTests: [
-        (
-          actual: Expr('({{0}}[0] as $errorMessage).message'),
-          expected: Expr("'error message'"),
-          reason: '$errorMessage.message',
-        ),
-        (
-          actual: Expr('({{0}}[0] as $errorMessage).length'),
-          expected: Expr('0'),
-          reason: '$errorMessage.length',
-        ),
-      ],
-    );
-    return buffer.toString();
-  });
+  /*
 
   tester.addTest(
       'StringChars', const StringChars(isDigit, 0x5c, Value(r"'\n'", Tag('n'))),
@@ -997,14 +969,23 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('Tag (short)', const Tag('0'), (parserName, parser) {
+  */
+
+  tester.addTest('Tag (short)', const Tag('0'), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '01',
@@ -1015,7 +996,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedTags],
     );
     t1.testFailure(
       input: '2',
@@ -1027,14 +1008,21 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('Tag (long)', const Tag(_rune), (parserName, parser) {
+  tester.addTest('Tag (long)', const Tag(_rune), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '${_rune}1',
@@ -1045,7 +1033,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedTags],
     );
     t1.testFailure(
       input: '2',
@@ -1058,15 +1046,21 @@ Future<void> _generate() async {
   });
 
   tester.addTest('Tags',
-      const Tags(['a', 'ab', 'abc', 'b', 'bc', 'c', _rune, '$_rune$_rune']),
-      (parserName, parser) {
+      const Tags(['a', 'ab', 'abc', 'b', 'bc', 'c', _rune, '$_rune$_rune']), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: 'abcd',
@@ -1112,7 +1106,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedTags],
     );
     t1.testFailure(
       input: 'x',
@@ -1125,15 +1119,21 @@ Future<void> _generate() async {
   });
 
   tester.addTest(
-      'TakeWhileMN (0..3)', const TakeWhileMN(0, 3, Expr('{{0}} == 0x1f600')),
-      (parserName, parser) {
+      'TakeWhileMN (0..3)', const TakeWhileMN(0, 3, Expr('{{0}} == 0x1f600')), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: String.fromCharCodes([0x1f600, 0x1f600, 0x1f600, 0x1f600]),
@@ -1164,15 +1164,21 @@ Future<void> _generate() async {
   });
 
   tester.addTest(
-      'TakeWhileMN (1..2)', const TakeWhileMN(1, 2, Expr('{{0}} == 0x1f600')),
-      (parserName, parser) {
+      'TakeWhileMN (1..2)', const TakeWhileMN(1, 2, Expr('{{0}} == 0x1f600')), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: String.fromCharCodes([0x1f600, 0x1f600, 0x1f600, 0x1f600]),
@@ -1188,7 +1194,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorUnexpectedChar],
     );
 
     t1.testFailure(
@@ -1201,90 +1207,21 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('Take16WhileMN (0..3)', const Take16WhileMN(0, 3, isDigit),
-      (parserName, parser) {
+  tester.addTest('TakeWhile', const TakeWhile(Expr('{{0}} == 0x1f600')), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
-    );
-    t1.testSuccess(
-      input: '12345',
-      result: '123',
-      pos: 3,
-    );
-    t1.testSuccess(
-      input: '12',
-      result: '12',
-      pos: 2,
-    );
-    t1.testSuccess(
-      input: '1',
-      result: '1',
-      pos: 1,
-    );
-    t1.testSuccess(
-      input: '',
-      result: '',
-      pos: 0,
-    );
-    t1.testSuccess(
-      input: 'a',
-      result: '',
-      pos: 0,
-    );
-    return buffer.toString();
-  });
-
-  tester.addTest('Take16WhileMN (1..2)', const Take16WhileMN(1, 2, isDigit),
-      (parserName, parser) {
-    final buffer = StringBuffer();
-    final t1 = ParserTest(
-      allocator: Allocator(_prefix),
-      context: context,
-      output: buffer,
-      parser: parser,
-      parserName: parserName,
-    );
-    t1.testSuccess(
-      input: '123',
-      result: '12',
-      pos: 2,
-    );
-    t1.testSuccess(
-      input: '1a',
-      result: '1',
-      pos: 1,
-    );
-    t1.testFailure(
-      input: '',
-      failPos: 0,
-      pos: 0,
-      errors: [errorUnexpectedEof],
-    );
-
-    t1.testFailure(
-      input: 'a',
-      failPos: 0,
-      pos: 0,
-      errors: [errorUnexpectedChar],
-    );
-
-    return buffer.toString();
-  });
-
-  tester.addTest('TakeWhile', const TakeWhile(Expr('{{0}} == 0x1f600')),
-      (parserName, parser) {
-    final buffer = StringBuffer();
-    final t1 = ParserTest(
-      allocator: Allocator(_prefix),
-      context: context,
-      output: buffer,
-      parser: parser,
-      parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: String.fromCharCodes([0x1f600]),
@@ -1309,15 +1246,21 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('TakeWhile1', const TakeWhile1(Expr('{{0}} == 0x1f600')),
-      (parserName, parser) {
+  tester.addTest('TakeWhile1', const TakeWhile1(Expr('{{0}} == 0x1f600')), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: String.fromCharCodes([0x1f600]),
@@ -1333,7 +1276,7 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorUnexpectedChar],
     );
     t1.testFailure(
       input: 'a',
@@ -1344,83 +1287,21 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest('Take16While', const Take16While(isDigit),
-      (parserName, parser) {
+  tester.addTest('Terminated', const Terminated(Char(0x31), Char(0x32)), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
-    );
-    t1.testSuccess(
-      input: '1a',
-      result: '1',
-      pos: 1,
-    );
-    t1.testSuccess(
-      input: '12a',
-      result: '12',
-      pos: 2,
-    );
-    t1.testSuccess(
-      input: '',
-      result: '',
-      pos: 0,
-    );
-    t1.testSuccess(
-      input: 'a',
-      result: '',
-      pos: 0,
-    );
-    return buffer.toString();
-  });
-
-  tester.addTest('Take16While1', const Take16While1(isDigit),
-      (parserName, parser) {
-    final buffer = StringBuffer();
-    final t1 = ParserTest(
-      allocator: Allocator(_prefix),
-      context: context,
-      output: buffer,
-      parser: parser,
-      parserName: parserName,
-    );
-    t1.testSuccess(
-      input: '1a',
-      result: '1',
-      pos: 1,
-    );
-    t1.testSuccess(
-      input: '12a',
-      result: '12',
-      pos: 2,
-    );
-    t1.testFailure(
-      input: '',
-      failPos: 0,
-      pos: 0,
-      errors: [errorUnexpectedEof],
-    );
-    t1.testFailure(
-      input: 'a',
-      failPos: 0,
-      pos: 0,
-      errors: [errorUnexpectedChar],
-    );
-    return buffer.toString();
-  });
-
-  tester.addTest('Terminated', const Terminated(Char(0x31), Char(0x32)),
-      (parserName, parser) {
-    final buffer = StringBuffer();
-    final t1 = ParserTest(
-      allocator: Allocator(_prefix),
-      context: context,
-      output: buffer,
-      parser: parser,
-      parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '123',
@@ -1431,13 +1312,13 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '1',
       failPos: 1,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
       input: '2',
@@ -1448,19 +1329,108 @@ Future<void> _generate() async {
     return buffer.toString();
   });
 
-  tester.addTest(
-      'Unterminated',
-      const Unterminated(
-        Delimited(Tag('"'), TakeWhile(isDigit), Tag('"')),
-        Expr("[ErrorMessage({{0}} - {{1}}, 'unterminated')]"),
-      ), (parserName, parser) {
+  tester.addTest('Tag (short)', const Tag('1'), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
+    );
+    t1.testSuccess(
+      input: '12',
+      result: '1',
+      pos: 1,
+    );
+    t1.testSuccess(
+      input: '1',
+      result: '1',
+      pos: 1,
+    );
+    t1.testFailure(
+      input: '',
+      failPos: 0,
+      pos: 0,
+      errors: [errorExpectedTags],
+    );
+    t1.testFailure(
+      input: '2',
+      failPos: 0,
+      pos: 0,
+      errors: [errorExpectedTags],
+    );
+    return buffer.toString();
+  });
+
+  tester.addTest('Tag (long)', const Tag('123456789'), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
+    final buffer = StringBuffer();
+    final t1 = ParserTest(
+      allocator: Allocator(_prefix),
+      context: context,
+      output: buffer,
+      parser: parser,
+      parserNameNoResult: parserNameNoResult,
+      parserName: parserName,
+      parserNoResult: parserNoResult,
+    );
+    t1.testSuccess(
+      input: '1234567890',
+      result: '123456789',
+      pos: 9,
+    );
+    t1.testSuccess(
+      input: '123456789',
+      result: '123456789',
+      pos: 9,
+    );
+    t1.testFailure(
+      input: '',
+      failPos: 0,
+      pos: 0,
+      errors: [errorExpectedTags],
+    );
+    t1.testFailure(
+      input: '12345678',
+      failPos: 0,
+      pos: 0,
+      errors: [errorExpectedTags],
+    );
+    return buffer.toString();
+  });
+
+  tester.addTest(
+      'Unterminated',
+      const Unterminated(
+        Delimited(Tag('"'), TakeWhile(isDigit), Tag('"')),
+        Expr("[ErrorMessage({{0}} - {{1}}, 'unterminated')]"),
+      ), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
+    final buffer = StringBuffer();
+    final t1 = ParserTest(
+      allocator: Allocator(_prefix),
+      context: context,
+      output: buffer,
+      parser: parser,
+      parserNameNoResult: parserNameNoResult,
+      parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
       input: '"123"',
@@ -1477,10 +1447,10 @@ Future<void> _generate() async {
       input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedTags],
     );
     t1.testFailure(input: '"123', failPos: 4, pos: 0, errors: [
-      errorUnexpectedEof,
+      errorExpectedTags,
       errorMessage
     ], errorTests: [
       (

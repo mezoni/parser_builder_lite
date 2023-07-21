@@ -1,39 +1,47 @@
+import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
 
 class Value<I, O> extends ParserBuilder<I, O> {
   static const _template = '''
-return Result(value);''';
+if (state.ok = true) {
+  @r = @value;
+}''';
 
-  static const _templateWithParser = '''
-final r1 = {{p1}}(state);
-if (r1 != null) {
-  return Result({{value}});
-}
-return null;''';
+  static const _templateParser = '''
+@p1
+if (state.ok) {
+  @r = @value;
+}''';
+
+  static const _templateNoResult = '''
+state.ok = true;''';
+
+  static const _templateParserNoResult = '''
+@p1''';
 
   final ParserBuilder<I, Object?>? p;
 
-  final String value;
+  final Calculable<O> value;
 
   const Value(this.value, [this.p]);
 
   @override
-  String buildBody(BuildContext context) {
-    if (p == null) {
-      return render(_template, {
-        'value': value,
-      });
-    }
-
-    return render(_templateWithParser, {
-      'p1': p!.build(context).name,
-      'value': value,
-    });
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      p == null ? _template : _templateParser,
+      p == null ? _templateNoResult : _templateParserNoResult,
+      {
+        'value': value.calculate(context, ['state']),
+      },
+    );
   }
 
   @override
-  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
-    return p;
+  Iterable<(ParserBuilder<I, Object?>, bool?)> getCombinedParsers() {
+    return p == null ? const [] : [(p!, false)];
   }
 }

@@ -1,6 +1,5 @@
 import '../helper.dart';
 import '../parser_builder.dart';
-import 'marked.dart';
 
 class Sequence<I, O> extends SequenceBase<I, O> {
   final List<(ParserBuilder<I, Object?>, bool)> ps;
@@ -8,157 +7,176 @@ class Sequence<I, O> extends SequenceBase<I, O> {
   const Sequence(this.ps);
 
   @override
-  List<(ParserBuilder<I, Object?>, bool)> getParserSequence(
-      BuildContext context) {
+  Iterable<(ParserBuilder<I, Object?>, bool)> getCombinedParsers() {
     return ps;
   }
 }
 
 abstract class SequenceBase<I, O> extends ParserBuilder<I, O> {
   static const _template = '''
-final pos = state.pos;
-{{sequence}}
-state.pos = pos;
-return null;''';
+final @pos = state.pos;
+@parsers
+if (!state.ok) {
+  state.pos = @pos;
+}''';
 
-  static const _templateChecked = '''
-final r{{index}} = {{value}};
-{{next}}''';
+  static const _template2 = '''
+final @pos = state.pos;
+@parsers''';
 
-  static const _templateFast = '''
-// final r{{index}} = {{value}};
-{{next}}''';
+  static const _template2Last = '''
+@p1
+if (state.ok) {
+  @r = @value;
+} else {
+  state.pos = @pos;
+}''';
+
+  static const _template2LastNoResult = '''
+@p1
+if (!state.ok) {
+  state.pos = @pos;
+}''';
+
+  static const _templateLast = '''
+@p1
+if (state.ok) {
+  @r = @value;
+}''';
+
+  static const _templateLastNoResult = '''
+@p1''';
 
   static const _templateNext = '''
-final r{{index}} = {{value}};
-if (r{{index}} != null) {
-  {{next}}
+@p1
+if (state.ok) {
+  @next
 }''';
 
   const SequenceBase();
 
   @override
-  String buildBody(BuildContext context) {
-    return _buildBody(context);
-  }
-
-  @override
-  bool getIsOptional(BuildContext context) {
-    final ps = getParserSequence(context);
-    return !ps.any((e) => !e.$1.getIsOptional(context));
-  }
-
-  List<(ParserBuilder<I, Object?>, bool)> getParserSequence(
-      BuildContext context);
-
-  @override
-  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
-    final ps = getParserSequence(context);
-    return ps.isEmpty ? null : ps[0].$1;
-  }
-
-  String _buildBody(BuildContext context) {
-    final sequence = _buildSequence(context, [], false);
-    String plunge(int i) {
-      final element = sequence[i];
-      final value = element.$1;
-      final isFast = element.isFast;
-      final isLast = element.isLast;
-      if (i == 0) {
-        return render(_templateNext, {
-          'index': getAsCode(i + 1),
-          'next': plunge(i + 1),
-          'value': value,
-        });
-      }
-
-      if (isLast) {
-        if (i == sequence.length - 1) {
-          return 'return $value;';
-        } else {
-          if (isFast) {
-            final next = plunge(i + 1);
-            return render(_templateFast, {
-              'index': getAsCode(i + 1),
-              'next': next,
-              'value': value,
-            });
-          } else {
-            final next = plunge(i + 1);
-            return render(_templateChecked, {
-              'index': getAsCode(i + 1),
-              'next': next,
-              'value': value,
-            });
-          }
-        }
-      } else {
-        return render(_templateNext, {
-          'index': getAsCode(i + 1),
-          'next': plunge(i + 1),
-          'value': value,
-        });
-      }
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    final sequence = getCombinedParsers().toList();
+    if (sequence.isEmpty) {
+      throw ArgumentError.value(sequence, 'sequence', 'Must not be empty');
     }
 
-    return render(_template, {
-      'sequence': plunge(0),
-    });
-  }
+    if (sequence.length == 1) {
+      final template = renderWithPlunge(
+        sequence.length,
+        hasResult,
+        next: _templateLast,
+        nextNoResult: _templateLastNoResult,
+        fillValues: (index, template, values, next) {
+          final element = sequence[index];
+          final mode = element.$2 ?? hasResult;
+          if (mode) {
+            values['value'] = '@rv1';
+          } else {
+            template = _templateLastNoResult;
+          }
 
-  List<(String, {bool isLast, bool isFast, bool isOptional})> _buildSequence(
-      BuildContext context,
-      List<(String, {bool isLast, bool isFast, bool isOptional})> sequence,
-      bool isFast) {
-    final ps = getParserSequence(context);
-    if (ps.isEmpty) {
-      throw ArgumentError.value(ps, 'ps', 'Must not be empty');
+          return template;
+        },
+      );
+      return renderBody(
+        this,
+        context,
+        hasResult,
+        template,
+        template,
+        const {},
+      );
+    } else if (sequence.length == 2) {
+      final results = <int>[];
+      final templateParsers = renderWithPlunge(
+        sequence.length,
+        hasResult,
+        last: _template2Last,
+        lastNoResult: _template2LastNoResult,
+        next: _templateNext,
+        nextNoResult: _templateNext,
+        fillValues: (index, template, values, next) {
+          final element = sequence[index];
+          final mode = element.$2 ?? hasResult;
+          if (mode) {
+            results.add(index + 1);
+          }
+
+          if (index < sequence.length - 1) {
+            values['next'] = next(index + 1);
+          } else {
+            if (hasResult) {
+              if (results.isNotEmpty) {
+                values['value'] = switch (results.length) {
+                  1 => '@r${results[0]}',
+                  _ => '(${results.map((e) => '@rv$e').join(', ')})',
+                };
+                template = _template2Last;
+              } else {
+                template = _template2LastNoResult;
+              }
+            }
+          }
+
+          return template;
+        },
+      );
+      final template = render(_template2, {'parsers': templateParsers});
+      return renderBody(
+        this,
+        context,
+        hasResult,
+        template,
+        template,
+        const {},
+      );
     }
 
     final results = <int>[];
-    for (var i = 0; i < ps.length; i++) {
-      final element = ps[i];
-      final p = element.$1;
-      final isResultUsed = element.$2;
-      if (p is SequenceBase) {
-        final p2 = p as SequenceBase;
-        sequence = p2._buildSequence(context, sequence, !isResultUsed);
-      } else if (p is Marked) {
-        final p2 = p as Marked;
-        if (p2.p is SequenceBase) {
-          final p3 = p2.p as SequenceBase;
-          sequence = p3._buildSequence(context, sequence, !isResultUsed);
+    final templateSequence = renderWithPlunge(
+      sequence.length,
+      hasResult,
+      last: _templateLast,
+      lastNoResult: _templateLastNoResult,
+      next: _templateNext,
+      nextNoResult: _templateNext,
+      fillValues: (index, template, values, next) {
+        final element = sequence[index];
+        final mode = element.$2 ?? hasResult;
+        if (mode) {
+          results.add(index + 1);
         }
-      } else {
-        final name = p.build(context).name;
-        final value = '$name(state)';
-        sequence.add((
-          value,
-          isFast: isFast,
-          isLast: false,
-          isOptional: getIsOptional(context)
-        ));
-      }
 
-      if (isResultUsed) {
-        results.add(sequence.length);
-      }
+        if (index < sequence.length - 1) {
+          values['next'] = next(index + 1);
+        } else {
+          if (hasResult) {
+            if (results.isNotEmpty) {
+              values['value'] = switch (results.length) {
+                1 => '@r${results[0]}',
+                _ => '(${results.map((e) => '@rv$e').join(', ')})',
+              };
+              template = _templateLast;
+            } else {
+              template = _templateLastNoResult;
+            }
+          }
+        }
 
-      if (i == ps.length - 1) {
-        final value = switch (results.length) {
-          0 => 'Result<${getResultType()}>(null)',
-          1 => 'r${results[0]}',
-          _ => 'Result((${results.map((e) => 'r$e.value').join(', ')}))',
-        };
-        sequence.add((
-          value,
-          isFast: isFast,
-          isLast: true,
-          isOptional: getIsOptional(context)
-        ));
-      }
-    }
+        return template;
+      },
+    );
 
-    return sequence;
+    final template = render(_template, {'parsers': templateSequence});
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      template,
+      template,
+      const {},
+    );
   }
 }

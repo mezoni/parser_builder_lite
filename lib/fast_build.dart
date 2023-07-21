@@ -7,6 +7,7 @@ import 'runtime.dart' as runtime;
 
 Future<void> fastBuild({
   bool addErrorMessageCode = true,
+  bool addParseCode = false,
   bool addRuntimeCode = true,
   required BuildContext context,
   required String filename,
@@ -21,11 +22,16 @@ Future<void> fastBuild({
     output.writeln();
   }
 
-  for (final parser in parsers) {
-    parser.build(context);
+  if (addParseCode) {
+    throw UnimplementedError();
   }
 
-  output.writeln(context.output);
+  for (final parser in parsers) {
+    parser.build(context, true);
+    context.globalOutput.writeln();
+  }
+
+  output.writeln(context.globalOutput);
   if (footer != null) {
     output.writeln(footer);
     output.writeln();

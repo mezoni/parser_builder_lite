@@ -13,46 +13,85 @@ import '../parser_builder.dart';
 /// ```
 class StringChars extends ParserBuilder<String, String> {
   static const _template = '''
-final input = state.input;
-final list = <String>[];
-var str = '';
-while (state.pos < input.length) {
-  final pos = state.pos;
-  str = '';
+final @input = state.input;
+final @list = <String>[];
+var @str = '';
+while (state.pos < @input.length) {
+  final @pos = state.pos;
+  @str = '';
   var c = -1;
-  while (state.pos < input.length) {
-    c = input.runeAt(state.pos);
-    final ok = {{normalChar}};
+  while (state.pos < @input.length) {
+    c = @input.runeAt(state.pos);
+    final ok = @normalChar;
     if (!ok) {
       break;
     }
     state.pos += c < 0xffff ? 1 : 2;
   }
-  if (state.pos != pos) {
-    str = input.substring(pos, state.pos);
-    if (list.isNotEmpty) {
-      list.add(str);
+  if (state.pos != @pos) {
+    @str = @input.substring(@pos, state.pos);
+    if (@list.isNotEmpty) {
+      @list.add(@str);
     }
   }
-  if (c != {{controlChar}}) {
+  if (c != @controlChar) {
     break;
   }
-  state.pos += {{size}};
-  final r1 = {{p1}}(state);
-  if (r1 == null) {
-    state.pos = pos;
+  state.pos += @size;
+  @p1
+  if (!state.ok) {
+    state.pos = @pos;
     break;
   }
-  if (list.isEmpty && str != '') {
-    list.add(str);
+  if (@list.isEmpty && @str != '') {
+    @list.add(@str);
   }
-  list.add(r1.value);
+  @list.add(@rv1);
 }
-if (list.isEmpty) {
-  return Result(str);
+state.ok = true;
+if (@list.isEmpty) {
+  @r = @str;
 } else {
-  return  Result(list.join());
+  @r = @list.join();
 }''';
+
+  static const _templateNoResult = '''
+final @input = state.input;
+final @list = <String>[];
+var @str = '';
+while (state.pos < @input.length) {
+  final @pos = state.pos;
+  @str = '';
+  var c = -1;
+  while (state.pos < @input.length) {
+    c = @input.runeAt(state.pos);
+    final ok = @normalChar;
+    if (!ok) {
+      break;
+    }
+    state.pos += c < 0xffff ? 1 : 2;
+  }
+  if (state.pos != @pos) {
+    @str = @input.substring(@pos, state.pos);
+    if (@list.isNotEmpty) {
+      @list.add(@str);
+    }
+  }
+  if (c != @controlChar) {
+    break;
+  }
+  state.pos += @size;
+  @p1
+  if (!state.ok) {
+    state.pos = @pos;
+    break;
+  }
+  if (@list.isEmpty && @str != '') {
+    @list.add(@str);
+  }
+  @list.add(@rv1);
+}
+state.ok = true;''';
 
   final int controlChar;
 
@@ -63,13 +102,20 @@ if (list.isEmpty) {
   const StringChars(this.normalChar, this.controlChar, this.escape);
 
   @override
-  String buildBody(BuildContext context) {
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
     final size = controlChar > 0xffff ? 2 : 1;
-    return render(_template, {
-      'controlChar': '$controlChar',
-      'normalChar': normalChar.calculate(context, ['c']),
-      'p1': escape.build(context).name,
-      'size': '$size',
-    });
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      _template,
+      _templateNoResult,
+      {
+        'controlChar': '$controlChar',
+        'normalChar': normalChar.calculate(context, ['c']),
+        'size': '$size',
+      },
+      parsers: [(escape, true)],
+    );
   }
 }

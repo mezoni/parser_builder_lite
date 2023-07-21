@@ -3,14 +3,21 @@ import '../parser_builder.dart';
 
 class SwitchTags<O> extends ParserBuilder<String, O> {
   static const _template = '''
-final pos = state.pos;
-final input = state.input;
-if (pos < input.length) {
-  final c = input.codeUnitAt(pos);
-  {{tests}}
-  return state.failAll({{errors}});
+final @pos = state.pos;
+if (@pos < state.input.length) {
+  final c = state.input.codeUnitAt(@pos);
+  @tests
 }
-return state.fail(const ErrorUnexpectedEof());''';
+if (!(state.ok = state.pos != @pos)) {
+  state.failAll(@errors);
+}''';
+
+  static const _templateBranch = '''
+state.pos += @length;
+@r = @value;''';
+
+  static const _templateBranchNoResult = '''
+state.pos += @length;''';
 
   final List<String> errors;
 
@@ -19,7 +26,7 @@ return state.fail(const ErrorUnexpectedEof());''';
   const SwitchTags(this.table, this.errors);
 
   @override
-  String buildBody(BuildContext context) {
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
     if (table.isEmpty) {
       throw ArgumentError.value(
           table, 'table', 'The map of tags must not be empty: $table');
@@ -52,9 +59,14 @@ return state.fail(const ErrorUnexpectedEof());''';
         final result = table[tag]!;
         final length = tag.length;
         final isLong = length > 1;
-        final branch = 'state.pos += $length;\nreturn $result;';
-        final test = 'input.startsWith($escaped, pos)';
-        final condition = isLong ? test : '';
+        final template = hasResult ? _templateBranch : _templateBranchNoResult;
+        final branch = render(template, {
+          'length': getAsCode(length),
+          'value': result,
+        });
+
+        final condition =
+            !isLong ? '' : 'state.input.startsWith($escaped, state.pos)';
         tests[condition] = branch;
       }
 
@@ -62,14 +74,21 @@ return state.fail(const ErrorUnexpectedEof());''';
       branches['c == $c'] = branch;
     }
 
-    return render(_template, {
-      'errors': '[${errors.join(', ')}]',
+    final template = render(_template, {
       'tests': buildConditional(branches),
     });
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      template,
+      template,
+      {'errors': '[${errors.join(', ')}]'},
+    );
   }
 
   @override
-  List<(int, int)> getStartCharacters(BuildContext context) {
+  Iterable<(int, int)> getStartingCharacters() {
     final runes = table.keys.map((e) => e.runes.toList());
     if (runes.any((e) => e.isEmpty)) {
       return const [];
@@ -79,12 +98,7 @@ return state.fail(const ErrorUnexpectedEof());''';
   }
 
   @override
-  List<String> getStartErrors(BuildContext context) {
-    final runes = table.keys.map((e) => e.runes.toList());
-    if (runes.any((e) => e.isEmpty)) {
-      return const [];
-    }
-
+  Iterable<String> getStartingErrors() {
     return errors;
   }
 }

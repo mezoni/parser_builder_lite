@@ -1,4 +1,5 @@
 import '../expr.dart';
+import '../helper.dart';
 import '../parser_builder.dart';
 import 'smart_choice_ex.dart';
 
@@ -8,24 +9,14 @@ class SmartChoice<O> extends ParserBuilder<String, O> {
   const SmartChoice(this.ps);
 
   @override
-  String buildBody(BuildContext context) {
-    return _getSmartChoiceEx(context).buildBody(context);
-  }
-
-  @override
-  List<(int, int)> getStartCharacters(BuildContext context) {
-    return _getSmartChoiceEx(context).getStartCharacters(context);
-  }
-
-  @override
-  List<String> getStartErrors(BuildContext context) {
-    return _getSmartChoiceEx(context).getStartErrors(context);
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    return _getSmartChoiceEx(context).buildBody(context, hasResult);
   }
 
   SmartChoiceEx<String, O> _getSmartChoiceEx(BuildContext context) {
     var is32bit = false;
     for (final p in ps) {
-      final chars = p.getStartCharacters(context);
+      final chars = p.getStartingCharacters();
       if (chars.isEmpty) {
         is32bit = true;
         break;
@@ -37,10 +28,10 @@ class SmartChoice<O> extends ParserBuilder<String, O> {
       }
     }
 
+    final reader = getCharReader(!is32bit, 'c');
     const check =
         '{{0}}.pos < {{0}}.input.length ? {{0}}.input.{{reader}}({{0}}.pos) : null';
-    final reader = is32bit ? 'runeAt' : 'codeUnitAt';
-    final peek = check.replaceAll('{{reader}}', reader);
+    final peek = check.replaceAll('{{reader}}', reader.name);
     return SmartChoiceEx(Expr(peek), ps);
   }
 }

@@ -4,12 +4,14 @@ import '../parser_builder.dart';
 
 class Mapped<I, O1, O2> extends ParserBuilder<I, O2> {
   static const _template = '''
-final r1 = {{p1}}(state);
-if (r1 != null) {
-  final v = {{map}};
-  return Result(v);
-}
-return null;''';
+@p1
+if (state.ok) {
+  final v = @rv1;
+  @r = @map;
+}''';
+
+  static const _templateNoResult = '''
+@p1''';
 
   final Calculable<O2> map;
 
@@ -18,15 +20,21 @@ return null;''';
   const Mapped(this.p, this.map);
 
   @override
-  String buildBody(BuildContext context) {
-    return render(_template, {
-      'map': map.calculate(context, ['r1.value']),
-      'p1': p.build(context).name,
-    });
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      _template,
+      _templateNoResult,
+      {
+        'map': map.calculate(context, ['v'])
+      },
+    );
   }
 
   @override
-  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
-    return p;
+  Iterable<(ParserBuilder<I, Object?>, bool?)> getCombinedParsers() {
+    return [(p, null)];
   }
 }

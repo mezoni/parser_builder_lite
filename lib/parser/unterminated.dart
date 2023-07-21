@@ -11,16 +11,16 @@ class Unterminated<I, O> extends ParserBuilder<I, O> {
   const Unterminated(this.p, this.handle);
 
   @override
-  String buildBody(BuildContext context) {
-    final handle2 = handle.calculate(context, ['{{0}}', '{{1}}']);
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    final errors = handle.calculate(context, ['{{0}}', '{{1}}']);
     return HandleError(
       p,
-      Expr('{{0}} == {{1}} ? (false, []) : (false, $handle2)'),
-    ).buildBody(context);
+      Expr('{{0}} == {{1}} ? const (false, null) : (false, $errors)'),
+    ).buildBody(context, hasResult);
   }
 
   @override
-  ParserBuilder<I, Object?>? getStartParser(BuildContext context) {
-    return p;
+  Iterable<(ParserBuilder<I, Object?>, bool?)> getCombinedParsers() {
+    return [(p, null)];
   }
 }

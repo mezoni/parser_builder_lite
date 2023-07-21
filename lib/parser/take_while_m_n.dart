@@ -1,49 +1,82 @@
 import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
-import 'take16_while_m_n.dart';
 
 class TakeWhileMN extends ParserBuilder<String, String> {
   static const _template = '''
-final input = state.input;
-final pos = state.pos;
-var count = 0;
-while (count < {{n}} && state.pos < input.length) {
-  final c = input.runeAt(state.pos);
-  final ok = {{predicate}};
-  if (!ok) {
+final @input = state.input;
+final @pos = state.pos;
+var @count = 0;
+while (@count < @n && state.pos < @input.length) {
+  final c = @input.@read(state.pos);
+  final v = @predicate;
+  if (!v) {
     break;
   }
-  state.pos += c <= 0xffff ? 1 : 2;
-  count++;
+  state.pos += @size;
+  @count++;
 }
-if (count >= {{m}}) {
-  return state.pos != pos ?
-      Result(input.substring(pos, state.pos))
-      : const Result('');
+if (state.ok = @count >= @m) {
+  @r = state.pos != @pos ?
+      @input.substring(@pos, state.pos)
+      : '';
+} else {
+  final failPos = state.pos;
+  state.pos = @pos;
+  state.failAt(failPos, const ErrorUnexpectedChar());
+}''';
+
+  static const _templateNoResult = '''
+final @input = state.input;
+final @pos = state.pos;
+var @count = 0;
+while (@count < @n && state.pos < @input.length) {
+  final c = @input.@read(state.pos);
+  final v = @predicate;
+  if (!v) {
+    break;
+  }
+  state.pos += @size;
+  @count++;
 }
-final end = state.pos;
-state.pos = pos;
-return end < input.length ?
-    state.failAt(end, const ErrorUnexpectedChar())
-    : state.failAt(end, const ErrorUnexpectedEof());''';
+if (!(state.ok = @count >= @m)) {
+  final failPos = state.pos;
+  state.pos = @pos;
+  state.failAt(failPos, const ErrorUnexpectedChar());
+}''';
 
   static const _template0 = '''
-final input = state.input;
-final pos = state.pos;
-var count = 0;
-while (count < {{n}} && state.pos < input.length) {
-  final c = input.runeAt(state.pos);
-  final ok = {{predicate}};
-  if (!ok) {
+final @input = state.input;
+final @pos = state.pos;
+var @count = 0;
+while (@count < @n && state.pos < @input.length) {
+  final c = @input.@read(state.pos);
+  final v = @predicate;
+  if (!v) {
     break;
   }
-  state.pos += c <= 0xffff ? 1 : 2;
-  count++;
+  state.pos += @size;
+  @count++;
 }
-return state.pos != pos ?
-    Result(input.substring(pos, state.pos))
-    : const Result('');''';
+if (state.ok = true) {
+  @r = state.pos != @pos ?
+      @input.substring(@pos, state.pos)
+      : '';
+}''';
+
+  static const _template0NoResult = '''
+final @input = state.input;
+var @count = 0;
+while (@count < @n && state.pos < @input.length) {
+  final c = @input.@read(state.pos);
+  final v = @predicate;
+  if (!v) {
+    break;
+  }
+  state.pos += @size;
+  @count++;
+}
+state.ok = true;''';
 
   final int m;
 
@@ -54,25 +87,31 @@ return state.pos != pos ?
   const TakeWhileMN(this.m, this.n, this.predicate);
 
   @override
-  String buildBody(BuildContext context) {
+  bool get isOptional => m == 0 ? true : false;
+
+  @override
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
     RangeError.checkNotNegative(m, 'm');
     if (n < m) {
       throw ArgumentError.value(n, 'n', 'Must be greater than or equal to $m');
     }
 
-    if (is16BitPredicate(predicate)) {
-      return Take16WhileMN(m, n, predicate).buildBody(context);
-    }
-
-    return render(m == 0 ? _template0 : _template, {
-      'm': getAsCode(m),
-      'n': getAsCode(n),
-      'predicate': predicate.calculate(context, ['c']),
-    });
-  }
-
-  @override
-  bool getIsOptional(BuildContext context) {
-    return m == 0 ? true : false;
+    final reader = getCharReader(is16BitPredicate(predicate), 'c');
+    final template = m == 0 ? _template0 : _template;
+    final templateNoResult = m == 0 ? _template0NoResult : _templateNoResult;
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      template,
+      templateNoResult,
+      {
+        'm': getAsCode(m),
+        'n': getAsCode(n),
+        'predicate': predicate.calculate(context, ['c']),
+        'read': reader.name,
+        'size': reader.size,
+      },
+    );
   }
 }

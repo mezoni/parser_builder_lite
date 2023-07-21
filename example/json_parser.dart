@@ -5,243 +5,145 @@ void main() {
 
 Object? parse(String input) {
   final state = State(input);
-  final result = json(state);
-  if (result == null) {
-    final message = _errorMessage(input, state.failPos, state.errors);
+  final result = parser(state);
+  if (!state.ok) {
+    final message = _errorMessage(input, state.failPos, state.getErrors());
     throw message;
   }
-  return result.value;
+  return result;
 }
 
-Result<Object?>? _ws(State<String> state) {
-  final input = state.input;
-  while (state.pos < input.length) {
-    final c = input.codeUnitAt(state.pos);
-    final v = c >= 9 && c <= 10 || c == 13 || c == 32;
-    if (!v) {
-      break;
-    }
-    state.pos++;
-  }
-  return const Result(null);
-}
-
-Result<String>? _p$1(State<String> state) {
-  const tag = '{';
-  if (state.pos < state.input.length) {
-    if (state.input.codeUnitAt(state.pos) == 123) {
-      state.pos += 1;
-      return const Result(tag);
-    }
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  return state.fail(const ErrorUnexpectedEof());
-}
-
-Result<String>? _p$3(State<String> state) {
-  const tag = '"';
-  if (state.pos < state.input.length) {
-    if (state.input.codeUnitAt(state.pos) == 34) {
-      state.pos += 1;
-      return const Result(tag);
-    }
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  return state.fail(const ErrorUnexpectedEof());
-}
-
-Result<String>? _escapeChar(State<String> state) {
-  final pos = state.pos;
-  final input = state.input;
-  if (pos < input.length) {
-    final c = input.codeUnitAt(pos);
+String? _escapeChar(State<String> state) {
+  String? $0;
+  final pos$0 = state.pos;
+  if (pos$0 < state.input.length) {
+    final c = state.input.codeUnitAt(pos$0);
     if (c == 34) {
       state.pos += 1;
-      return const Result('"');
+      $0 = '"';
     } else if (c == 47) {
       state.pos += 1;
-      return const Result('/');
+      $0 = '/';
     } else if (c == 92) {
       state.pos += 1;
-      return const Result('\\');
+      $0 = '\\';
     } else if (c == 98) {
       state.pos += 1;
-      return const Result('\b');
+      $0 = '\b';
     } else if (c == 102) {
       state.pos += 1;
-      return const Result('\f');
+      $0 = '\f';
     } else if (c == 110) {
       state.pos += 1;
-      return const Result('\n');
+      $0 = '\n';
     } else if (c == 114) {
       state.pos += 1;
-      return const Result('\r');
+      $0 = '\r';
     } else if (c == 116) {
       state.pos += 1;
-      return const Result('\t');
+      $0 = '\t';
     }
-    return state.failAll([
+  }
+  if (!(state.ok = state.pos != pos$0)) {
+    state.failAll([
       const ErrorExpectedTags(['"', '/', '\\', 'b', 'f', 'n', 'r', 't'])
     ]);
   }
-  return state.fail(const ErrorUnexpectedEof());
+  return $0;
 }
 
-Result<String>? _p$5(State<String> state) {
-  const tag = 'u';
-  if (state.pos < state.input.length) {
-    if (state.input.codeUnitAt(state.pos) == 117) {
-      state.pos += 1;
-      return const Result(tag);
-    }
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  return state.fail(const ErrorUnexpectedEof());
-}
-
-Result<String>? _p$6(State<String> state) {
-  final input = state.input;
-  final pos = state.pos;
-  var count = 0;
-  while (count < 4 && state.pos < input.length) {
-    final c = input.codeUnitAt(state.pos);
-    final ok = c >= 48 && c <= 57 || c >= 65 && c <= 70 || c >= 97 && c <= 102;
-    if (!ok) {
+String? _hexValue(State<String> state) {
+  String? $0;
+  String? $1;
+  final input$0 = state.input;
+  final pos$0 = state.pos;
+  var count$0 = 0;
+  while (count$0 < 4 && state.pos < input$0.length) {
+    final c = input$0.codeUnitAt(state.pos);
+    final v = c >= 48 && c <= 57 || c >= 65 && c <= 70 || c >= 97 && c <= 102;
+    if (!v) {
       break;
     }
-    state.pos++;
-    count++;
+    state.pos += 1;
+    count$0++;
   }
-  if (count >= 4) {
-    return state.pos != pos
-        ? Result(input.substring(pos, state.pos))
-        : const Result('');
-  }
-  final end = state.pos;
-  state.pos = pos;
-  return end < input.length
-      ? state.failAt(end, const ErrorUnexpectedChar())
-      : state.failAt(end, const ErrorUnexpectedEof());
-}
-
-Result<String>? _hexValue(State<String> state) {
-  final r1 = _p$6(state);
-  if (r1 != null) {
-    final v = String.fromCharCode(_toHexValue(r1.value));
-    return Result(v);
-  }
-  return null;
-}
-
-Result<String>? _hexValueChecked(State<String> state) {
-  final errors = state.errors.toList();
-  final previous = state.failPos;
-  state.errors = [];
-  state.failPos = 0;
-  final r1 = _hexValue(state);
-  final current = state.failPos;
-  if (current < previous) {
-    state.errors = errors;
-    state.failPos = previous;
-  }
-  if (r1 != null) {
-    if (current == previous) {
-      state.errors.addAll(errors);
-    }
-    return r1;
-  }
-  if (current < previous) {
-    return null;
-  }
-  final (bool, List<ParseError>)? v;
-  v = (
-    true,
-    [ErrorMessage(current - state.pos, 'Expected 4 digit hexadecimal number')]
-  );
-  if (current == previous) {
-    if (v.$1) {
-      state.errors = errors;
-    } else {
-      state.errors.addAll(errors);
-    }
+  if (state.ok = count$0 >= 4) {
+    $1 = state.pos != pos$0 ? input$0.substring(pos$0, state.pos) : '';
   } else {
+    final failPos = state.pos;
+    state.pos = pos$0;
+    state.failAt(failPos, const ErrorUnexpectedChar());
+  }
+  if (state.ok) {
+    final v = $1!;
+    $0 = String.fromCharCode(_toHexValue(v));
+  }
+  return $0;
+}
+
+String? _hexValueChecked(State<String> state) {
+  String? $0;
+  final failPos$0 = state.failPos;
+  final errorCount$0 = state.errorCount;
+  String? $1;
+  $1 = _hexValue(state);
+  if (state.ok) {
+    $0 = $1;
+  } else if (state.failPos >= failPos$0) {
+    final (bool, List<ParseError>?) v;
+    v = (
+      true,
+      [
+        ErrorMessage(
+            state.failPos - state.pos, 'Expected 4 digit hexadecimal number')
+      ]
+    );
     if (v.$1) {
-      state.errors = [];
+      state.errorCount = state.failPos > failPos$0 ? 0 : errorCount$0;
+    }
+    if (v.$2 != null) {
+      final list = v.$2!;
+      for (var i = 0; i < list.length; i++) {
+        state.errors[state.errorCount++] = list[i];
+      }
     }
   }
-  state.errors.addAll(v.$2);
-  return null;
+  return $0;
 }
 
-Result<String>? _escapeHex(State<String> state) {
-  final pos = state.pos;
-  final r1 = _p$5(state);
-  if (r1 != null) {
-    final r2 = _hexValueChecked(state);
-    if (r2 != null) {
-      return r2;
+String? _escapeHex(State<String> state) {
+  String? $0;
+  final pos$0 = state.pos;
+  const tag$0 = 'u';
+  if (state.ok = state.pos + 1 <= state.input.length &&
+      state.input.codeUnitAt(state.pos) == 117) {
+    state.pos += 1;
+  } else {
+    state.fail(const ErrorExpectedTags([tag$0]));
+  }
+  if (state.ok) {
+    String? $1;
+    $1 = _hexValueChecked(state);
+    if (state.ok) {
+      $0 = $1;
+    } else {
+      state.pos = pos$0;
     }
   }
-  state.pos = pos;
-  return null;
+  return $0;
 }
 
-Result<String>? _p$4(State<String> state) {
-  final int? v =
-      state.pos < state.input.length ? state.input.codeUnitAt(state.pos) : null;
-  var flag = 0x0;
-  if (v != null) {
-    if (v == 34) {
-      flag = 0x1;
-    } else if (v == 47) {
-      flag = 0x1;
-    } else if (v == 92) {
-      flag = 0x1;
-    } else if (v == 98) {
-      flag = 0x1;
-    } else if (v == 102) {
-      flag = 0x1;
-    } else if (v == 110) {
-      flag = 0x1;
-    } else if (v == 114) {
-      flag = 0x1;
-    } else if (v == 116) {
-      flag = 0x1;
-    } else if (v == 117) {
-      flag = 0x2;
-    }
-  }
-  if (flag & 0x1 != 0) {
-    final r1 = _escapeChar(state);
-    if (r1 != null) {
-      return r1;
-    }
-  }
-  if (flag & 0x2 != 0) {
-    final r1 = _escapeHex(state);
-    if (r1 != null) {
-      return r1;
-    }
-  }
-  if (state.pos >= state.input.length) {
-    state.fail<String>(const ErrorUnexpectedEof());
-  }
-  return state.failAll([
-    const ErrorExpectedTags(['"', '/', '\\', 'b', 'f', 'n', 'r', 't']),
-    const ErrorExpectedTags(['u'])
-  ]);
-}
-
-Result<String>? _stringChars(State<String> state) {
-  final input = state.input;
-  final list = <String>[];
-  var str = '';
-  while (state.pos < input.length) {
-    final pos = state.pos;
-    str = '';
+String? _stringChars(State<String> state) {
+  String? $0;
+  final input$0 = state.input;
+  final list$0 = <String>[];
+  var str$0 = '';
+  while (state.pos < input$0.length) {
+    final pos$0 = state.pos;
+    str$0 = '';
     var c = -1;
-    while (state.pos < input.length) {
-      c = input.runeAt(state.pos);
+    while (state.pos < input$0.length) {
+      c = input$0.runeAt(state.pos);
       final ok = c <= 91
           ? c <= 33
               ? c >= 32
@@ -252,541 +154,515 @@ Result<String>? _stringChars(State<String> state) {
       }
       state.pos += c < 0xffff ? 1 : 2;
     }
-    if (state.pos != pos) {
-      str = input.substring(pos, state.pos);
-      if (list.isNotEmpty) {
-        list.add(str);
+    if (state.pos != pos$0) {
+      str$0 = input$0.substring(pos$0, state.pos);
+      if (list$0.isNotEmpty) {
+        list$0.add(str$0);
       }
     }
     if (c != 92) {
       break;
     }
     state.pos += 1;
-    final r1 = _p$4(state);
-    if (r1 == null) {
-      state.pos = pos;
+    String? $1;
+    String? $2;
+    $2 = _escapeChar(state);
+    if (state.ok) {
+      $1 = $2;
+    } else {
+      String? $4;
+      $4 = _escapeHex(state);
+      if (state.ok) {
+        $1 = $4;
+      }
+    }
+    if (!state.ok) {
+      state.pos = pos$0;
       break;
     }
-    if (list.isEmpty && str != '') {
-      list.add(str);
+    if (list$0.isEmpty && str$0 != '') {
+      list$0.add(str$0);
     }
-    list.add(r1.value);
+    list$0.add($1!);
   }
-  if (list.isEmpty) {
-    return Result(str);
+  state.ok = true;
+  if (list$0.isEmpty) {
+    $0 = str$0;
   } else {
-    return Result(list.join());
+    $0 = list$0.join();
   }
+  return $0;
 }
 
-Result<String>? _string(State<String> state) {
-  final pos = state.pos;
-  final r1 = _p$3(state);
-  if (r1 != null) {
-    final r2 = _stringChars(state);
-    if (r2 != null) {
-      final r3 = _p$3(state);
-      if (r3 != null) {
-        final r4 = _ws(state);
-        if (r4 != null) {
-          // final r5 = r3;
-          return r2;
-        }
+String? _string(State<String> state) {
+  String? $0;
+  final pos$0 = state.pos;
+  const tag$0 = '"';
+  if (state.ok = state.pos + 1 <= state.input.length &&
+      state.input.codeUnitAt(state.pos) == 34) {
+    state.pos += 1;
+  } else {
+    state.fail(const ErrorExpectedTags([tag$0]));
+  }
+  if (state.ok) {
+    String? $1;
+    $1 = _stringChars(state);
+    if (state.ok) {
+      const tag$2 = '"';
+      if (state.ok = state.pos + 1 <= state.input.length &&
+          state.input.codeUnitAt(state.pos) == 34) {
+        state.pos += 1;
+      } else {
+        state.fail(const ErrorExpectedTags([tag$2]));
+      }
+      if (state.ok) {
+        $0 = $1;
       }
     }
   }
-  state.pos = pos;
-  return null;
+  if (!state.ok) {
+    state.pos = pos$0;
+  }
+  return $0;
 }
 
-Result<String>? _p$7(State<String> state) {
-  const tag = ':';
-  if (state.pos < state.input.length) {
-    if (state.input.codeUnitAt(state.pos) == 58) {
+MapEntry<String, Object?>? _keyValue(State<String> state) {
+  MapEntry<String, Object?>? $0;
+  (String, String, Object?)? $1;
+  final pos$0 = state.pos;
+  String? $2;
+  $2 = _string(state);
+  if (state.ok) {
+    String? $16;
+    // => _colon
+    final pos$6 = state.pos;
+    String? $17;
+    const tag$3 = ':';
+    if (state.ok = state.pos + 1 <= state.input.length &&
+        state.input.codeUnitAt(state.pos) == 58) {
       state.pos += 1;
-      return const Result(tag);
-    }
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  return state.fail(const ErrorUnexpectedEof());
-}
-
-Result<(String, String, Object?)>? _p$2(State<String> state) {
-  final pos = state.pos;
-  final r1 = _string(state);
-  if (r1 != null) {
-    final r2 = _p$7(state);
-    if (r2 != null) {
-      final r3 = _ws(state);
-      if (r3 != null) {
-        final r4 = r2;
-        final r5 = _value(state);
-        if (r5 != null) {
-          return Result((r1.value, r4.value, r5.value));
-        }
-      }
-    }
-  }
-  state.pos = pos;
-  return null;
-}
-
-Result<MapEntry<String, Object?>>? _keyValue(State<String> state) {
-  final r1 = _p$2(state);
-  if (r1 != null) {
-    final v = MapEntry(r1.value.$1, r1.value.$3);
-    return Result(v);
-  }
-  return null;
-}
-
-Result<String>? _p$8(State<String> state) {
-  const tag = ',';
-  if (state.pos < state.input.length) {
-    if (state.input.codeUnitAt(state.pos) == 44) {
-      state.pos += 1;
-      return const Result(tag);
-    }
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  return state.fail(const ErrorUnexpectedEof());
-}
-
-Result<String>? _comma(State<String> state) {
-  final pos = state.pos;
-  final r1 = _p$8(state);
-  if (r1 != null) {
-    final r2 = _ws(state);
-    if (r2 != null) {
-      return r1;
-    }
-  }
-  state.pos = pos;
-  return null;
-}
-
-Result<List<MapEntry<String, Object?>>>? _keyValues(State<String> state) {
-  var pos = state.pos;
-  final list = <MapEntry<String, Object?>>[];
-  while (true) {
-    final r1 = _keyValue(state);
-    if (r1 == null) {
-      state.pos = pos;
-      break;
-    }
-    list.add(r1.value);
-    pos = state.pos;
-    final r2 = _comma(state);
-    if (r2 == null) {
-      break;
-    }
-  }
-  return Result(list);
-}
-
-Result<String>? _p$9(State<String> state) {
-  const tag = '}';
-  if (state.pos < state.input.length) {
-    if (state.input.codeUnitAt(state.pos) == 125) {
-      state.pos += 1;
-      return const Result(tag);
-    }
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  return state.fail(const ErrorUnexpectedEof());
-}
-
-Result<(String, List<MapEntry<String, Object?>>, String)>? _p$0(
-    State<String> state) {
-  final pos = state.pos;
-  final r1 = _p$1(state);
-  if (r1 != null) {
-    final r2 = _ws(state);
-    if (r2 != null) {
-      final r3 = r1;
-      final r4 = _keyValues(state);
-      if (r4 != null) {
-        final r5 = _p$9(state);
-        if (r5 != null) {
-          final r6 = _ws(state);
-          if (r6 != null) {
-            final r7 = r5;
-            return Result((r3.value, r4.value, r7.value));
-          }
-        }
-      }
-    }
-  }
-  state.pos = pos;
-  return null;
-}
-
-Result<Map<String, Object?>>? _object(State<String> state) {
-  final r1 = _p$0(state);
-  if (r1 != null) {
-    final v = Map.fromEntries(r1.value.$2);
-    return Result(v);
-  }
-  return null;
-}
-
-Result<String>? _p$10(State<String> state) {
-  const tag = '[';
-  if (state.pos < state.input.length) {
-    if (state.input.codeUnitAt(state.pos) == 91) {
-      state.pos += 1;
-      return const Result(tag);
-    }
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  return state.fail(const ErrorUnexpectedEof());
-}
-
-Result<List<Object?>>? _values(State<String> state) {
-  var pos = state.pos;
-  final list = <Object?>[];
-  while (true) {
-    final r1 = _value(state);
-    if (r1 == null) {
-      state.pos = pos;
-      break;
-    }
-    list.add(r1.value);
-    pos = state.pos;
-    final r2 = _comma(state);
-    if (r2 == null) {
-      break;
-    }
-  }
-  return Result(list);
-}
-
-Result<String>? _p$11(State<String> state) {
-  const tag = ']';
-  if (state.pos < state.input.length) {
-    if (state.input.codeUnitAt(state.pos) == 93) {
-      state.pos += 1;
-      return const Result(tag);
-    }
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  return state.fail(const ErrorUnexpectedEof());
-}
-
-Result<List<Object?>>? _array(State<String> state) {
-  final pos = state.pos;
-  final r1 = _p$10(state);
-  if (r1 != null) {
-    final r2 = _ws(state);
-    if (r2 != null) {
-      // final r3 = r1;
-      final r4 = _values(state);
-      if (r4 != null) {
-        final r5 = _p$11(state);
-        if (r5 != null) {
-          final r6 = _ws(state);
-          if (r6 != null) {
-            // final r7 = r5;
-            return r4;
-          }
-        }
-      }
-    }
-  }
-  state.pos = pos;
-  return null;
-}
-
-Result<String>? _p$13(State<String> state) {
-  const tag = 'null';
-  if (state.pos < state.input.length) {
-    if (state.input.codeUnitAt(state.pos) == 110 &&
-        state.input.codeUnitAt(state.pos + 1) == 117 &&
-        state.input.codeUnitAt(state.pos + 2) == 108 &&
-        state.input.codeUnitAt(state.pos + 3) == 108) {
-      state.pos += 4;
-      return const Result(tag);
-    }
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  return state.fail(const ErrorUnexpectedEof());
-}
-
-Result<Object?>? _p$12(State<String> state) {
-  final pos = state.pos;
-  final r1 = _p$13(state);
-  if (r1 != null) {
-    final r2 = _ws(state);
-    if (r2 != null) {
-      return r1;
-    }
-  }
-  state.pos = pos;
-  return null;
-}
-
-Result<Object?>? _null(State<String> state) {
-  final r1 = _p$12(state);
-  if (r1 != null) {
-    return Result(null);
-  }
-  return null;
-}
-
-Result<String>? _p$15(State<String> state) {
-  const tag = 'false';
-  if (state.pos < state.input.length) {
-    if (state.input.codeUnitAt(state.pos) == 102 &&
-        state.input.codeUnitAt(state.pos + 1) == 97 &&
-        state.input.codeUnitAt(state.pos + 2) == 108 &&
-        state.input.codeUnitAt(state.pos + 3) == 115 &&
-        state.input.codeUnitAt(state.pos + 4) == 101) {
-      state.pos += 5;
-      return const Result(tag);
-    }
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  return state.fail(const ErrorUnexpectedEof());
-}
-
-Result<Object?>? _p$14(State<String> state) {
-  final pos = state.pos;
-  final r1 = _p$15(state);
-  if (r1 != null) {
-    final r2 = _ws(state);
-    if (r2 != null) {
-      return r1;
-    }
-  }
-  state.pos = pos;
-  return null;
-}
-
-Result<bool>? _false(State<String> state) {
-  final r1 = _p$14(state);
-  if (r1 != null) {
-    return const Result(false);
-  }
-  return null;
-}
-
-Result<String>? _p$17(State<String> state) {
-  const tag = 'true';
-  if (state.pos < state.input.length) {
-    if (state.input.codeUnitAt(state.pos) == 116 &&
-        state.input.codeUnitAt(state.pos + 1) == 114 &&
-        state.input.codeUnitAt(state.pos + 2) == 117 &&
-        state.input.codeUnitAt(state.pos + 3) == 101) {
-      state.pos += 4;
-      return const Result(tag);
-    }
-    return state.fail(const ErrorExpectedTags([tag]));
-  }
-  return state.fail(const ErrorUnexpectedEof());
-}
-
-Result<Object?>? _p$16(State<String> state) {
-  final pos = state.pos;
-  final r1 = _p$17(state);
-  if (r1 != null) {
-    final r2 = _ws(state);
-    if (r2 != null) {
-      return r1;
-    }
-  }
-  state.pos = pos;
-  return null;
-}
-
-Result<bool>? _true(State<String> state) {
-  final r1 = _p$16(state);
-  if (r1 != null) {
-    return const Result(true);
-  }
-  return null;
-}
-
-Result<num>? _p$18(State<String> state) {
-  final start = state.pos;
-  final input = state.input;
-  num? v;
-  while (true) {
-    //  '-'?('0'|[1-9][0-9]*)('.'[0-9]+)?([eE][+-]?[0-9]+)?
-    const eof = 0x110000;
-    const mask = 0x30;
-    const powersOfTen = [
-      1.0,
-      1e1,
-      1e2,
-      1e3,
-      1e4,
-      1e5,
-      1e6,
-      1e7,
-      1e8,
-      1e9,
-      1e10,
-      1e11,
-      1e12,
-      1e13,
-      1e14,
-      1e15,
-      1e16,
-      1e17,
-      1e18,
-      1e19,
-      1e20,
-      1e21,
-      1e22,
-    ];
-    final length = input.length;
-    var pos = state.pos;
-    var c = eof;
-    if (pos < length) {
-      c = input.codeUnitAt(pos);
+      $17 = tag$3;
     } else {
-      c = eof;
+      state.fail(const ErrorExpectedTags([tag$3]));
     }
-    var hasSign = false;
-    if (c == 0x2d) {
-      pos++;
-      if (pos < length) {
-        c = input.codeUnitAt(pos);
-      } else {
-        c = eof;
-      }
-      hasSign = true;
-    }
-    var digit = c ^ mask;
-    if (digit > 9) {
-      v = null;
-      state.pos = pos;
-      break;
-    }
-    final intPartPos = pos;
-    var intPartLen = 0;
-    intPartLen = 1;
-    var intValue = 0;
-    if (digit == 0) {
-      pos++;
-      if (pos < length) {
-        c = input.codeUnitAt(pos);
-      } else {
-        c = eof;
-      }
-    } else {
-      pos++;
-      if (pos < length) {
-        c = input.codeUnitAt(pos);
-      } else {
-        c = eof;
-      }
-      intValue = digit;
-      while (true) {
-        digit = c ^ mask;
-        if (digit > 9) {
+    if (state.ok) {
+      // => _ws
+      final input$2 = state.input;
+      while (state.pos < input$2.length) {
+        final c = input$2.codeUnitAt(state.pos);
+        final v = c >= 9 && c <= 10 || c == 13 || c == 32;
+        if (!v) {
           break;
         }
+        state.pos += 1;
+      }
+      state.ok = true;
+      // <= _ws
+      if (state.ok) {
+        $16 = $17;
+      } else {
+        state.pos = pos$6;
+      }
+    }
+    // <= _colon
+    if (state.ok) {
+      Object? $18;
+      $18 = _value(state);
+      if (state.ok) {
+        $1 = ($2!, $16!, $18);
+      }
+    }
+  }
+  if (!state.ok) {
+    state.pos = pos$0;
+  }
+  if (state.ok) {
+    final v = $1!;
+    $0 = MapEntry(v.$1, v.$3);
+  }
+  return $0;
+}
+
+List<MapEntry<String, Object?>>? _keyValues(State<String> state) {
+  List<MapEntry<String, Object?>>? $0;
+  var pos$0 = state.pos;
+  final list$0 = <MapEntry<String, Object?>>[];
+  while (true) {
+    MapEntry<String, Object?>? $1;
+    $1 = _keyValue(state);
+    if (!state.ok) {
+      state.pos = pos$0;
+      break;
+    }
+    list$0.add($1!);
+    pos$0 = state.pos;
+    // => _comma
+    final pos$8 = state.pos;
+    const tag$4 = ',';
+    if (state.ok = state.pos + 1 <= state.input.length &&
+        state.input.codeUnitAt(state.pos) == 44) {
+      state.pos += 1;
+    } else {
+      state.fail(const ErrorExpectedTags([tag$4]));
+    }
+    if (state.ok) {
+      // => _ws
+      final input$3 = state.input;
+      while (state.pos < input$3.length) {
+        final c = input$3.codeUnitAt(state.pos);
+        final v = c >= 9 && c <= 10 || c == 13 || c == 32;
+        if (!v) {
+          break;
+        }
+        state.pos += 1;
+      }
+      state.ok = true;
+      // <= _ws
+      if (!state.ok) {
+        state.pos = pos$8;
+      }
+    }
+    // <= _comma
+    if (!state.ok) {
+      break;
+    }
+  }
+  if (state.ok = true) {
+    $0 = list$0;
+  }
+  return $0;
+}
+
+Map<String, Object?>? _object(State<String> state) {
+  Map<String, Object?>? $0;
+  (String, List<MapEntry<String, Object?>>, String)? $1;
+  final pos$0 = state.pos;
+  String? $2;
+  // => _openBrace
+  final pos$1 = state.pos;
+  String? $3;
+  const tag$0 = '{';
+  if (state.ok = state.pos + 1 <= state.input.length &&
+      state.input.codeUnitAt(state.pos) == 123) {
+    state.pos += 1;
+    $3 = tag$0;
+  } else {
+    state.fail(const ErrorExpectedTags([tag$0]));
+  }
+  if (state.ok) {
+    // => _ws
+    final input$0 = state.input;
+    while (state.pos < input$0.length) {
+      final c = input$0.codeUnitAt(state.pos);
+      final v = c >= 9 && c <= 10 || c == 13 || c == 32;
+      if (!v) {
+        break;
+      }
+      state.pos += 1;
+    }
+    state.ok = true;
+    // <= _ws
+    if (state.ok) {
+      $2 = $3;
+    } else {
+      state.pos = pos$1;
+    }
+  }
+  // <= _openBrace
+  if (state.ok) {
+    List<MapEntry<String, Object?>>? $4;
+    $4 = _keyValues(state);
+    if (state.ok) {
+      String? $26;
+      const tag$6 = '}';
+      if (state.ok = state.pos + 1 <= state.input.length &&
+          state.input.codeUnitAt(state.pos) == 125) {
+        state.pos += 1;
+        $26 = tag$6;
+      } else {
+        state.fail(const ErrorExpectedTags([tag$6]));
+      }
+      if (state.ok) {
+        $1 = ($2!, $4!, $26!);
+      }
+    }
+  }
+  if (!state.ok) {
+    state.pos = pos$0;
+  }
+  if (state.ok) {
+    final v = $1!;
+    $0 = Map.fromEntries(v.$2);
+  }
+  return $0;
+}
+
+List<Object?>? _values(State<String> state) {
+  List<Object?>? $0;
+  var pos$0 = state.pos;
+  final list$0 = <Object?>[];
+  while (true) {
+    Object? $1;
+    $1 = _value(state);
+    if (!state.ok) {
+      state.pos = pos$0;
+      break;
+    }
+    list$0.add($1);
+    pos$0 = state.pos;
+    // => _comma
+    final pos$1 = state.pos;
+    const tag$0 = ',';
+    if (state.ok = state.pos + 1 <= state.input.length &&
+        state.input.codeUnitAt(state.pos) == 44) {
+      state.pos += 1;
+    } else {
+      state.fail(const ErrorExpectedTags([tag$0]));
+    }
+    if (state.ok) {
+      // => _ws
+      final input$0 = state.input;
+      while (state.pos < input$0.length) {
+        final c = input$0.codeUnitAt(state.pos);
+        final v = c >= 9 && c <= 10 || c == 13 || c == 32;
+        if (!v) {
+          break;
+        }
+        state.pos += 1;
+      }
+      state.ok = true;
+      // <= _ws
+      if (!state.ok) {
+        state.pos = pos$1;
+      }
+    }
+    // <= _comma
+    if (!state.ok) {
+      break;
+    }
+  }
+  if (state.ok = true) {
+    $0 = list$0;
+  }
+  return $0;
+}
+
+List<Object?>? _array(State<String> state) {
+  List<Object?>? $0;
+  final pos$0 = state.pos;
+  // => _openBracket
+  final pos$1 = state.pos;
+  const tag$0 = '[';
+  if (state.ok = state.pos + 1 <= state.input.length &&
+      state.input.codeUnitAt(state.pos) == 91) {
+    state.pos += 1;
+  } else {
+    state.fail(const ErrorExpectedTags([tag$0]));
+  }
+  if (state.ok) {
+    // => _ws
+    final input$0 = state.input;
+    while (state.pos < input$0.length) {
+      final c = input$0.codeUnitAt(state.pos);
+      final v = c >= 9 && c <= 10 || c == 13 || c == 32;
+      if (!v) {
+        break;
+      }
+      state.pos += 1;
+    }
+    state.ok = true;
+    // <= _ws
+    if (!state.ok) {
+      state.pos = pos$1;
+    }
+  }
+  // <= _openBracket
+  if (state.ok) {
+    List<Object?>? $1;
+    $1 = _values(state);
+    if (state.ok) {
+      const tag$2 = ']';
+      if (state.ok = state.pos + 1 <= state.input.length &&
+          state.input.codeUnitAt(state.pos) == 93) {
+        state.pos += 1;
+      } else {
+        state.fail(const ErrorExpectedTags([tag$2]));
+      }
+      if (state.ok) {
+        $0 = $1;
+      }
+    }
+  }
+  if (!state.ok) {
+    state.pos = pos$0;
+  }
+  return $0;
+}
+
+Object? _null(State<String> state) {
+  Object? $0;
+  const tag$0 = 'null';
+  if (state.ok = state.pos + 4 <= state.input.length &&
+      state.input.codeUnitAt(state.pos) == 110 &&
+      state.input.codeUnitAt(state.pos + 1) == 117 &&
+      state.input.codeUnitAt(state.pos + 2) == 108 &&
+      state.input.codeUnitAt(state.pos + 3) == 108) {
+    state.pos += 4;
+  } else {
+    state.fail(const ErrorExpectedTags([tag$0]));
+  }
+  if (state.ok) {
+    $0 = null;
+  }
+  return $0;
+}
+
+bool? _false(State<String> state) {
+  bool? $0;
+  const tag$0 = 'false';
+  if (state.ok = state.pos + 5 <= state.input.length &&
+      state.input.codeUnitAt(state.pos) == 102 &&
+      state.input.codeUnitAt(state.pos + 1) == 97 &&
+      state.input.codeUnitAt(state.pos + 2) == 108 &&
+      state.input.codeUnitAt(state.pos + 3) == 115 &&
+      state.input.codeUnitAt(state.pos + 4) == 101) {
+    state.pos += 5;
+  } else {
+    state.fail(const ErrorExpectedTags([tag$0]));
+  }
+  if (state.ok) {
+    $0 = false;
+  }
+  return $0;
+}
+
+bool? _true(State<String> state) {
+  bool? $0;
+  const tag$0 = 'true';
+  if (state.ok = state.pos + 4 <= state.input.length &&
+      state.input.codeUnitAt(state.pos) == 116 &&
+      state.input.codeUnitAt(state.pos + 1) == 114 &&
+      state.input.codeUnitAt(state.pos + 2) == 117 &&
+      state.input.codeUnitAt(state.pos + 3) == 101) {
+    state.pos += 4;
+  } else {
+    state.fail(const ErrorExpectedTags([tag$0]));
+  }
+  if (state.ok) {
+    $0 = true;
+  }
+  return $0;
+}
+
+num? _number(State<String> state) {
+  num? $0;
+  {
+    final start = state.pos;
+    final input = state.input;
+    num? v;
+    while (true) {
+      //  '-'?('0'|[1-9][0-9]*)('.'[0-9]+)?([eE][+-]?[0-9]+)?
+      const eof = 0x110000;
+      const mask = 0x30;
+      const powersOfTen = [
+        1.0,
+        1e1,
+        1e2,
+        1e3,
+        1e4,
+        1e5,
+        1e6,
+        1e7,
+        1e8,
+        1e9,
+        1e10,
+        1e11,
+        1e12,
+        1e13,
+        1e14,
+        1e15,
+        1e16,
+        1e17,
+        1e18,
+        1e19,
+        1e20,
+        1e21,
+        1e22,
+      ];
+      final length = input.length;
+      var pos = state.pos;
+      var c = eof;
+      if (pos < length) {
+        c = input.codeUnitAt(pos);
+      } else {
+        c = eof;
+      }
+      var hasSign = false;
+      if (c == 0x2d) {
         pos++;
         if (pos < length) {
           c = input.codeUnitAt(pos);
         } else {
           c = eof;
         }
-        if (intPartLen++ < 18) {
-          intValue = intValue * 10 + digit;
-        }
+        hasSign = true;
       }
-    }
-    var hasDot = false;
-    var decPartLen = 0;
-    var decValue = 0;
-    if (c == 0x2e) {
-      pos++;
-      if (pos < length) {
-        c = input.codeUnitAt(pos);
-      } else {
-        c = eof;
-      }
-      hasDot = true;
-      digit = c ^ mask;
+      var digit = c ^ mask;
       if (digit > 9) {
         v = null;
         state.pos = pos;
         break;
       }
-      pos++;
-      if (pos < length) {
-        c = input.codeUnitAt(pos);
-      } else {
-        c = eof;
-      }
-      decPartLen = 1;
-      decValue = digit;
-      while (true) {
-        digit = c ^ mask;
-        if (digit > 9) {
-          break;
-        }
+      final intPartPos = pos;
+      var intPartLen = 0;
+      intPartLen = 1;
+      var intValue = 0;
+      if (digit == 0) {
         pos++;
         if (pos < length) {
           c = input.codeUnitAt(pos);
         } else {
           c = eof;
         }
-        if (decPartLen++ < 18) {
-          decValue = decValue * 10 + digit;
-        }
-      }
-    }
-    var hasExp = false;
-    var hasExpSign = false;
-    var expPartLen = 0;
-    var exp = 0;
-    if (c == 0x45 || c == 0x65) {
-      pos++;
-      if (pos < length) {
-        c = input.codeUnitAt(pos);
       } else {
-        c = eof;
-      }
-      hasExp = true;
-      switch (c) {
-        case 0x2b:
+        pos++;
+        if (pos < length) {
+          c = input.codeUnitAt(pos);
+        } else {
+          c = eof;
+        }
+        intValue = digit;
+        while (true) {
+          digit = c ^ mask;
+          if (digit > 9) {
+            break;
+          }
           pos++;
           if (pos < length) {
             c = input.codeUnitAt(pos);
           } else {
             c = eof;
           }
-          break;
-        case 0x2d:
-          pos++;
-          if (pos < length) {
-            c = input.codeUnitAt(pos);
-          } else {
-            c = eof;
+          if (intPartLen++ < 18) {
+            intValue = intValue * 10 + digit;
           }
-          hasExpSign = true;
-          break;
+        }
       }
-      digit = c ^ mask;
-      if (digit > 9) {
-        v = null;
-        state.pos = pos;
-        break;
-      }
-      pos++;
-      if (pos < length) {
-        c = input.codeUnitAt(pos);
-      } else {
-        c = eof;
-      }
-      expPartLen = 1;
-      exp = digit;
-      while (true) {
+      var hasDot = false;
+      var decPartLen = 0;
+      var decValue = 0;
+      if (c == 0x2e) {
+        pos++;
+        if (pos < length) {
+          c = input.codeUnitAt(pos);
+        } else {
+          c = eof;
+        }
+        hasDot = true;
         digit = c ^ mask;
         if (digit > 9) {
+          v = null;
+          state.pos = pos;
           break;
         }
         pos++;
@@ -795,199 +671,313 @@ Result<num>? _p$18(State<String> state) {
         } else {
           c = eof;
         }
-        if (expPartLen++ < 18) {
-          exp = exp * 10 + digit;
+        decPartLen = 1;
+        decValue = digit;
+        while (true) {
+          digit = c ^ mask;
+          if (digit > 9) {
+            break;
+          }
+          pos++;
+          if (pos < length) {
+            c = input.codeUnitAt(pos);
+          } else {
+            c = eof;
+          }
+          if (decPartLen++ < 18) {
+            decValue = decValue * 10 + digit;
+          }
         }
       }
-      if (expPartLen > 18) {
+      var hasExp = false;
+      var hasExpSign = false;
+      var expPartLen = 0;
+      var exp = 0;
+      if (c == 0x45 || c == 0x65) {
+        pos++;
+        if (pos < length) {
+          c = input.codeUnitAt(pos);
+        } else {
+          c = eof;
+        }
+        hasExp = true;
+        switch (c) {
+          case 0x2b:
+            pos++;
+            if (pos < length) {
+              c = input.codeUnitAt(pos);
+            } else {
+              c = eof;
+            }
+            break;
+          case 0x2d:
+            pos++;
+            if (pos < length) {
+              c = input.codeUnitAt(pos);
+            } else {
+              c = eof;
+            }
+            hasExpSign = true;
+            break;
+        }
+        digit = c ^ mask;
+        if (digit > 9) {
+          v = null;
+          state.pos = pos;
+          break;
+        }
+        pos++;
+        if (pos < length) {
+          c = input.codeUnitAt(pos);
+        } else {
+          c = eof;
+        }
+        expPartLen = 1;
+        exp = digit;
+        while (true) {
+          digit = c ^ mask;
+          if (digit > 9) {
+            break;
+          }
+          pos++;
+          if (pos < length) {
+            c = input.codeUnitAt(pos);
+          } else {
+            c = eof;
+          }
+          if (expPartLen++ < 18) {
+            exp = exp * 10 + digit;
+          }
+        }
+        if (expPartLen > 18) {
+          state.pos = pos;
+          v = double.parse(input.substring(start, pos));
+          break;
+        }
+        if (hasExpSign) {
+          exp = -exp;
+        }
+      }
+      state.pos = pos;
+      final singlePart = !hasDot && !hasExp;
+      if (singlePart && intPartLen <= 18) {
+        v = hasSign ? -intValue : intValue;
+        break;
+      }
+      if (singlePart && intPartLen == 19) {
+        if (intValue == 922337203685477580) {
+          final digit = input.codeUnitAt(intPartPos + 18) - 0x30;
+          if (digit <= 7) {
+            intValue = intValue * 10 + digit;
+            v = hasSign ? -intValue : intValue;
+            break;
+          }
+        }
+      }
+      var doubleValue = intValue * 1.0;
+      var expRest = intPartLen - 18;
+      expRest = expRest < 0 ? 0 : expRest;
+      exp = expRest + exp;
+      final modExp = exp < 0 ? -exp : exp;
+      if (modExp > 22) {
         state.pos = pos;
         v = double.parse(input.substring(start, pos));
         break;
       }
-      if (hasExpSign) {
-        exp = -exp;
+      final k = powersOfTen[modExp];
+      if (exp > 0) {
+        doubleValue *= k;
+      } else {
+        doubleValue /= k;
       }
-    }
-    state.pos = pos;
-    final singlePart = !hasDot && !hasExp;
-    if (singlePart && intPartLen <= 18) {
-      v = hasSign ? -intValue : intValue;
-      break;
-    }
-    if (singlePart && intPartLen == 19) {
-      if (intValue == 922337203685477580) {
-        final digit = input.codeUnitAt(intPartPos + 18) - 0x30;
-        if (digit <= 7) {
-          intValue = intValue * 10 + digit;
-          v = hasSign ? -intValue : intValue;
-          break;
+      if (decValue != 0) {
+        var value = decValue * 1.0;
+        final diff = exp - decPartLen;
+        final modDiff = diff < 0 ? -diff : diff;
+        final sign = diff < 0;
+        var rest = modDiff;
+        while (rest != 0) {
+          var i = rest;
+          if (i > 20) {
+            i = 20;
+          }
+          rest -= i;
+          final k = powersOfTen[i];
+          if (sign) {
+            value /= k;
+          } else {
+            value *= k;
+          }
         }
+        doubleValue += value;
       }
-    }
-    var doubleValue = intValue * 1.0;
-    var expRest = intPartLen - 18;
-    expRest = expRest < 0 ? 0 : expRest;
-    exp = expRest + exp;
-    final modExp = exp < 0 ? -exp : exp;
-    if (modExp > 22) {
-      state.pos = pos;
-      v = double.parse(input.substring(start, pos));
+      v = hasSign ? -doubleValue : doubleValue;
       break;
     }
-    final k = powersOfTen[modExp];
-    if (exp > 0) {
-      doubleValue *= k;
+    state.ok = v != null;
+    if (state.ok) {
+      $0 = v;
     } else {
-      doubleValue /= k;
+      final failPos = state.pos;
+      state.pos = start;
+      state.failAt(failPos, const ErrorUnexpectedChar());
     }
-    if (decValue != 0) {
-      var value = decValue * 1.0;
-      final diff = exp - decPartLen;
-      final modDiff = diff < 0 ? -diff : diff;
-      final sign = diff < 0;
-      var rest = modDiff;
-      while (rest != 0) {
-        var i = rest;
-        if (i > 20) {
-          i = 20;
-        }
-        rest -= i;
-        final k = powersOfTen[i];
-        if (sign) {
-          value /= k;
-        } else {
-          value *= k;
-        }
-      }
-      doubleValue += value;
-    }
-    v = hasSign ? -doubleValue : doubleValue;
-    break;
   }
-  if (v != null) {
-    return Result(v);
-  }
-  final failPos = state.pos;
-  state.pos = start;
-  if (failPos < input.length) {
-    return state.failAt(failPos, const ErrorUnexpectedChar());
-  }
-  return state.failAt(failPos, const ErrorUnexpectedEof());
+  return $0;
 }
 
-Result<num>? _number(State<String> state) {
-  final pos = state.pos;
-  final r1 = _p$18(state);
-  if (r1 != null) {
-    final r2 = _ws(state);
-    if (r2 != null) {
-      return r1;
-    }
-  }
-  state.pos = pos;
-  return null;
-}
-
-Result<Object?>? _value(State<String> state) {
-  final int? v =
+Object? _value(State<String> state) {
+  Object? $0;
+  final pos$0 = state.pos;
+  Object? $1;
+  final int? v$0 =
       state.pos < state.input.length ? state.input.codeUnitAt(state.pos) : null;
-  var flag = 0x0;
-  if (v != null) {
-    if (v == 34) {
-      flag = 0x2;
-    } else if (v == 45) {
-      flag = 0x40;
-    } else if (v >= 48 && v <= 57) {
-      flag = 0x40;
-    } else if (v == 91) {
-      flag = 0x4;
-    } else if (v == 102) {
-      flag = 0x10;
-    } else if (v == 110) {
-      flag = 0x8;
-    } else if (v == 116) {
-      flag = 0x20;
-    } else if (v == 123) {
-      flag = 0x1;
+  var flag$0 = 0x0;
+  if (v$0 != null) {
+    if (v$0 == 34) {
+      flag$0 = 0x2;
+    } else if (v$0 == 45) {
+      flag$0 = 0x40;
+    } else if (v$0 >= 48 && v$0 <= 57) {
+      flag$0 = 0x40;
+    } else if (v$0 == 91) {
+      flag$0 = 0x4;
+    } else if (v$0 == 102) {
+      flag$0 = 0x10;
+    } else if (v$0 == 110) {
+      flag$0 = 0x8;
+    } else if (v$0 == 116) {
+      flag$0 = 0x20;
+    } else if (v$0 == 123) {
+      flag$0 = 0x1;
     }
   }
-  if (flag & 0x1 != 0) {
-    final r1 = _object(state);
-    if (r1 != null) {
-      return r1;
+  state.ok = false;
+  if (flag$0 & 0x1 != 0) {
+    Map<String, Object?>? $2;
+    $2 = _object(state);
+    if (state.ok) {
+      $1 = $2!;
     }
   }
-  if (flag & 0x2 != 0) {
-    final r1 = _string(state);
-    if (r1 != null) {
-      return r1;
+  if (!state.ok) {
+    if (flag$0 & 0x2 != 0) {
+      String? $30;
+      $30 = _string(state);
+      if (state.ok) {
+        $1 = $30!;
+      }
     }
-  }
-  if (flag & 0x4 != 0) {
-    final r1 = _array(state);
-    if (r1 != null) {
-      return r1;
-    }
-  }
-  if (flag & 0x8 != 0) {
-    final r1 = _null(state);
-    if (r1 != null) {
-      return r1;
-    }
-  }
-  if (flag & 0x10 != 0) {
-    final r1 = _false(state);
-    if (r1 != null) {
-      return r1;
-    }
-  }
-  if (flag & 0x20 != 0) {
-    final r1 = _true(state);
-    if (r1 != null) {
-      return r1;
-    }
-  }
-  if (flag & 0x40 != 0) {
-    final r1 = _number(state);
-    if (r1 != null) {
-      return r1;
-    }
-  }
-  if (state.pos >= state.input.length) {
-    state.fail<Object?>(const ErrorUnexpectedEof());
-  }
-  return state.failAll([
-    const ErrorExpectedTags(['{']),
-    const ErrorExpectedTags(['"']),
-    const ErrorExpectedTags(['[']),
-    const ErrorExpectedTags(['null']),
-    const ErrorExpectedTags(['false']),
-    const ErrorExpectedTags(['true']),
-    const ErrorExpectedTags(['number'])
-  ]);
-}
-
-Result<Object?>? _p$19(State<String> state) {
-  if (state.pos >= state.input.length) {
-    return const Result(null);
-  }
-  return state.fail(const ErrorExpectedEof());
-}
-
-Result<Object?>? json(State<String> state) {
-  final pos = state.pos;
-  final r1 = _ws(state);
-  if (r1 != null) {
-    final r2 = _value(state);
-    if (r2 != null) {
-      final r3 = _p$19(state);
-      if (r3 != null) {
-        return r2;
+    if (!state.ok) {
+      if (flag$0 & 0x4 != 0) {
+        List<Object?>? $44;
+        $44 = _array(state);
+        if (state.ok) {
+          $1 = $44!;
+        }
+      }
+      if (!state.ok) {
+        if (flag$0 & 0x8 != 0) {
+          Object? $49;
+          $49 = _null(state);
+          if (state.ok) {
+            $1 = $49;
+          }
+        }
+        if (!state.ok) {
+          if (flag$0 & 0x10 != 0) {
+            bool? $51;
+            $51 = _false(state);
+            if (state.ok) {
+              $1 = $51!;
+            }
+          }
+          if (!state.ok) {
+            if (flag$0 & 0x20 != 0) {
+              bool? $53;
+              $53 = _true(state);
+              if (state.ok) {
+                $1 = $53!;
+              }
+            }
+            if (!state.ok) {
+              if (flag$0 & 0x40 != 0) {
+                num? $55;
+                $55 = _number(state);
+                if (state.ok) {
+                  $1 = $55!;
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
-  state.pos = pos;
-  return null;
+  if (!state.ok) {
+    state.failAll([
+      const ErrorExpectedTags(['{']),
+      const ErrorExpectedTags(['"']),
+      const ErrorExpectedTags(['[']),
+      const ErrorExpectedTags(['null']),
+      const ErrorExpectedTags(['false']),
+      const ErrorExpectedTags(['true']),
+      const ErrorExpectedTags(['number'])
+    ]);
+  }
+  if (state.ok) {
+    // => _ws
+    final input$9 = state.input;
+    while (state.pos < input$9.length) {
+      final c = input$9.codeUnitAt(state.pos);
+      final v = c >= 9 && c <= 10 || c == 13 || c == 32;
+      if (!v) {
+        break;
+      }
+      state.pos += 1;
+    }
+    state.ok = true;
+    // <= _ws
+    if (state.ok) {
+      $0 = $1;
+    } else {
+      state.pos = pos$0;
+    }
+  }
+  return $0;
+}
+
+Object? parser(State<String> state) {
+  Object? $0;
+  final pos$0 = state.pos;
+  // => _ws
+  final input$0 = state.input;
+  while (state.pos < input$0.length) {
+    final c = input$0.codeUnitAt(state.pos);
+    final v = c >= 9 && c <= 10 || c == 13 || c == 32;
+    if (!v) {
+      break;
+    }
+    state.pos += 1;
+  }
+  state.ok = true;
+  // <= _ws
+  if (state.ok) {
+    Object? $1;
+    $1 = _value(state);
+    if (state.ok) {
+      if (!(state.ok = state.pos >= state.input.length)) {
+        state.fail(const ErrorExpectedEof());
+      }
+      if (state.ok) {
+        $0 = $1;
+      }
+    }
+  }
+  if (!state.ok) {
+    state.pos = pos$0;
+  }
+  return $0;
 }
 
 @pragma('vm:prefer-inline')
@@ -1015,6 +1005,11 @@ int _toHexValue(String s) {
 String _errorMessage(String input, int offset, List<ParseError> errors) {
   final sb = StringBuffer();
   final errorList = errors.toList();
+  if (offset >= input.length) {
+    errorList.add(const ErrorUnexpectedEof());
+    errorList.removeWhere((e) => e is ErrorUnexpectedChar);
+  }
+
   final expectedTags = errorList.whereType<ErrorExpectedTags>().toList();
   if (expectedTags.isNotEmpty) {
     errorList.removeWhere((e) => e is ErrorExpectedTags);
@@ -1293,62 +1288,78 @@ class Result<T> {
 }
 
 class State<T> {
-  List<ParseError> errors = [];
+  Object? context;
+
+  List<ParseError?> errors = List.filled(512, null, growable: false);
+
+  int errorCount = 0;
 
   int failPos = 0;
 
   final T input;
+
+  bool ok = false;
 
   int pos = 0;
 
   State(this.input);
 
   @pragma('vm:prefer-inline')
-  Result<R>? fail<R>(ParseError error) {
-    if (pos < failPos) {
-      return null;
-    } else if (failPos < pos) {
-      failPos = pos;
-      errors = [];
+  void fail(ParseError error) {
+    ok = false;
+    if (pos >= failPos) {
+      if (failPos < pos) {
+        failPos = pos;
+        errorCount = 0;
+      }
+      errors[errorCount++] = error;
     }
-    errors.add(error);
-    return null;
   }
 
   @pragma('vm:prefer-inline')
-  Result<R>? failAll<R>(List<ParseError> errors) {
-    if (pos < failPos) {
-      return null;
-    } else if (failPos < pos) {
-      failPos = pos;
-      this.errors = [];
+  void failAll(List<ParseError> errors) {
+    ok = false;
+    if (pos >= failPos) {
+      if (failPos < pos) {
+        failPos = pos;
+        errorCount = 0;
+      }
+      for (var i = 0; i < errors.length; i++) {
+        final error = errors[i];
+        this.errors[errorCount++] = error;
+      }
     }
-    this.errors.addAll(errors);
-    return null;
   }
 
   @pragma('vm:prefer-inline')
-  Result<R>? failAllAt<R>(int offset, List<ParseError> errors) {
-    if (offset < failPos) {
-      return null;
-    } else if (failPos < offset) {
-      failPos = offset;
-      this.errors = [];
+  void failAllAt(int offset, List<ParseError> errors) {
+    ok = false;
+    if (offset >= failPos) {
+      if (failPos < offset) {
+        failPos = offset;
+        errorCount = 0;
+      }
+      for (var i = 0; i < errors.length; i++) {
+        final error = errors[i];
+        this.errors[errorCount++] = error;
+      }
     }
-    this.errors.addAll(errors);
-    return null;
   }
 
   @pragma('vm:prefer-inline')
-  Result<R>? failAt<R>(int offset, ParseError error) {
-    if (offset < failPos) {
-      return null;
-    } else if (failPos < offset) {
-      failPos = offset;
-      errors = [];
+  void failAt(int offset, ParseError error) {
+    ok = false;
+    if (offset >= failPos) {
+      if (failPos < offset) {
+        failPos = offset;
+        errorCount = 0;
+      }
+      errors[errorCount++] = error;
     }
-    errors.add(error);
-    return null;
+  }
+
+  List<ParseError> getErrors() {
+    return List.generate(errorCount, (i) => errors[i]!);
   }
 
   @override

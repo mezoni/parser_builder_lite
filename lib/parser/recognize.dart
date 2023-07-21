@@ -3,33 +3,35 @@ import '../parser_builder.dart';
 
 class Recognize extends ParserBuilder<String, String> {
   static const _template = '''
-final pos = state.pos;
-final r1 = {{p1}}(state);
-if (r1 != null) {
-  return state.pos != pos ?
-      Result(state.input.substring(pos, state.pos))
-      : const Result('');
-}
-return null;''';
+final @pos = state.pos;
+@p1
+if (state.ok) {
+  @r = state.pos != @pos ?
+      state.input.substring(@pos, state.pos)
+      : '';
+}''';
+
+  static const _templateNoResult = '''
+@p1''';
 
   final ParserBuilder<String, Object?> p;
 
   const Recognize(this.p);
 
   @override
-  String buildBody(BuildContext context) {
-    return render(_template, {
-      'p1': p.build(context).name,
-    });
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      _template,
+      _templateNoResult,
+      const {},
+    );
   }
 
   @override
-  bool getIsOptional(BuildContext context) {
-    return p.getIsOptional(context);
-  }
-
-  @override
-  ParserBuilder<String, Object?>? getStartParser(BuildContext context) {
-    return p;
+  Iterable<(ParserBuilder<String, Object?>, bool?)> getCombinedParsers() {
+    return [(p, false)];
   }
 }

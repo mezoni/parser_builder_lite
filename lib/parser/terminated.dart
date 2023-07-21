@@ -9,10 +9,9 @@ class Terminated<I, O> extends SequenceBase<I, O> {
   const Terminated(this.p, this.end);
 
   @override
-  List<(ParserBuilder<I, Object?>, bool)> getParserSequence(
-      BuildContext context) {
+  Iterable<(ParserBuilder<I, Object?>, bool?)> getCombinedParsers() {
     return [
-      (p, true),
+      (p, null),
       (end, false),
     ];
   }

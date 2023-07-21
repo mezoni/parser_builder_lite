@@ -3,31 +3,49 @@ import '../parser_builder.dart';
 
 class Many<I, O> extends ParserBuilder<I, List<O>> {
   static const _template = '''
-final list = <{{O}}>[];
+final @list = <@O>[];
 while (true) {
-  final r1 = {{p1}}(state);
-  if (r1 == null) {
+  @p1
+  if (!state.ok) {
     break;
   }
-  list.add(r1.value);
+  @list.add(@rv1);
 }
-return Result(list);''';
+if (state.ok = true) {
+  @r = @list;
+}''';
+
+  static const _templateNoResult = '''
+while (true) {
+  @p1
+  if (!state.ok) {
+    break;
+  }
+}
+state.ok = true;''';
 
   final ParserBuilder<I, O> p;
 
   const Many(this.p);
 
   @override
-  String buildBody(BuildContext context) {
-    checkIsNotOptional(context, p);
-    return render(_template, {
-      'O': '$O',
-      'p1': p.build(context).name,
-    });
+  bool get isOptional => true;
+
+  @override
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    checkIsNotOptional(p);
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      _template,
+      _templateNoResult,
+      {'O': '$O'},
+    );
   }
 
   @override
-  bool getIsOptional(BuildContext context) {
-    return true;
+  Iterable<(ParserBuilder<I, Object?>, bool?)> getCombinedParsers() {
+    return [(p, null)];
   }
 }

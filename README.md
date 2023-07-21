@@ -2,7 +2,7 @@
 
 Parser Builder Lite is a source code generator of high performance parsers.
 
-Version: 0.6.10
+Version: 0.7.0
 
 ## What is it and what is it for?
 
@@ -27,26 +27,50 @@ import '../parser_builder.dart';
 
 class Many<I, O> extends ParserBuilder<I, List<O>> {
   static const _template = '''
-final list = <{{O}}>[];
+final @list = <@O>[];
 while (true) {
-  final r1 = {{p1}}(state);
-  if (r1 == null) {
+  @p1
+  if (!state.ok) {
     break;
   }
-  list.add(r1.value);
+  @list.add(@rv1);
 }
-return Result(list);''';
+if (state.ok = true) {
+  @r = @list;
+}''';
+
+  static const _templateNoResult = '''
+while (true) {
+  @p1
+  if (!state.ok) {
+    break;
+  }
+}
+state.ok = true;''';
 
   final ParserBuilder<I, O> p;
 
   const Many(this.p);
 
   @override
-  String buildBody(BuildContext context) {
-    return render(_template, {
-      'O': '$O',
-      'p1': p.build(context).name,
-    });
+  bool get isOptional => true;
+
+  @override
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
+    checkIsNotOptional(p);
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      _template,
+      _templateNoResult,
+      {'O': '$O'},
+    );
+  }
+
+  @override
+  Iterable<(ParserBuilder<I, Object?>, bool?)> getCombinedParsers() {
+    return [(p, null)];
   }
 }
 
@@ -70,34 +94,72 @@ const _object = Named(
 
 ```
 
-An example of the generated source code.  
-As you can see, there is not a lot of source code, just as much as is generated from the template.
+An example of the generated source code.
 
 ```dart
-Result<(String, List<MapEntry<String, Object?>>, String)>? _p$0(
-    State<String> state) {
-  final pos = state.pos;
-  final r1 = _openBrace(state);
-  if (r1 != null) {
-    final r2 = _keyValues(state);
-    if (r2 != null) {
-      final r3 = _closeBrace(state);
-      if (r3 != null) {
-        return Result((r1.value, r2.value, r3.value));
+Map<String, Object?>? _object(State<String> state) {
+  Map<String, Object?>? $0;
+  (String, List<MapEntry<String, Object?>>, String)? $1;
+  final pos$0 = state.pos;
+  String? $2;
+  // => _openBrace
+  final pos$1 = state.pos;
+  String? $3;
+  const tag$0 = '{';
+  if (state.ok = state.pos + 1 <= state.input.length &&
+      state.input.codeUnitAt(state.pos) == 123) {
+    state.pos += 1;
+    $3 = tag$0;
+  } else {
+    state.fail(const ErrorExpectedTags([tag$0]));
+  }
+  if (state.ok) {
+    _ws(state);
+    if (state.ok) {
+      $2 = $3;
+    } else {
+      state.pos = pos$1;
+    }
+  }
+  // <= _openBrace
+  if (state.ok) {
+    List<MapEntry<String, Object?>>? $5;
+    $5 = _keyValues(state);
+    if (state.ok) {
+      String? $32;
+      // => _closeBrace
+      final pos$12 = state.pos;
+      String? $33;
+      const tag$6 = '}';
+      if (state.ok = state.pos + 1 <= state.input.length &&
+          state.input.codeUnitAt(state.pos) == 125) {
+        state.pos += 1;
+        $33 = tag$6;
+      } else {
+        state.fail(const ErrorExpectedTags([tag$6]));
+      }
+      if (state.ok) {
+        _ws(state);
+        if (state.ok) {
+          $32 = $33;
+        } else {
+          state.pos = pos$12;
+        }
+      }
+      // <= _closeBrace
+      if (state.ok) {
+        $1 = ($2!, $5!, $32!);
       }
     }
   }
-  state.pos = pos;
-  return null;
-}
-
-Result<Map<String, Object?>>? _object(State<String> state) {
-  final r1 = _p$0(state);
-  if (r1 != null) {
-    final v = Map.fromEntries(r1.value.$2);
-    return Result(v);
+  if (!state.ok) {
+    state.pos = pos$0;
   }
-  return null;
+  if (state.ok) {
+    final v = $1!;
+    $0 = Map.fromEntries(v.$2);
+  }
+  return $0;
 }
 
 ```
@@ -136,9 +198,10 @@ const _hexValueChecked = Named(
     '_hexValueChecked',
     ReplaceErrors(
       _hexValue,
-      Expr<Object?>(
-          '''ErrorMessage({{1}} - {{0}}, 'Expected 4 digit hexadecimal number')'''),
+      Expr(
+          "(true, [ErrorMessage({{1}} - {{0}}, 'Expected 4 digit hexadecimal number')])"),
     ));
+
 ```
 
 Data source (JSON):  
@@ -167,19 +230,18 @@ Data source (JSON):
 Error report:  
 
 ```
-Unhandled exception:
 line 1, column 35: Unexpected end of file
 {"rocket": "🚀 flies to the stars}
                                   ^
 
-line 1, column 35: Expected '\', '\u', '"'
+line 1, column 35: Expected '"'
 {"rocket": "🚀 flies to the stars}
                                   ^
 ```
 
 ## Parser test generator
 
-Example of usage:  
+Example of usage:
 
 ```dart
 import 'package:parser_builder_lite/allocator.dart';
@@ -209,69 +271,83 @@ const _prefix = '';
 
 Future<void> _generate() async {
   final context = BuildContext(
-    allocator: Allocator('_'),
-    output: StringBuffer(),
+    globalAllocator: Allocator('_'),
+    globalOutput: StringBuffer(),
+    localAllocator: Allocator(''),
   );
   final tester = ParserTester<String>(
     context: context,
     localOutput: StringBuffer(),
   );
-  tester.addTest('Many', const Many(Char(0x31)), (parserName, parser) {
+  tester.addTest('Many', const Many(Char(0x31)), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
-      source: '1112',
+      input: '1112',
       result: [0x31, 0x31, 0x31],
       pos: 3,
     );
     t1.testSuccess(
-      source: '',
+      input: '',
       result: [],
       pos: 0,
     );
     t1.testSuccess(
-      source: '2',
+      input: '2',
       result: [],
       pos: 0,
     );
     return buffer.toString();
   });
 
-  tester.addTest('Preceded', const Preceded(Char(0x31), Char(0x32)),
-      (parserName, parser) {
+  tester.addTest('Preceded', const Preceded(Char(0x31), Char(0x32)), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
     final buffer = StringBuffer();
     final t1 = ParserTest(
       allocator: Allocator(_prefix),
       context: context,
       output: buffer,
       parser: parser,
+      parserNameNoResult: parserNameNoResult,
       parserName: parserName,
+      parserNoResult: parserNoResult,
     );
     t1.testSuccess(
-      source: '123',
+      input: '123',
       result: 0x32,
       pos: 2,
     );
     t1.testFailure(
-      source: '',
+      input: '',
       failPos: 0,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
-      source: '1',
+      input: '1',
       failPos: 1,
       pos: 0,
-      errors: [errorUnexpectedEof],
+      errors: [errorExpectedChar],
     );
     t1.testFailure(
-      source: '2',
+      input: '2',
       failPos: 0,
       pos: 0,
       errors: [errorExpectedChar],
@@ -282,7 +358,7 @@ Future<void> _generate() async {
   await fastBuild(
     context: context,
     parsers: [...tester.parsers],
-    filename: 'example/simple_test.dart',
+    filename: 'example/parser_test.dart',
     addErrorMessageCode: false,
     footer: _footer,
     header: _header + tester.generate(),
@@ -316,82 +392,49 @@ void _test_Many$0() {
   test('Many', () {
     final state$0 = State('1112');
     final result$0 = _Many$0(state$0);
-    expect(result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'1112\'');
-    final value$0 = result$0!.value;
+    expect(state$0.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: 1112');
+    final value$0 = result$0!;
     expect(value$0, [49, 49, 49],
-        reason: 'Testing \'result.value\' failed, source: \'1112\'');
-    expect(state$0.pos, 3,
-        reason: 'Testing \'state.pos\' failed, source: \'1112\'');
-    final state$1 = State('');
-    final result$1 = _Many$0(state$1);
-    expect(result$1 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'\'');
-    final value$1 = result$1!.value;
-    expect(value$1, [],
-        reason: 'Testing \'result.value\' failed, source: \'\'');
-    expect(state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
-    final state$2 = State('2');
+        reason: 'Testing \'result = value\' failed, input: 1112');
+    expect(state$0.pos, 3, reason: 'Testing \'state.pos\' failed, input: 1112');
+    final state$1 = State('1112');
+    final result$1 = _Many_NoResult$0(state$1);
+    expect(state$1.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: 1112');
+    final value$1 = result$1;
+    expect(value$1, null,
+        reason: 'Testing \'result == null\' failed, input: 1112');
+    expect(state$1.pos, 3, reason: 'Testing \'state.pos\' failed, input: 1112');
+    final state$2 = State('');
     final result$2 = _Many$0(state$2);
-    expect(result$2 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'2\'');
-    final value$2 = result$2!.value;
-    expect(value$2, [],
-        reason: 'Testing \'result.value\' failed, source: \'2\'');
-    expect(state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
-  });
-}
-
-void _test_Preceded$0() {
-  // Preceded
-  test('Preceded', () {
-    final state$0 = State('123');
-    final result$0 = _Preceded$0(state$0);
-    expect(result$0 != null, true,
-        reason: 'Testing \'result != null\' failed, source: \'123\'');
-    final value$0 = result$0!.value;
-    expect(value$0, 50,
-        reason: 'Testing \'result.value\' failed, source: \'123\'');
-    expect(state$0.pos, 2,
-        reason: 'Testing \'state.pos\' failed, source: \'123\'');
-    final state$1 = State('');
-    final result$1 = _Preceded$0(state$1);
-    expect(result$1 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'\'');
-    expect(state$1.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'\'');
-    expect(state$1.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'\'');
-    expect(state$1.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'\'');
-    expect(state$1.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'\'');
-    final state$2 = State('1');
-    final result$2 = _Preceded$0(state$2);
-    expect(result$2 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'1\'');
-    expect(state$2.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'1\'');
-    expect(state$2.failPos, 1,
-        reason: 'Testing \'state.failPos\' failed, source: \'1\'');
-    expect(state$2.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'1\'');
-    expect(state$2.errors[0], isA<ErrorUnexpectedEof>(),
-        reason: 'Testing \'state.error\' failed, source: \'1\'');
-    final state$3 = State('2');
-    final result$3 = _Preceded$0(state$3);
-    expect(result$3 == null, true,
-        reason: 'Testing \'result == null\' failed, source: \'2\'');
-    expect(state$3.pos, 0,
-        reason: 'Testing \'state.pos\' failed, source: \'2\'');
-    expect(state$3.failPos, 0,
-        reason: 'Testing \'state.failPos\' failed, source: \'2\'');
-    expect(state$3.errors.length, 1,
-        reason: 'Testing \'state.errors.length\' failed, source: \'2\'');
-    expect(state$3.errors[0], isA<ErrorExpectedChar>(),
-        reason: 'Testing \'state.error\' failed, source: \'2\'');
+    expect(state$2.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: ');
+    final value$2 = result$2!;
+    expect(value$2, [], reason: 'Testing \'result = value\' failed, input: ');
+    expect(state$2.pos, 0, reason: 'Testing \'state.pos\' failed, input: ');
+    final state$3 = State('');
+    final result$3 = _Many_NoResult$0(state$3);
+    expect(state$3.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: ');
+    final value$3 = result$3;
+    expect(value$3, null, reason: 'Testing \'result == null\' failed, input: ');
+    expect(state$3.pos, 0, reason: 'Testing \'state.pos\' failed, input: ');
+    final state$4 = State('2');
+    final result$4 = _Many$0(state$4);
+    expect(state$4.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: 2');
+    final value$4 = result$4!;
+    expect(value$4, [], reason: 'Testing \'result = value\' failed, input: 2');
+    expect(state$4.pos, 0, reason: 'Testing \'state.pos\' failed, input: 2');
+    final state$5 = State('2');
+    final result$5 = _Many_NoResult$0(state$5);
+    expect(state$5.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: 2');
+    final value$5 = result$5;
+    expect(value$5, null,
+        reason: 'Testing \'result == null\' failed, input: 2');
+    expect(state$5.pos, 0, reason: 'Testing \'state.pos\' failed, input: 2');
   });
 }
 
@@ -399,22 +442,22 @@ void _test_Preceded$0() {
 
 ## Performance
 
+Test results based on data from this source https://github.com/miloyip/nativejson-benchmark.  
+
 JIT code execution.
 
 ```
-Test failures
-
 Parse 20 times: E:\prj\test_json\bin\data\canada.json (2251.05 Kb)
-Dart SDK JSON : k: 2.05, 53.75 MB/s, 798.7460 ms (100.00%),
-JSON Parser: k: 1.00, 110.03 MB/s, 390.2050 ms (48.85%),
+Dart SDK JSON : k: 2.75, 54.78 MB/s, 783.7180 ms (100.00%),
+JSON Parser: k: 1.00, 150.85 MB/s, 284.6280 ms (36.32%),
 
 Parse 20 times: E:\prj\test_json\bin\data\citm_catalog.json (1727.03 Kb)
-Dart SDK JSON : k: 1.00, 106.24 MB/s, 310.0440 ms (72.65%),
-JSON Parser: k: 1.38, 77.19 MB/s, 426.7540 ms (100.00%),
+Dart SDK JSON : k: 1.00, 108.23 MB/s, 304.3650 ms (85.31%),
+JSON Parser: k: 1.17, 92.33 MB/s, 356.7710 ms (100.00%),
 
 Parse 20 times: E:\prj\test_json\bin\data\twitter.json (567.93 Kb)
-Dart SDK JSON : k: 1.00, 67.48 MB/s, 160.5340 ms (80.84%),
-JSON Parser: k: 1.24, 54.55 MB/s, 198.5810 ms (100.00%),
+Dart SDK JSON : k: 1.00, 68.83 MB/s, 157.3720 ms (89.55%),
+JSON Parser: k: 1.12, 61.64 MB/s, 175.7270 ms (100.00%),
 
 OS: Њ ©Єа®б®дв Windows 10 Pro 10.0.19045
 Kernel: Windows_NT 10.0.19045
@@ -424,19 +467,17 @@ Processor (4 core) Intel(R) Core(TM) i5-3450 CPU @ 3.10GHz
 AOT code execution.
 
 ```
-Test failures
-
 Parse 20 times: E:\prj\test_json\bin\data\canada.json (2251.05 Kb)
-Dart SDK JSON : k: 1.54, 50.20 MB/s, 855.2930 ms (100.00%),
-JSON Parser: k: 1.00, 77.43 MB/s, 554.5380 ms (64.84%),
+Dart SDK JSON : k: 1.76, 49.26 MB/s, 871.5480 ms (100.00%),
+JSON Parser: k: 1.00, 86.89 MB/s, 494.1260 ms (56.70%),
 
 Parse 20 times: E:\prj\test_json\bin\data\citm_catalog.json (1727.03 Kb)
-Dart SDK JSON : k: 1.00, 91.70 MB/s, 359.2160 ms (79.55%),
-JSON Parser: k: 1.26, 72.95 MB/s, 451.5760 ms (100.00%),
+Dart SDK JSON : k: 1.00, 88.38 MB/s, 372.6970 ms (90.48%),
+JSON Parser: k: 1.11, 79.97 MB/s, 411.9100 ms (100.00%),
 
 Parse 20 times: E:\prj\test_json\bin\data\twitter.json (567.93 Kb)
-Dart SDK JSON : k: 1.00, 61.09 MB/s, 177.3080 ms (79.32%),
-JSON Parser: k: 1.26, 48.46 MB/s, 223.5440 ms (100.00%),
+Dart SDK JSON : k: 1.00, 61.71 MB/s, 175.5400 ms (87.40%),
+JSON Parser: k: 1.14, 53.93 MB/s, 200.8460 ms (100.00%),
 
 OS: Њ ©Єа®б®дв Windows 10 Pro 10.0.19045
 Kernel: Windows_NT 10.0.19045

@@ -2,6 +2,11 @@ const errorMessageTemplate = r'''
 String _errorMessage(String input, int offset, List<ParseError> errors) {
   final sb = StringBuffer();
   final errorList = errors.toList();
+  if (offset >= input.length) {
+    errorList.add(const ErrorUnexpectedEof());
+    errorList.removeWhere((e) => e is ErrorUnexpectedChar);
+  }
+
   final expectedTags = errorList.whereType<ErrorExpectedTags>().toList();
   if (expectedTags.isNotEmpty) {
     errorList.removeWhere((e) => e is ErrorExpectedTags);
@@ -283,62 +288,78 @@ class Result<T> {
 }
 
 class State<T> {
-  List<ParseError> errors = [];
+  Object? context;
+
+  List<ParseError?> errors = List.filled(512, null, growable: false);
+
+  int errorCount = 0;
 
   int failPos = 0;
 
   final T input;
+
+  bool ok = false;
 
   int pos = 0;
 
   State(this.input);
 
   @pragma('vm:prefer-inline')
-  Result<R>? fail<R>(ParseError error) {
-    if (pos < failPos) {
-      return null;
-    } else if (failPos < pos) {
-      failPos = pos;
-      errors = [];
+  void fail(ParseError error) {
+    ok = false;
+    if (pos >= failPos) {
+      if (failPos < pos) {
+        failPos = pos;
+        errorCount = 0;
+      }
+      errors[errorCount++] = error;
     }
-    errors.add(error);
-    return null;
   }
 
   @pragma('vm:prefer-inline')
-  Result<R>? failAll<R>(List<ParseError> errors) {
-    if (pos < failPos) {
-      return null;
-    } else if (failPos < pos) {
-      failPos = pos;
-      this.errors = [];
+  void failAll(List<ParseError> errors) {
+    ok = false;
+    if (pos >= failPos) {
+      if (failPos < pos) {
+        failPos = pos;
+        errorCount = 0;
+      }
+      for (var i = 0; i < errors.length; i++) {
+        final error = errors[i];
+        this.errors[errorCount++] = error;
+      }
     }
-    this.errors.addAll(errors);
-    return null;
   }
 
   @pragma('vm:prefer-inline')
-  Result<R>? failAllAt<R>(int offset, List<ParseError> errors) {
-    if (offset < failPos) {
-      return null;
-    } else if (failPos < offset) {
-      failPos = offset;
-      this.errors = [];
+  void failAllAt(int offset, List<ParseError> errors) {
+    ok = false;
+    if (offset >= failPos) {
+      if (failPos < offset) {
+        failPos = offset;
+        errorCount = 0;
+      }
+      for (var i = 0; i < errors.length; i++) {
+        final error = errors[i];
+        this.errors[errorCount++] = error;
+      }
     }
-    this.errors.addAll(errors);
-    return null;
   }
 
   @pragma('vm:prefer-inline')
-  Result<R>? failAt<R>(int offset, ParseError error) {
-    if (offset < failPos) {
-      return null;
-    } else if (failPos < offset) {
-      failPos = offset;
-      errors = [];
+  void failAt(int offset, ParseError error) {
+    ok = false;
+    if (offset >= failPos) {
+      if (failPos < offset) {
+        failPos = offset;
+        errorCount = 0;
+      }
+      errors[errorCount++] = error;
     }
-    errors.add(error);
-    return null;
+  }
+
+  List<ParseError> getErrors() {
+    return List.generate(errorCount, (i) => errors[i]!);
   }
 
   @override

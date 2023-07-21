@@ -107,79 +107,72 @@ class Choice7<I, O> extends _Choice<I, O> {
 }
 
 abstract class _Choice<I, O> extends ParserBuilder<I, O> {
-  static const _template = '''
-{{next}}
-return null;''';
+  static const _templateLast = '''
+@p1
+if (state.ok) {
+  @r = @r1;
+}''';
 
   static const _templateNext = '''
-final {{r1}} = {{p1}}(state);
-if ({{r1}} != null) {
-  return {{r1}};
+@p1
+if (state.ok) {
+  @r = @r1;
+} else {
+  @next
+}''';
+
+  static const _templateLastNoResult = '''
+@p1''';
+
+  static const _templateNextNoResult = '''
+@p1
+if (!state.ok) {
+  @next
 }''';
 
   const _Choice();
 
+  @override
+  bool get isSequential => false;
+
   List<ParserBuilder<I, O>> get _ps;
 
   @override
-  String buildBody(BuildContext context) {
+  BuildBodyResult buildBody(BuildContext context, bool hasResult) {
     final ps = _ps;
     if (_ps.isEmpty) {
       throw ArgumentError.value(_ps, '_ps', 'Must not be empty');
     }
 
-    ps.take(ps.length - 1).map((e) => checkIsNotOptional(context, e));
-    final buffer = StringBuffer();
-    final values = <String, String>{};
-    for (var i = 0; i < ps.length; i++) {
-      final p = ps[i];
-      final source = render(_templateNext, {
-        'p1': '{{p${i + 1}}}',
-        'r1': 'r${i + 1}',
-      });
-      buffer.writeln(source);
-      final result = p.build(context);
-      values['p${i + 1}'] = result.name;
-    }
+    ps.take(ps.length - 1).map(checkIsNotOptional);
+    final template = renderWithPlunge(
+      ps.length,
+      hasResult,
+      last: _templateLast,
+      lastNoResult: _templateLastNoResult,
+      next: _templateNext,
+      nextNoResult: _templateNextNoResult,
+      fillValues: (index, template, values, next) {
+        if (index < ps.length - 1) {
+          values['next'] = next(index + 1);
+        }
 
-    final template = render(_template, {
-      'next': buffer.toString(),
-    });
-    return render(template, values);
+        return template;
+      },
+    );
+
+    return renderBody(
+      this,
+      context,
+      hasResult,
+      template,
+      template,
+      const {},
+    );
   }
 
   @override
-  bool getIsOptional(BuildContext context) {
-    return _ps.any((e) => e.getIsOptional(context));
-  }
-
-  @override
-  List<(int, int)> getStartCharacters(BuildContext context) {
-    final list = <(int, int)>[];
-    for (final p in _ps) {
-      final chars = p.getStartCharacters(context);
-      if (chars.isEmpty) {
-        return const [];
-      }
-
-      list.addAll(chars);
-    }
-
-    return list;
-  }
-
-  @override
-  List<String> getStartErrors(BuildContext context) {
-    final list = <String>[];
-    for (final p in _ps) {
-      final errors = p.getStartErrors(context);
-      if (errors.isEmpty) {
-        return const [];
-      }
-
-      list.addAll(errors);
-    }
-
-    return list;
+  Iterable<(ParserBuilder<I, Object?>, bool?)> getCombinedParsers() {
+    return _ps.map((e) => (e, null));
   }
 }

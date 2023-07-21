@@ -1,16 +1,26 @@
 import 'build_context.dart';
-import 'build_result.dart';
 import 'helper.dart';
+
+class BuildFunctionResult {
+  final String name;
+
+  final String source;
+
+  BuildFunctionResult({
+    required this.name,
+    required this.source,
+  });
+}
 
 class FunctionBuilder {
   static const _template = '''
-{{type}} {{name}}({{parameters}}) {
-  {{body}}
+@type @name(@parameters) {
+  @body
 }''';
 
   const FunctionBuilder();
 
-  BuildResult build(
+  BuildFunctionResult build(
       BuildContext context,
       Object key,
       ({
@@ -23,22 +33,22 @@ class FunctionBuilder {
           buildBody) {
     final cache = context.initializeCache(
         'parser_builder_lite.parser_builder.function_builder',
-        <Object?, BuildResult>{});
+        <Object?, BuildFunctionResult>{});
     final found = cache[key];
     if (found != null) {
       return found;
     }
 
-    final x = buildBody();
+    final body = buildBody();
     final source = render(_template, {
-      'body': x.body,
-      'name': x.name,
-      'parameters': x.parameters,
-      'type': x.type,
+      'body': body.body,
+      'name': body.name,
+      'parameters': body.parameters,
+      'type': body.type,
     });
-    final result = BuildResult(name: x.name, source: source);
+    final result = BuildFunctionResult(name: body.name, source: source);
     cache[key] = result;
-    context.output.writeln(source);
+    context.globalOutput.writeln(source);
     return result;
   }
 }

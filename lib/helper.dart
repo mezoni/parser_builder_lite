@@ -377,6 +377,10 @@ String renderWithPlunge(
 }
 
 List<(int, int)> toRanges(List<Object> ranges) {
+  if (ranges.isEmpty) {
+    throw ArgumentError.value(ranges, 'ranges', 'Must not be empty');
+  }
+
   final result = <(int, int)>[];
   for (final element in ranges) {
     Never error() {
@@ -392,16 +396,29 @@ List<(int, int)> toRanges(List<Object> ranges) {
       error();
     }
 
-    final range = switch (element) {
-      final int i => (i, i),
-      final String i => (toInt(i), toInt(i)),
-      final (String, String) i => (toInt(i.$1), toInt(i.$2)),
-      final (String, int) i => (toInt(i.$1), i.$2),
-      final (int, String) i => (i.$1, toInt(i.$2)),
-      final (int, int) i => (i.$1, i.$2),
-      _ => error(),
-    };
-    result.add(range);
+    var done = false;
+    if (element is String) {
+      final runes = element.runes.toList();
+      if (runes.isNotEmpty) {
+        done = true;
+        for (var i = 0; i < runes.length; i++) {
+          final rune = runes[i];
+          result.add((rune, rune));
+        }
+      }
+    }
+
+    if (!done) {
+      final range = switch (element) {
+        final int i => (i, i),
+        final (String, String) i => (toInt(i.$1), toInt(i.$2)),
+        final (String, int) i => (toInt(i.$1), i.$2),
+        final (int, String) i => (i.$1, toInt(i.$2)),
+        final (int, int) i => (i.$1, i.$2),
+        _ => error(),
+      };
+      result.add(range);
+    }
   }
 
   return normalizeRanges(result);

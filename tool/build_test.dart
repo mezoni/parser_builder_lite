@@ -13,11 +13,14 @@ import 'package:parser_builder_lite/parser/many1.dart';
 import 'package:parser_builder_lite/parser/many1_count.dart';
 import 'package:parser_builder_lite/parser/many_count.dart';
 import 'package:parser_builder_lite/parser/many_m_n.dart';
+import 'package:parser_builder_lite/parser/memoize.dart';
+import 'package:parser_builder_lite/parser/named.dart';
 import 'package:parser_builder_lite/parser/not.dart';
 import 'package:parser_builder_lite/parser/preceded.dart';
 import 'package:parser_builder_lite/parser/predicate.dart';
 import 'package:parser_builder_lite/parser/tag.dart';
 import 'package:parser_builder_lite/parser/tags.dart';
+import 'package:parser_builder_lite/parser/take_until.dart';
 import 'package:parser_builder_lite/parser/take_while.dart';
 import 'package:parser_builder_lite/parser/take_while1.dart';
 import 'package:parser_builder_lite/parser/take_while_m_n.dart';
@@ -26,6 +29,7 @@ import 'package:parser_builder_lite/parser/tuple.dart';
 import 'package:parser_builder_lite/parser/unterminated.dart';
 import 'package:parser_builder_lite/parser_builder.dart';
 import 'package:parser_builder_lite/parser_tester.dart';
+import 'package:parser_builder_lite/ranges.dart';
 
 void main(List<String> args) async {
   await _generate();
@@ -835,6 +839,82 @@ Future<void> _generate() async {
 
   */
 
+  final abc = Named('_abc', Tag('abc'));
+
+  tester.addTest(
+      'Memoize',
+      Choice2(
+        Terminated(Memoize(abc), Not(Tag('1'))),
+        Memoize(abc),
+      ), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
+    final buffer = StringBuffer();
+    final t1 = ParserTest(
+      allocator: Allocator(_prefix),
+      context: context,
+      output: buffer,
+      parser: parser,
+      parserNameNoResult: parserNameNoResult,
+      parserName: parserName,
+      parserNoResult: parserNoResult,
+    );
+
+    t1.testSuccess(
+      input: 'abc',
+      result: 'abc',
+      pos: 3,
+    );
+
+    t1.testSuccess(
+      input: 'abc1',
+      result: 'abc',
+      pos: 3,
+    );
+
+    return buffer.toString();
+  });
+
+  tester.addTest(
+      'Memoize (circular buffer)',
+      Choice2(
+        Terminated(Many(Memoize(abc)), Not(Tag('1'))),
+        Many(Memoize(abc)),
+      ), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
+    final buffer = StringBuffer();
+    final t1 = ParserTest(
+      allocator: Allocator(_prefix),
+      context: context,
+      output: buffer,
+      parser: parser,
+      parserNameNoResult: parserNameNoResult,
+      parserName: parserName,
+      parserNoResult: parserNoResult,
+    );
+
+    t1.testSuccess(
+      input: 'abcabcabcabcabcabc1',
+      result: ['abc', 'abc', 'abc', 'abc', 'abc', 'abc'],
+      pos: 18,
+    );
+
+    t1.testSuccess(
+      input: 'abcabcabcabcabcabc',
+      result: ['abc', 'abc', 'abc', 'abc', 'abc', 'abc'],
+      pos: 18,
+    );
+
+    return buffer.toString();
+  });
+
   tester.addTest('Not', const Terminated(Char(0x30), Not(Char(0x31))), (
     parserName,
     parserNameNoResult,
@@ -1115,6 +1195,53 @@ Future<void> _generate() async {
       errors: [errorExpectedTags],
     );
 
+    return buffer.toString();
+  });
+
+  tester.addTest('TakeUntil', const TakeUntil('-->'), (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
+    final buffer = StringBuffer();
+    final t1 = ParserTest(
+      allocator: Allocator(_prefix),
+      context: context,
+      output: buffer,
+      parser: parser,
+      parserNameNoResult: parserNameNoResult,
+      parserName: parserName,
+      parserNoResult: parserNoResult,
+    );
+    t1.testSuccess(
+      input: '12-->',
+      result: '12',
+      pos: 2,
+    );
+    t1.testSuccess(
+      input: '-->',
+      result: '',
+      pos: 0,
+    );
+    t1.testFailure(
+      input: '',
+      failPos: 0,
+      pos: 0,
+      errors: [errorExpectedTags],
+    );
+    t1.testFailure(
+      input: '->',
+      failPos: 0,
+      pos: 0,
+      errors: [errorExpectedTags],
+    );
+    t1.testFailure(
+      input: '--',
+      failPos: 0,
+      pos: 0,
+      errors: [errorExpectedTags],
+    );
     return buffer.toString();
   });
 
@@ -1464,6 +1591,37 @@ Future<void> _generate() async {
         reason: '$errorMessage.length',
       ),
     ]);
+    return buffer.toString();
+  });
+
+  tester.addTest(
+      'InRangeExcept', const TakeWhile(InRangeExcept([('0', '9')], ['7', '9'])),
+      (
+    parserName,
+    parserNameNoResult,
+    parser,
+    parserNoResult,
+  ) {
+    final buffer = StringBuffer();
+    final t1 = ParserTest(
+      allocator: Allocator(_prefix),
+      context: context,
+      output: buffer,
+      parser: parser,
+      parserNameNoResult: parserNameNoResult,
+      parserName: parserName,
+      parserNoResult: parserNoResult,
+    );
+    t1.testSuccess(
+      input: '123456789',
+      result: '123456',
+      pos: 6,
+    );
+    t1.testSuccess(
+      input: '',
+      result: '',
+      pos: 0,
+    );
     return buffer.toString();
   });
 

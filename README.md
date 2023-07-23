@@ -11,8 +11,9 @@ The main features and advantage:
 - A very simple builder is used to build parsers
 - Parsers are generated as source code
 - The generated parsers are very fast and efficient (as if they were written by hand)
-- The `SmartChoice` parser builder increases the performance of parsing by looking one character ahead.
-- The `SequenceBase` can efficiently generate an unlimited number of combinations of parser sequences.
+- The `SmartChoice` parser builder increases the performance of parsing by looking one character ahead
+- The `SequenceBase` can efficiently generate an unlimited number of combinations of parser sequences
+- On-demand memoization almost without delay in real-time
 - The error reporting system is very flexible and informative
 - Convenient and easy debugging of the parsing process
 - A simple and convenient test generator is included

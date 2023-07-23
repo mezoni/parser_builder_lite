@@ -10,6 +10,22 @@ class InRange extends _Range {
   bool get negate => false;
 }
 
+class InRangeExcept implements Calculable<bool> {
+  final List<Object> ranges;
+
+  final List<Object> except;
+
+  const InRangeExcept(this.ranges, this.except);
+
+  @override
+  String calculate(BuildContext context, List<String> arguments) {
+    return [
+      NotInRange(except).calculate(context, arguments),
+      InRange(ranges).calculate(context, arguments)
+    ].join(' && ');
+  }
+}
+
 class NotInRange extends _Range {
   const NotInRange(super.ranges);
 

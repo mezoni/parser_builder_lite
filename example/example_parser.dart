@@ -1157,7 +1157,7 @@ class Result<T> {
 class State<T> {
   Object? context;
 
-  List<ParseError?> errors = List.filled(512, null, growable: false);
+  final List<ParseError?> errors = List.filled(64, null, growable: false);
 
   int errorCount = 0;
 
@@ -1169,6 +1169,9 @@ class State<T> {
 
   int pos = 0;
 
+  final List<(int, List<({int end, bool ok, Object? result, int start})?>)?>
+      _cache = List.generate(64, (i) => null);
+
   State(this.input);
 
   @pragma('vm:prefer-inline')
@@ -1179,7 +1182,9 @@ class State<T> {
         failPos = pos;
         errorCount = 0;
       }
-      errors[errorCount++] = error;
+      if (errorCount < errors.length) {
+        errors[errorCount++] = error;
+      }
     }
   }
 
@@ -1192,8 +1197,9 @@ class State<T> {
         errorCount = 0;
       }
       for (var i = 0; i < errors.length; i++) {
-        final error = errors[i];
-        this.errors[errorCount++] = error;
+        if (errorCount < errors.length) {
+          this.errors[errorCount++] = errors[i];
+        }
       }
     }
   }
@@ -1207,8 +1213,9 @@ class State<T> {
         errorCount = 0;
       }
       for (var i = 0; i < errors.length; i++) {
-        final error = errors[i];
-        this.errors[errorCount++] = error;
+        if (errorCount < errors.length) {
+          this.errors[errorCount++] = errors[i];
+        }
       }
     }
   }
@@ -1221,12 +1228,65 @@ class State<T> {
         failPos = offset;
         errorCount = 0;
       }
-      errors[errorCount++] = error;
+      if (errorCount < errors.length) {
+        errors[errorCount++] = error;
+      }
     }
   }
 
   List<ParseError> getErrors() {
     return List.generate(errorCount, (i) => errors[i]!);
+  }
+
+  @pragma('vm:prefer-inline')
+  void memoize(int id, int start, int end, bool ok, Object? result) {
+    if (id >= _cache.length) {
+      return;
+    }
+
+    var record = _cache[id];
+    if (record == null) {
+      record = (0, List.generate(5, (i) => null));
+      _cache[id] = record;
+    }
+
+    var index = record.$1;
+    final list = record.$2;
+    index = index < list.length ? index + 1 : 0;
+    list[index] = (end: end, ok: ok, result: result, start: start);
+    _cache[id] = (index, list);
+  }
+
+  @pragma('vm:prefer-inline')
+  ({int end, bool ok, Object? result, int start})? memoized(int id, int pos) {
+    if (id >= _cache.length) {
+      return null;
+    }
+
+    final record = _cache[id];
+    if (record == null) {
+      return null;
+    }
+
+    var index = record.$1;
+    final list = record.$2;
+    var count = 0;
+    while (count++ < list.length) {
+      final value = list[index];
+      if (value == null) {
+        return null;
+      }
+
+      if (value.start == pos) {
+        return value;
+      }
+
+      if (index >= list.length) {
+        index = 0;
+      }
+    }
+
+    return null;
   }
 
   @override

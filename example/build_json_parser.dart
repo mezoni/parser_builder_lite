@@ -184,4 +184,4 @@ const _value_ = Named(
 
 const _values = Named('_values', SeparatedList(_value, _comma));
 
-const _ws = Marked('_ws', SkipWhile(InRange(['\t', '\r', '\n', ' '])));
+const _ws = Marked('_ws', SkipWhile(InRange(['\t\r\n '])));

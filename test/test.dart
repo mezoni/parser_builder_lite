@@ -43,6 +43,10 @@ void _test() {
   _test_ManyMN03$0();
   // ManyMN (2..3)
   _test_ManyMN23$0();
+  // Memoize
+  _test_Memoize$0();
+  // Memoize (circular buffer)
+  _test_Memoizecircularbuffer$0();
   // Not
   _test_Not$0();
   // Preceded
@@ -53,6 +57,8 @@ void _test() {
   _test_Taglong$0();
   // Tags
   _test_Tags$0();
+  // TakeUntil
+  _test_TakeUntil$0();
   // TakeWhileMN (0..3)
   _test_TakeWhileMN03$0();
   // TakeWhileMN (1..2)
@@ -69,6 +75,8 @@ void _test() {
   _test_Taglong$1();
   // Unterminated
   _test_Unterminated$0();
+  // InRangeExcept
+  _test_InRangeExcept$0();
 }
 
 void _test_And$0() {
@@ -1467,6 +1475,94 @@ void _test_ManyMN23$0() {
   });
 }
 
+void _test_Memoize$0() {
+  // Memoize
+  test('Memoize', () {
+    final $state$0 = State('abc');
+    final $result$0 = _Memoize$0($state$0);
+    expect($state$0.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: abc');
+    final $value$0 = $result$0!;
+    expect($value$0, 'abc',
+        reason: 'Testing \'result = value\' failed, input: abc');
+    expect($state$0.pos, 3, reason: 'Testing \'state.pos\' failed, input: abc');
+    final $state$1 = State('abc');
+    final $result$1 = _Memoize_NoResult$0($state$1);
+    expect($state$1.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: abc');
+    final $value$1 = $result$1;
+    expect($value$1, null,
+        reason: 'Testing \'result == null\' failed, input: abc');
+    expect($state$1.pos, 3, reason: 'Testing \'state.pos\' failed, input: abc');
+    final $state$2 = State('abc1');
+    final $result$2 = _Memoize$0($state$2);
+    expect($state$2.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: abc1');
+    final $value$2 = $result$2!;
+    expect($value$2, 'abc',
+        reason: 'Testing \'result = value\' failed, input: abc1');
+    expect($state$2.pos, 3,
+        reason: 'Testing \'state.pos\' failed, input: abc1');
+    final $state$3 = State('abc1');
+    final $result$3 = _Memoize_NoResult$0($state$3);
+    expect($state$3.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: abc1');
+    final $value$3 = $result$3;
+    expect($value$3, null,
+        reason: 'Testing \'result == null\' failed, input: abc1');
+    expect($state$3.pos, 3,
+        reason: 'Testing \'state.pos\' failed, input: abc1');
+  });
+}
+
+void _test_Memoizecircularbuffer$0() {
+  // Memoize (circular buffer)
+  test('Memoize (circular buffer)', () {
+    final $state$0 = State('abcabcabcabcabcabc1');
+    final $result$0 = _Memoizecircularbuffer$0($state$0);
+    expect($state$0.ok, true,
+        reason:
+            'Testing \'state.ok == true\' failed, input: abcabcabcabcabcabc1');
+    final $value$0 = $result$0!;
+    expect($value$0, ['abc', 'abc', 'abc', 'abc', 'abc', 'abc'],
+        reason:
+            'Testing \'result = value\' failed, input: abcabcabcabcabcabc1');
+    expect($state$0.pos, 18,
+        reason: 'Testing \'state.pos\' failed, input: abcabcabcabcabcabc1');
+    final $state$1 = State('abcabcabcabcabcabc1');
+    final $result$1 = _Memoizecircularbuffer_NoResult$0($state$1);
+    expect($state$1.ok, true,
+        reason:
+            'Testing \'state.ok == true\' failed, input: abcabcabcabcabcabc1');
+    final $value$1 = $result$1;
+    expect($value$1, null,
+        reason:
+            'Testing \'result == null\' failed, input: abcabcabcabcabcabc1');
+    expect($state$1.pos, 18,
+        reason: 'Testing \'state.pos\' failed, input: abcabcabcabcabcabc1');
+    final $state$2 = State('abcabcabcabcabcabc');
+    final $result$2 = _Memoizecircularbuffer$0($state$2);
+    expect($state$2.ok, true,
+        reason:
+            'Testing \'state.ok == true\' failed, input: abcabcabcabcabcabc');
+    final $value$2 = $result$2!;
+    expect($value$2, ['abc', 'abc', 'abc', 'abc', 'abc', 'abc'],
+        reason: 'Testing \'result = value\' failed, input: abcabcabcabcabcabc');
+    expect($state$2.pos, 18,
+        reason: 'Testing \'state.pos\' failed, input: abcabcabcabcabcabc');
+    final $state$3 = State('abcabcabcabcabcabc');
+    final $result$3 = _Memoizecircularbuffer_NoResult$0($state$3);
+    expect($state$3.ok, true,
+        reason:
+            'Testing \'state.ok == true\' failed, input: abcabcabcabcabcabc');
+    final $value$3 = $result$3;
+    expect($value$3, null,
+        reason: 'Testing \'result == null\' failed, input: abcabcabcabcabcabc');
+    expect($state$3.pos, 18,
+        reason: 'Testing \'state.pos\' failed, input: abcabcabcabcabcabc');
+  });
+}
+
 void _test_Not$0() {
   // Not
   test('Not', () {
@@ -2021,6 +2117,124 @@ void _test_Tags$0() {
         reason: 'Testing \'state.errorCount\' failed, input: x');
     expect($state$19.errors[0], isA<ErrorExpectedTags>(),
         reason: 'Testing \'state.error\' failed, input: x');
+  });
+}
+
+void _test_TakeUntil$0() {
+  // TakeUntil
+  test('TakeUntil', () {
+    final $state$0 = State('12-->');
+    final $result$0 = _TakeUntil$0($state$0);
+    expect($state$0.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: 12-->');
+    final $value$0 = $result$0!;
+    expect($value$0, '12',
+        reason: 'Testing \'result = value\' failed, input: 12-->');
+    expect($state$0.pos, 2,
+        reason: 'Testing \'state.pos\' failed, input: 12-->');
+    final $state$1 = State('12-->');
+    final $result$1 = _TakeUntil_NoResult$0($state$1);
+    expect($state$1.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: 12-->');
+    final $value$1 = $result$1;
+    expect($value$1, null,
+        reason: 'Testing \'result == null\' failed, input: 12-->');
+    expect($state$1.pos, 2,
+        reason: 'Testing \'state.pos\' failed, input: 12-->');
+    final $state$2 = State('-->');
+    final $result$2 = _TakeUntil$0($state$2);
+    expect($state$2.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: -->');
+    final $value$2 = $result$2!;
+    expect($value$2, '',
+        reason: 'Testing \'result = value\' failed, input: -->');
+    expect($state$2.pos, 0, reason: 'Testing \'state.pos\' failed, input: -->');
+    final $state$3 = State('-->');
+    final $result$3 = _TakeUntil_NoResult$0($state$3);
+    expect($state$3.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: -->');
+    final $value$3 = $result$3;
+    expect($value$3, null,
+        reason: 'Testing \'result == null\' failed, input: -->');
+    expect($state$3.pos, 0, reason: 'Testing \'state.pos\' failed, input: -->');
+    final $state$4 = State('');
+    final $result$4 = _TakeUntil$0($state$4);
+    expect($state$4.ok, false,
+        reason: 'Testing \'state.ok == false\' failed, input: ');
+    expect($result$4, null,
+        reason: 'Testing \'result == null\' failed, input: ');
+    expect($state$4.pos, 0, reason: 'Testing \'state.pos\' failed, input: ');
+    expect($state$4.failPos, 0,
+        reason: 'Testing \'state.failPos\' failed, input: ');
+    expect($state$4.errorCount, 1,
+        reason: 'Testing \'state.errorCount\' failed, input: ');
+    expect($state$4.errors[0], isA<ErrorExpectedTags>(),
+        reason: 'Testing \'state.error\' failed, input: ');
+    final $state$5 = State('');
+    final $result$5 = _TakeUntil_NoResult$0($state$5);
+    expect($state$5.ok, false,
+        reason: 'Testing \'state.ok == false\' failed, input: ');
+    expect($result$5, null,
+        reason: 'Testing \'result == null\' failed, input: ');
+    expect($state$5.pos, 0, reason: 'Testing \'state.pos\' failed, input: ');
+    expect($state$5.failPos, 0,
+        reason: 'Testing \'state.failPos\' failed, input: ');
+    expect($state$5.errorCount, 1,
+        reason: 'Testing \'state.errorCount\' failed, input: ');
+    expect($state$5.errors[0], isA<ErrorExpectedTags>(),
+        reason: 'Testing \'state.error\' failed, input: ');
+    final $state$6 = State('->');
+    final $result$6 = _TakeUntil$0($state$6);
+    expect($state$6.ok, false,
+        reason: 'Testing \'state.ok == false\' failed, input: ->');
+    expect($result$6, null,
+        reason: 'Testing \'result == null\' failed, input: ->');
+    expect($state$6.pos, 0, reason: 'Testing \'state.pos\' failed, input: ->');
+    expect($state$6.failPos, 0,
+        reason: 'Testing \'state.failPos\' failed, input: ->');
+    expect($state$6.errorCount, 1,
+        reason: 'Testing \'state.errorCount\' failed, input: ->');
+    expect($state$6.errors[0], isA<ErrorExpectedTags>(),
+        reason: 'Testing \'state.error\' failed, input: ->');
+    final $state$7 = State('->');
+    final $result$7 = _TakeUntil_NoResult$0($state$7);
+    expect($state$7.ok, false,
+        reason: 'Testing \'state.ok == false\' failed, input: ->');
+    expect($result$7, null,
+        reason: 'Testing \'result == null\' failed, input: ->');
+    expect($state$7.pos, 0, reason: 'Testing \'state.pos\' failed, input: ->');
+    expect($state$7.failPos, 0,
+        reason: 'Testing \'state.failPos\' failed, input: ->');
+    expect($state$7.errorCount, 1,
+        reason: 'Testing \'state.errorCount\' failed, input: ->');
+    expect($state$7.errors[0], isA<ErrorExpectedTags>(),
+        reason: 'Testing \'state.error\' failed, input: ->');
+    final $state$8 = State('--');
+    final $result$8 = _TakeUntil$0($state$8);
+    expect($state$8.ok, false,
+        reason: 'Testing \'state.ok == false\' failed, input: --');
+    expect($result$8, null,
+        reason: 'Testing \'result == null\' failed, input: --');
+    expect($state$8.pos, 0, reason: 'Testing \'state.pos\' failed, input: --');
+    expect($state$8.failPos, 0,
+        reason: 'Testing \'state.failPos\' failed, input: --');
+    expect($state$8.errorCount, 1,
+        reason: 'Testing \'state.errorCount\' failed, input: --');
+    expect($state$8.errors[0], isA<ErrorExpectedTags>(),
+        reason: 'Testing \'state.error\' failed, input: --');
+    final $state$9 = State('--');
+    final $result$9 = _TakeUntil_NoResult$0($state$9);
+    expect($state$9.ok, false,
+        reason: 'Testing \'state.ok == false\' failed, input: --');
+    expect($result$9, null,
+        reason: 'Testing \'result == null\' failed, input: --');
+    expect($state$9.pos, 0, reason: 'Testing \'state.pos\' failed, input: --');
+    expect($state$9.failPos, 0,
+        reason: 'Testing \'state.failPos\' failed, input: --');
+    expect($state$9.errorCount, 1,
+        reason: 'Testing \'state.errorCount\' failed, input: --');
+    expect($state$9.errors[0], isA<ErrorExpectedTags>(),
+        reason: 'Testing \'state.error\' failed, input: --');
   });
 }
 
@@ -2738,6 +2952,45 @@ void _test_Unterminated$0() {
         reason: 'Testing \'ErrorMessage.message\' failed, input: "123');
     expect(($state$5.errors[1] as ErrorMessage).length, -4,
         reason: 'Testing \'ErrorMessage.length\' failed, input: "123');
+  });
+}
+
+void _test_InRangeExcept$0() {
+  // InRangeExcept
+  test('InRangeExcept', () {
+    final $state$0 = State('123456789');
+    final $result$0 = _InRangeExcept$0($state$0);
+    expect($state$0.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: 123456789');
+    final $value$0 = $result$0!;
+    expect($value$0, '123456',
+        reason: 'Testing \'result = value\' failed, input: 123456789');
+    expect($state$0.pos, 6,
+        reason: 'Testing \'state.pos\' failed, input: 123456789');
+    final $state$1 = State('123456789');
+    final $result$1 = _InRangeExcept_NoResult$0($state$1);
+    expect($state$1.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: 123456789');
+    final $value$1 = $result$1;
+    expect($value$1, null,
+        reason: 'Testing \'result == null\' failed, input: 123456789');
+    expect($state$1.pos, 6,
+        reason: 'Testing \'state.pos\' failed, input: 123456789');
+    final $state$2 = State('');
+    final $result$2 = _InRangeExcept$0($state$2);
+    expect($state$2.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: ');
+    final $value$2 = $result$2!;
+    expect($value$2, '', reason: 'Testing \'result = value\' failed, input: ');
+    expect($state$2.pos, 0, reason: 'Testing \'state.pos\' failed, input: ');
+    final $state$3 = State('');
+    final $result$3 = _InRangeExcept_NoResult$0($state$3);
+    expect($state$3.ok, true,
+        reason: 'Testing \'state.ok == true\' failed, input: ');
+    final $value$3 = $result$3;
+    expect($value$3, null,
+        reason: 'Testing \'result == null\' failed, input: ');
+    expect($state$3.pos, 0, reason: 'Testing \'state.pos\' failed, input: ');
   });
 }
 
@@ -3460,6 +3713,267 @@ Object? _ManyMN23_NoResult$0(State<String> state) {
   return $0;
 }
 
+String? _abc(State<String> state) {
+  String? $0;
+  const tag$0 = 'abc';
+  if (state.ok = state.pos + 3 <= state.input.length &&
+      state.input.codeUnitAt(state.pos) == 97 &&
+      state.input.codeUnitAt(state.pos + 1) == 98 &&
+      state.input.codeUnitAt(state.pos + 2) == 99) {
+    state.pos += 3;
+    $0 = tag$0;
+  } else {
+    state.fail(const ErrorExpectedTags([tag$0]));
+  }
+  return $0;
+}
+
+String? _Memoize$0(State<String> state) {
+  String? $0;
+  String? $1;
+  final pos$0 = state.pos;
+  String? $2;
+  final v$0 = state.memoized(0, state.pos);
+  if (v$0 != null) {
+    state.ok = v$0.ok;
+    state.pos = v$0.end;
+    $2 = v$0.result as String?;
+  } else {
+    final pos$1 = state.pos;
+    String? $3;
+    $3 = _abc(state);
+    state.memoize(0, pos$1, state.pos, state.ok, $3);
+    $2 = $3;
+  }
+  if (state.ok) {
+    final pos$2 = state.pos;
+    const tag$1 = '1';
+    if (state.ok = state.pos + 1 <= state.input.length &&
+        state.input.codeUnitAt(state.pos) == 49) {
+      state.pos += 1;
+    } else {
+      state.fail(const ErrorExpectedTags([tag$1]));
+    }
+    state.ok = !state.ok;
+    if (!state.ok) {
+      final length = state.pos - pos$2;
+      state.pos = pos$2;
+      state.fail(ErrorUnexpectedInput(length));
+    }
+    if (state.ok) {
+      $1 = $2;
+    } else {
+      state.pos = pos$0;
+    }
+  }
+  if (state.ok) {
+    $0 = $1;
+  } else {
+    String? $5;
+    final v$1 = state.memoized(0, state.pos);
+    if (v$1 != null) {
+      state.ok = v$1.ok;
+      state.pos = v$1.end;
+      $5 = v$1.result as String?;
+    } else {
+      final pos$3 = state.pos;
+      String? $6;
+      $6 = _abc(state);
+      state.memoize(0, pos$3, state.pos, state.ok, $6);
+      $5 = $6;
+    }
+    if (state.ok) {
+      $0 = $5;
+    }
+  }
+  return $0;
+}
+
+Object? _Memoize_NoResult$0(State<String> state) {
+  Object? $0;
+  final pos$0 = state.pos;
+  final v$0 = state.memoized(0, state.pos);
+  if (v$0 != null) {
+    state.ok = v$0.ok;
+    state.pos = v$0.end;
+  } else {
+    final pos$1 = state.pos;
+    _abc(state);
+    state.memoize(0, pos$1, state.pos, state.ok, null);
+  }
+  if (state.ok) {
+    final pos$2 = state.pos;
+    const tag$1 = '1';
+    if (state.ok = state.pos + 1 <= state.input.length &&
+        state.input.codeUnitAt(state.pos) == 49) {
+      state.pos += 1;
+    } else {
+      state.fail(const ErrorExpectedTags([tag$1]));
+    }
+    state.ok = !state.ok;
+    if (!state.ok) {
+      final length = state.pos - pos$2;
+      state.pos = pos$2;
+      state.fail(ErrorUnexpectedInput(length));
+    }
+    if (!state.ok) {
+      state.pos = pos$0;
+    }
+  }
+  if (!state.ok) {
+    final v$1 = state.memoized(0, state.pos);
+    if (v$1 != null) {
+      state.ok = v$1.ok;
+      state.pos = v$1.end;
+    } else {
+      final pos$3 = state.pos;
+      _abc(state);
+      state.memoize(0, pos$3, state.pos, state.ok, null);
+    }
+  }
+  return $0;
+}
+
+List<String>? _Memoizecircularbuffer$0(State<String> state) {
+  List<String>? $0;
+  List<String>? $1;
+  final pos$0 = state.pos;
+  List<String>? $2;
+  final list$0 = <String>[];
+  while (true) {
+    String? $3;
+    final v$0 = state.memoized(0, state.pos);
+    if (v$0 != null) {
+      state.ok = v$0.ok;
+      state.pos = v$0.end;
+      $3 = v$0.result as String?;
+    } else {
+      final pos$1 = state.pos;
+      String? $4;
+      $4 = _abc(state);
+      state.memoize(0, pos$1, state.pos, state.ok, $4);
+      $3 = $4;
+    }
+    if (!state.ok) {
+      break;
+    }
+    list$0.add($3!);
+  }
+  if (state.ok = true) {
+    $2 = list$0;
+  }
+  if (state.ok) {
+    final pos$2 = state.pos;
+    const tag$1 = '1';
+    if (state.ok = state.pos + 1 <= state.input.length &&
+        state.input.codeUnitAt(state.pos) == 49) {
+      state.pos += 1;
+    } else {
+      state.fail(const ErrorExpectedTags([tag$1]));
+    }
+    state.ok = !state.ok;
+    if (!state.ok) {
+      final length = state.pos - pos$2;
+      state.pos = pos$2;
+      state.fail(ErrorUnexpectedInput(length));
+    }
+    if (state.ok) {
+      $1 = $2;
+    } else {
+      state.pos = pos$0;
+    }
+  }
+  if (state.ok) {
+    $0 = $1;
+  } else {
+    List<String>? $6;
+    final list$1 = <String>[];
+    while (true) {
+      String? $7;
+      final v$1 = state.memoized(0, state.pos);
+      if (v$1 != null) {
+        state.ok = v$1.ok;
+        state.pos = v$1.end;
+        $7 = v$1.result as String?;
+      } else {
+        final pos$3 = state.pos;
+        String? $8;
+        $8 = _abc(state);
+        state.memoize(0, pos$3, state.pos, state.ok, $8);
+        $7 = $8;
+      }
+      if (!state.ok) {
+        break;
+      }
+      list$1.add($7!);
+    }
+    if (state.ok = true) {
+      $6 = list$1;
+    }
+    if (state.ok) {
+      $0 = $6;
+    }
+  }
+  return $0;
+}
+
+Object? _Memoizecircularbuffer_NoResult$0(State<String> state) {
+  Object? $0;
+  final pos$0 = state.pos;
+  while (true) {
+    final v$0 = state.memoized(0, state.pos);
+    if (v$0 != null) {
+      state.ok = v$0.ok;
+      state.pos = v$0.end;
+    } else {
+      final pos$1 = state.pos;
+      _abc(state);
+      state.memoize(0, pos$1, state.pos, state.ok, null);
+    }
+    if (!state.ok) {
+      break;
+    }
+  }
+  state.ok = true;
+  if (state.ok) {
+    final pos$2 = state.pos;
+    const tag$1 = '1';
+    if (state.ok = state.pos + 1 <= state.input.length &&
+        state.input.codeUnitAt(state.pos) == 49) {
+      state.pos += 1;
+    } else {
+      state.fail(const ErrorExpectedTags([tag$1]));
+    }
+    state.ok = !state.ok;
+    if (!state.ok) {
+      final length = state.pos - pos$2;
+      state.pos = pos$2;
+      state.fail(ErrorUnexpectedInput(length));
+    }
+    if (!state.ok) {
+      state.pos = pos$0;
+    }
+  }
+  if (!state.ok) {
+    while (true) {
+      final v$1 = state.memoized(0, state.pos);
+      if (v$1 != null) {
+        state.ok = v$1.ok;
+        state.pos = v$1.end;
+      } else {
+        final pos$3 = state.pos;
+        _abc(state);
+        state.memoize(0, pos$3, state.pos, state.ok, null);
+      }
+      if (!state.ok) {
+        break;
+      }
+    }
+    state.ok = true;
+  }
+  return $0;
+}
+
 int? _Not$0(State<String> state) {
   int? $0;
   final pos$0 = state.pos;
@@ -3704,6 +4218,32 @@ Object? _Tags_NoResult$0(State<String> state) {
     state.failAll([
       const ErrorExpectedTags(['a', 'ab', 'abc', 'b', 'bc', 'c', '😀', '😀😀'])
     ]);
+  }
+  return $0;
+}
+
+String? _TakeUntil$0(State<String> state) {
+  String? $0;
+  const tag$0 = '-->';
+  final index$0 = state.input.indexOf(tag$0);
+  if (state.ok = index$0 >= 0) {
+    final pos = state.pos;
+    state.pos = index$0;
+    $0 = pos < index$0 ? state.input.substring(pos, index$0) : '';
+  } else {
+    state.fail(const ErrorExpectedTags([tag$0]));
+  }
+  return $0;
+}
+
+Object? _TakeUntil_NoResult$0(State<String> state) {
+  Object? $0;
+  const tag$0 = '-->';
+  final index$0 = state.input.indexOf(tag$0);
+  if (state.ok = index$0 >= 0) {
+    state.pos = index$0;
+  } else {
+    state.fail(const ErrorExpectedTags([tag$0]));
   }
   return $0;
 }
@@ -4088,6 +4628,39 @@ Object? _Unterminated_NoResult$0(State<String> state) {
   return $0;
 }
 
+String? _InRangeExcept$0(State<String> state) {
+  String? $0;
+  final input$0 = state.input;
+  final pos$0 = state.pos;
+  while (state.pos < input$0.length) {
+    final c = input$0.runeAt(state.pos);
+    final v = !(c == 55 || c == 57) && c >= 48 && c <= 57;
+    if (!v) {
+      break;
+    }
+    state.pos += c < 0xffff ? 1 : 2;
+  }
+  if (state.ok = true) {
+    $0 = state.pos != pos$0 ? input$0.substring(pos$0, state.pos) : '';
+  }
+  return $0;
+}
+
+Object? _InRangeExcept_NoResult$0(State<String> state) {
+  Object? $0;
+  final input$0 = state.input;
+  while (state.pos < input$0.length) {
+    final c = input$0.runeAt(state.pos);
+    final v = !(c == 55 || c == 57) && c >= 48 && c <= 57;
+    if (!v) {
+      break;
+    }
+    state.pos += c < 0xffff ? 1 : 2;
+  }
+  state.ok = true;
+  return $0;
+}
+
 class ErrorExpectedChar extends ParseError {
   final int char;
 
@@ -4292,7 +4865,7 @@ class Result<T> {
 class State<T> {
   Object? context;
 
-  List<ParseError?> errors = List.filled(512, null, growable: false);
+  final List<ParseError?> errors = List.filled(64, null, growable: false);
 
   int errorCount = 0;
 
@@ -4304,6 +4877,13 @@ class State<T> {
 
   int pos = 0;
 
+  final List<
+      ({
+        int last,
+        int index,
+        List<({int start, int end, bool ok, Object? result})?> list
+      })?> _cache = List.filled(64, null, growable: false);
+
   State(this.input);
 
   @pragma('vm:prefer-inline')
@@ -4314,7 +4894,9 @@ class State<T> {
         failPos = pos;
         errorCount = 0;
       }
-      errors[errorCount++] = error;
+      if (errorCount < errors.length) {
+        errors[errorCount++] = error;
+      }
     }
   }
 
@@ -4327,8 +4909,9 @@ class State<T> {
         errorCount = 0;
       }
       for (var i = 0; i < errors.length; i++) {
-        final error = errors[i];
-        this.errors[errorCount++] = error;
+        if (errorCount < errors.length) {
+          this.errors[errorCount++] = errors[i];
+        }
       }
     }
   }
@@ -4342,8 +4925,9 @@ class State<T> {
         errorCount = 0;
       }
       for (var i = 0; i < errors.length; i++) {
-        final error = errors[i];
-        this.errors[errorCount++] = error;
+        if (errorCount < errors.length) {
+          this.errors[errorCount++] = errors[i];
+        }
       }
     }
   }
@@ -4356,12 +4940,67 @@ class State<T> {
         failPos = offset;
         errorCount = 0;
       }
-      errors[errorCount++] = error;
+      if (errorCount < errors.length) {
+        errors[errorCount++] = error;
+      }
     }
   }
 
   List<ParseError> getErrors() {
     return List.generate(errorCount, (i) => errors[i]!);
+  }
+
+  @pragma('vm:prefer-inline')
+  void memoize(int id, int start, int end, bool ok, Object? result) {
+    if (id >= _cache.length) {
+      return;
+    }
+
+    var index = -1;
+    var record = _cache[id];
+    if (record == null) {
+      record =
+          (last: start, index: 0, list: List.filled(4, null, growable: false));
+      _cache[id] = record;
+    } else {
+      index = record.index;
+    }
+
+    if (record.last <= pos) {
+      final list = record.list;
+      index = index < list.length - 1 ? index + 1 : 0;
+      list[index] = (start: start, end: end, ok: ok, result: result);
+      _cache[id] = (last: pos, index: index, list: list);
+    }
+  }
+
+  @pragma('vm:prefer-inline')
+  ({int start, int end, bool ok, Object? result})? memoized(int id, int pos) {
+    if (id >= _cache.length) {
+      return null;
+    }
+
+    final record = _cache[id];
+    if (record == null) {
+      return null;
+    }
+
+    final list = record.list;
+    var count = 0;
+    while (count < list.length) {
+      final value = list[count];
+      if (value == null) {
+        return null;
+      }
+
+      if (value.start == pos) {
+        return value;
+      }
+
+      count++;
+    }
+
+    return null;
   }
 
   @override

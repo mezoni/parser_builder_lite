@@ -41,7 +41,7 @@ if (!state.ok && state.failPos >= @failPos) {
   }
 }''';
 
-  final Calculable<List<Object?>> handle;
+  final Calculable<(bool, List<Object>?)> handle;
 
   final ParserBuilder<I, O> p;
 

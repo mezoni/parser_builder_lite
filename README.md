@@ -2,7 +2,7 @@
 
 Parser Builder Lite is a source code generator of high performance real-time parsers.
 
-Version: 0.7.1
+Version: 0.7.2
 
 ## What is it and what is it for?
 

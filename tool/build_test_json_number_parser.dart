@@ -40,7 +40,7 @@ num parse(String input) {
   final state = State(input);
   final result = number(state);
   if (!state.ok) {
-    final message = _errorMessage(input, state.pos, state.getErrors());
+    final message = ParseError.errorMessage(input, state.failPos, state.getErrors());
     throw FormatException('\n$message');
   }
   return result!;

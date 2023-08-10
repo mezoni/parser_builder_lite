@@ -69,7 +69,7 @@ int _toHexValue(String s) {
 
 const __header = r'''
 void main() {
-  final r = parse( '{"rocket": "🚀 flies to the stars"}');
+  final r = parse('{"rocket": "🚀 flies to the stars"}');
   print(r);
 }
 
@@ -77,7 +77,7 @@ Object? parse(String input) {
   final state = State(input);
   final result = parser(state);
   if (!state.ok) {
-    final message = _errorMessage(input, state.failPos, state.getErrors());
+    final message = ParseError.errorMessage(input, state.failPos, state.getErrors());
     throw message;
   }
   return result;
@@ -153,7 +153,8 @@ const _openBrace = Marked('_openBrace ', Terminated(Tag('{'), _ws));
 
 const _openBracket = Marked('_openBracket', Terminated(Tag('['), _ws));
 
-const _string = Named('_string', Delimited(Tag('"'), _stringChars, Tag('"')));
+const _string = Named(
+    '_string', Delimited(Tag('"'), _stringChars, Terminated(Tag('"'), _ws)));
 
 const _stringChars = Named(
     '_stringChars',

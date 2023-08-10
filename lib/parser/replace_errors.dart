@@ -3,7 +3,7 @@ import '../parser_builder.dart';
 import 'handle_error.dart';
 
 class ReplaceErrors<I, O> extends ParserBuilder<I, O> {
-  final Calculable<List<Object?>> handle;
+  final Calculable<(bool, List<Object>?)> handle;
 
   final ParserBuilder<I, O> p;
 

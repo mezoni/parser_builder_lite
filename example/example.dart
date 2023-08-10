@@ -80,7 +80,7 @@ Object? parse(String input) {
   final state = State(input);
   final result = parser(state);
   if (!state.ok) {
-    final message = _errorMessage(input, state.failPos, state.getErrors());
+    final message = ParseError.errorMessage(input, state.failPos, state.getErrors());
     throw message;
   }
   return result;

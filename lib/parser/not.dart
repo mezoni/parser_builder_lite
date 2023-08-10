@@ -1,3 +1,4 @@
+import '../calculable.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
 
@@ -12,9 +13,22 @@ if (!state.ok) {
   state.fail(ErrorUnexpectedInput(length));
 }''';
 
+  static const _templateWithHandler = '''
+final @pos = state.pos;
+@p1
+state.ok = !state.ok;
+if (!state.ok) {
+  final end = state.pos;
+  state.pos = @pos;
+  final errors = @handle;
+  state.failAll(errors);
+}''';
+
+  final Calculable<List<Object>>? handle;
+
   final ParserBuilder<I, Object?> p;
 
-  const Not(this.p);
+  const Not(this.p, [this.handle]);
 
   @override
   BuildBodyResult buildBody(BuildContext context, bool hasResult) {
@@ -22,9 +36,12 @@ if (!state.ok) {
       this,
       context,
       hasResult,
-      _template,
-      _template,
-      const {},
+      handle == null ? _template : _templateWithHandler,
+      handle == null ? _template : _templateWithHandler,
+      {
+        if (handle != null)
+          'handle': handle!.calculate(context, ['state.pos', 'end'])
+      },
     );
   }
 

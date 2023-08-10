@@ -6,7 +6,6 @@ import 'parser_builder.dart';
 import 'runtime.dart' as runtime;
 
 Future<void> fastBuild({
-  bool addErrorMessageCode = true,
   bool addParseCode = false,
   bool addRuntimeCode = true,
   required BuildContext context,
@@ -35,10 +34,6 @@ Future<void> fastBuild({
   if (footer != null) {
     output.writeln(footer);
     output.writeln();
-  }
-
-  if (addErrorMessageCode) {
-    output.writeln(runtime.errorMessageTemplate);
   }
 
   if (addRuntimeCode) {

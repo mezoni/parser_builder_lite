@@ -1629,7 +1629,6 @@ Future<void> _generate() async {
     context: context,
     parsers: tester.parsers,
     filename: 'test/test.dart',
-    addErrorMessageCode: false,
     footer: _footer,
     header: _header + tester.generate(),
   );

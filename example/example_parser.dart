@@ -7,7 +7,8 @@ Object? parse(String input) {
   final state = State(input);
   final result = parser(state);
   if (!state.ok) {
-    final message = _errorMessage(input, state.failPos, state.getErrors());
+    final message =
+        ParseError.errorMessage(input, state.failPos, state.getErrors());
     throw message;
   }
   return result;
@@ -869,90 +870,6 @@ int _toHexValue(String s) {
   return r;
 }
 
-String _errorMessage(String input, int offset, List<ParseError> errors) {
-  final sb = StringBuffer();
-  final errorList = errors.toList();
-  if (offset >= input.length) {
-    errorList.add(const ErrorUnexpectedEof());
-    errorList.removeWhere((e) => e is ErrorUnexpectedChar);
-  }
-
-  final expectedTags = errorList.whereType<ErrorExpectedTags>().toList();
-  if (expectedTags.isNotEmpty) {
-    errorList.removeWhere((e) => e is ErrorExpectedTags);
-    final tags = <String>[];
-    for (final error in expectedTags) {
-      tags.addAll(error.tags);
-    }
-    final error = ErrorExpectedTags(tags);
-    errorList.add(error);
-  }
-  final errorInfoList = errorList
-      .map((e) => (
-            message: e.getMessage(offset: offset, input: input),
-            start: offset - e.length,
-          ))
-      .toSet()
-      .toList();
-  for (var i = 0; i < errorInfoList.length; i++) {
-    int max(int x, int y) => x > y ? x : y;
-    int min(int x, int y) => x < y ? x : y;
-    if (sb.isNotEmpty) {
-      sb.writeln();
-      sb.writeln();
-    }
-    final errorInfo = errorInfoList[i];
-    final message = errorInfo.message;
-    final start = min(errorInfo.start, offset);
-    final end = max(errorInfo.start, offset);
-    var row = 1;
-    var lineStart = 0, next = 0, pos = 0;
-    while (pos < input.length) {
-      final c = input.codeUnitAt(pos++);
-      if (c == 0xa || c == 0xd) {
-        next = c == 0xa ? 0xd : 0xa;
-        if (pos < input.length && input.codeUnitAt(pos) == next) {
-          pos++;
-        }
-        if (pos - 1 >= start) {
-          break;
-        }
-        row++;
-        lineStart = pos;
-      }
-    }
-    final inputLen = input.length;
-    final lineLimit = min(80, inputLen);
-    final start2 = start;
-    final end2 = min(start2 + lineLimit, end);
-    final errorLen = end2 - start;
-    final extraLen = lineLimit - errorLen;
-    final rightLen = min(inputLen - end2, extraLen - (extraLen >> 1));
-    final leftLen = min(start, max(0, lineLimit - errorLen - rightLen));
-    final list = <int>[];
-    final iterator = RuneIterator.at(input, start2);
-    for (var i = 0; i < leftLen; i++) {
-      if (!iterator.movePrevious()) {
-        break;
-      }
-      list.add(iterator.current);
-    }
-    final column = start - lineStart + 1;
-    final left = String.fromCharCodes(list.reversed);
-    final end3 = min(inputLen, start2 + (lineLimit - leftLen));
-    final indicatorLen = max(1, errorLen);
-    final right = input.substring(start2, end3);
-    var text = left + right;
-    text = text.replaceAll('\n', ' ');
-    text = text.replaceAll('\r', ' ');
-    text = text.replaceAll('\t', ' ');
-    sb.writeln('line $row, column $column: $message');
-    sb.writeln(text);
-    sb.write(' ' * leftLen + '^' * indicatorLen);
-  }
-  return sb.toString();
-}
-
 class ErrorExpectedChar extends ParseError {
   final int char;
 
@@ -960,15 +877,12 @@ class ErrorExpectedChar extends ParseError {
 
   @override
   String getMessage({
-    required Object input,
+    required Object? input,
     required int offset,
   }) {
-    if (input is String) {
-      final value = escape(char);
-      return 'Expected character $value';
-    } else {
-      return 'Expected character';
-    }
+    final hexValue = char.toRadixString(16);
+    final value = ParseError.escape(char);
+    return 'Unexpected character $value (0x$hexValue)';
   }
 }
 
@@ -977,7 +891,7 @@ class ErrorExpectedEof extends ParseError {
 
   @override
   String getMessage({
-    required Object input,
+    required Object? input,
     required int offset,
   }) {
     return 'Expected end of file';
@@ -993,7 +907,7 @@ class ErrorExpectedInt extends ParseError {
 
   @override
   String getMessage({
-    required Object input,
+    required Object? input,
     required int offset,
   }) {
     var string = value.toRadixString(16);
@@ -1001,7 +915,7 @@ class ErrorExpectedInt extends ParseError {
       string = string.padLeft(size >> 2, '0');
     }
     if (value >= 0 && value <= 0x10ffff) {
-      string = '$string (${escape(value)})';
+      string = '$string (${ParseError.escape(value)})';
     }
     return 'Expected 0x$string';
   }
@@ -1014,10 +928,10 @@ class ErrorExpectedTags extends ParseError {
 
   @override
   String getMessage({
-    required Object input,
+    required Object? input,
     required int offset,
   }) {
-    final value = tags.map(escape).join(', ');
+    final value = tags.map(ParseError.escape).join(', ');
     return 'Expected $value';
   }
 }
@@ -1032,7 +946,7 @@ class ErrorMessage extends ParseError {
 
   @override
   String getMessage({
-    required Object input,
+    required Object? input,
     required int offset,
   }) {
     return message;
@@ -1044,16 +958,18 @@ class ErrorUnexpectedChar extends ParseError {
 
   @override
   String getMessage({
-    required Object input,
+    required Object? input,
     required int offset,
   }) {
     if (input is String) {
-      final char = input.runeAt(offset);
-      final value = escape(char);
-      return 'Unexpected character $value';
-    } else {
-      return 'Unexpected character';
+      if (offset < input.length) {
+        final char = input.runeAt(offset);
+        final hexValue = char.toRadixString(16);
+        final value = ParseError.escape(char);
+        return 'Unexpected character $value (0x$hexValue)';
+      }
     }
+    return 'Unexpected character';
   }
 }
 
@@ -1062,7 +978,7 @@ class ErrorUnexpectedEof extends ParseError {
 
   @override
   String getMessage({
-    required Object input,
+    required Object? input,
     required int offset,
   }) {
     return 'Unexpected end of file';
@@ -1077,7 +993,7 @@ class ErrorUnexpectedInput extends ParseError {
 
   @override
   String getMessage({
-    required Object input,
+    required Object? input,
     required int offset,
   }) {
     return 'Unexpected input';
@@ -1089,7 +1005,7 @@ class ErrorUnknown extends ParseError {
 
   @override
   String getMessage({
-    required Object input,
+    required Object? input,
     required int offset,
   }) {
     return 'Unknown error';
@@ -1101,7 +1017,96 @@ abstract class ParseError {
 
   int get length => 0;
 
-  String escape(Object? value, [bool quote = true]) {
+  String getMessage({
+    required Object? input,
+    required int offset,
+  });
+
+  static String errorMessage(
+      String input, int offset, List<ParseError> errors) {
+    final sb = StringBuffer();
+    final errorList = errors.toList();
+    if (offset >= input.length) {
+      errorList.add(const ErrorUnexpectedEof());
+      errorList.removeWhere((e) => e is ErrorUnexpectedChar);
+    }
+    final expectedTags = errorList.whereType<ErrorExpectedTags>().toList();
+    if (expectedTags.isNotEmpty) {
+      errorList.removeWhere((e) => e is ErrorExpectedTags);
+      final tags = <String>{};
+      for (final error in expectedTags) {
+        tags.addAll(error.tags);
+      }
+      final error = ErrorExpectedTags(tags.toList());
+      errorList.add(error);
+    }
+    final errorInfoList = errorList
+        .map((e) => (
+              message: e.getMessage(offset: offset, input: input),
+              start: offset - e.length,
+            ))
+        .toSet()
+        .toList();
+    for (var i = 0; i < errorInfoList.length; i++) {
+      int max(int x, int y) => x > y ? x : y;
+      int min(int x, int y) => x < y ? x : y;
+      if (sb.isNotEmpty) {
+        sb.writeln();
+        sb.writeln();
+      }
+      final errorInfo = errorInfoList[i];
+      final message = errorInfo.message;
+      final start = min(errorInfo.start, offset);
+      final end = max(errorInfo.start, offset);
+      var row = 1;
+      var lineStart = 0, next = 0, pos = 0;
+      while (pos < input.length) {
+        final c = input.codeUnitAt(pos++);
+        if (c == 0xa || c == 0xd) {
+          next = c == 0xa ? 0xd : 0xa;
+          if (pos < input.length && input.codeUnitAt(pos) == next) {
+            pos++;
+          }
+          if (pos - 1 >= start) {
+            break;
+          }
+          row++;
+          lineStart = pos;
+        }
+      }
+      final inputLen = input.length;
+      final lineLimit = min(80, inputLen);
+      final start2 = start;
+      final end2 = min(start2 + lineLimit, end);
+      final errorLen = end2 - start;
+      final extraLen = lineLimit - errorLen;
+      final rightLen = min(inputLen - end2, extraLen - (extraLen >> 1));
+      final leftLen = min(start, max(0, lineLimit - errorLen - rightLen));
+      final list = <int>[];
+      final iterator = RuneIterator.at(input, start2);
+      for (var i = 0; i < leftLen; i++) {
+        if (!iterator.movePrevious()) {
+          break;
+        }
+        list.add(iterator.current);
+      }
+      final column = start - lineStart + 1;
+      final left = String.fromCharCodes(list.reversed);
+      final end3 = min(inputLen, start2 + (lineLimit - leftLen));
+      final indicatorLen = max(1, errorLen);
+      final right = input.substring(start2, end3);
+      var text = left + right;
+      text = text.replaceAll('\n', ' ');
+      text = text.replaceAll('\r', ' ');
+      text = text.replaceAll('\t', ' ');
+      sb.writeln('line $row, column $column: $message');
+      sb.writeln(text);
+      sb.write(' ' * leftLen + '^' * indicatorLen);
+    }
+    return sb.toString();
+  }
+
+  static String escape(Object? value, [bool quote = true]) {
     if (value is int) {
       if (value >= 0 && value <= 0xd7ff ||
           value >= 0xe000 && value <= 0x10ffff) {
@@ -1130,11 +1135,6 @@ abstract class ParseError {
     }
     return result;
   }
-
-  String getMessage({
-    required Object input,
-    required int offset,
-  });
 }
 
 class Result<T> {
@@ -1169,8 +1169,12 @@ class State<T> {
 
   int pos = 0;
 
-  final List<(int, List<({int end, bool ok, Object? result, int start})?>)?>
-      _cache = List.generate(64, (i) => null);
+  final List<
+      ({
+        int last,
+        int index,
+        List<({int start, int end, bool ok, Object? result})?> list
+      })?> _cache = List.filled(64, null, growable: false);
 
   State(this.input);
 
@@ -1244,21 +1248,26 @@ class State<T> {
       return;
     }
 
+    var index = -1;
     var record = _cache[id];
     if (record == null) {
-      record = (0, List.generate(5, (i) => null));
+      record =
+          (last: start, index: 0, list: List.filled(4, null, growable: false));
       _cache[id] = record;
+    } else {
+      index = record.index;
     }
 
-    var index = record.$1;
-    final list = record.$2;
-    index = index < list.length ? index + 1 : 0;
-    list[index] = (end: end, ok: ok, result: result, start: start);
-    _cache[id] = (index, list);
+    if (record.last <= pos) {
+      final list = record.list;
+      index = index < list.length - 1 ? index + 1 : 0;
+      list[index] = (start: start, end: end, ok: ok, result: result);
+      _cache[id] = (last: pos, index: index, list: list);
+    }
   }
 
   @pragma('vm:prefer-inline')
-  ({int end, bool ok, Object? result, int start})? memoized(int id, int pos) {
+  ({int start, int end, bool ok, Object? result})? memoized(int id, int pos) {
     if (id >= _cache.length) {
       return null;
     }
@@ -1268,11 +1277,10 @@ class State<T> {
       return null;
     }
 
-    var index = record.$1;
-    final list = record.$2;
+    final list = record.list;
     var count = 0;
-    while (count++ < list.length) {
-      final value = list[index];
+    while (count < list.length) {
+      final value = list[count];
       if (value == null) {
         return null;
       }
@@ -1281,9 +1289,7 @@ class State<T> {
         return value;
       }
 
-      if (index >= list.length) {
-        index = 0;
-      }
+      count++;
     }
 
     return null;

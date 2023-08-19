@@ -18,6 +18,7 @@ import 'package:parser_builder_lite/parser/recognize.dart';
 import 'package:parser_builder_lite/parser/ref.dart';
 import 'package:parser_builder_lite/parser/satisfy.dart';
 import 'package:parser_builder_lite/parser/separated_list.dart';
+import 'package:parser_builder_lite/parser/separated_pair.dart';
 import 'package:parser_builder_lite/parser/skip_while.dart';
 import 'package:parser_builder_lite/parser/smart_choice.dart';
 import 'package:parser_builder_lite/parser/string_chars.dart';
@@ -158,8 +159,8 @@ const _isDigits1_9 = InRange([('1', '9')]);
 const _keyValue = Named(
     '_keyValue',
     Mapped(
-      Tuple3(_string, _colon, _value),
-      Expr<MapEntry<String, Object?>>(r'MapEntry({{0}}.$1, {{0}}.$3)'),
+      SeparatedPair(_string, _colon, _value),
+      Expr<MapEntry<String, Object?>>(r'MapEntry({{0}}.$1, {{0}}.$2)'),
     ));
 
 const _keyValues = Named('_keyValues', SeparatedList(_keyValue, _comma));

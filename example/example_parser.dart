@@ -1,6 +1,5 @@
 void main() {
-  final r = parse(r'"\t "');
-  print(r == '\t ');
+  final r = parse('{"rocket": "🚀 flies to the stars"}');
   print(r);
 }
 
@@ -258,37 +257,32 @@ String? _string(State<String> state) {
 
 MapEntry<String, Object?>? _keyValue(State<String> state) {
   MapEntry<String, Object?>? $0;
-  (String, String, Object?)? $1;
+  (String, Object?)? $1;
   final pos$0 = state.pos;
   String? $2;
   $2 = _string(state);
   if (state.ok) {
-    String? $17;
     // => _colon
     final pos$7 = state.pos;
-    String? $18;
     const tag$3 = ':';
     if (state.ok = state.pos + 1 <= state.input.length &&
         state.input.codeUnitAt(state.pos) == 58) {
       state.pos += 1;
-      $18 = tag$3;
     } else {
       state.fail(const ErrorExpectedTags([tag$3]));
     }
     if (state.ok) {
       _ws(state);
-      if (state.ok) {
-        $17 = $18;
-      } else {
+      if (!state.ok) {
         state.pos = pos$7;
       }
     }
     // <= _colon
     if (state.ok) {
-      Object? $20;
-      $20 = _value(state);
+      Object? $18;
+      $18 = _value(state);
       if (state.ok) {
-        $1 = ($2!, $17!, $20);
+        $1 = ($2!, $18);
       }
     }
   }
@@ -297,7 +291,7 @@ MapEntry<String, Object?>? _keyValue(State<String> state) {
   }
   if (state.ok) {
     final v = $1!;
-    $0 = MapEntry(v.$1, v.$3);
+    $0 = MapEntry(v.$1, v.$2);
   }
   return $0;
 }
@@ -378,29 +372,29 @@ Map<String, Object?>? _object(State<String> state) {
     List<MapEntry<String, Object?>>? $5;
     $5 = _keyValues(state);
     if (state.ok) {
-      String? $32;
+      String? $30;
       // => _closeBrace
       final pos$12 = state.pos;
-      String? $33;
+      String? $31;
       const tag$6 = '}';
       if (state.ok = state.pos + 1 <= state.input.length &&
           state.input.codeUnitAt(state.pos) == 125) {
         state.pos += 1;
-        $33 = tag$6;
+        $31 = tag$6;
       } else {
         state.fail(const ErrorExpectedTags([tag$6]));
       }
       if (state.ok) {
         _ws(state);
         if (state.ok) {
-          $32 = $33;
+          $30 = $31;
         } else {
           state.pos = pos$12;
         }
       }
       // <= _closeBrace
       if (state.ok) {
-        $1 = ($2!, $5!, $32!);
+        $1 = ($2!, $5!, $30!);
       }
     }
   }
@@ -766,50 +760,50 @@ Object? _value(State<String> state) {
   }
   if (!state.ok) {
     if (flag$0 & 0x2 != 0) {
-      String? $37;
-      $37 = _string(state);
+      String? $35;
+      $35 = _string(state);
       if (state.ok) {
-        $0 = $37!;
+        $0 = $35!;
       }
     }
     if (!state.ok) {
       if (flag$0 & 0x4 != 0) {
-        List<Object?>? $52;
-        $52 = _array(state);
+        List<Object?>? $50;
+        $50 = _array(state);
         if (state.ok) {
-          $0 = $52!;
+          $0 = $50!;
         }
       }
       if (!state.ok) {
         if (flag$0 & 0x8 != 0) {
-          Object? $62;
-          $62 = _null(state);
+          Object? $60;
+          $60 = _null(state);
           if (state.ok) {
-            $0 = $62;
+            $0 = $60;
           }
         }
         if (!state.ok) {
           if (flag$0 & 0x10 != 0) {
-            bool? $65;
-            $65 = _false(state);
+            bool? $63;
+            $63 = _false(state);
             if (state.ok) {
-              $0 = $65!;
+              $0 = $63!;
             }
           }
           if (!state.ok) {
             if (flag$0 & 0x20 != 0) {
-              bool? $68;
-              $68 = _true(state);
+              bool? $66;
+              $66 = _true(state);
               if (state.ok) {
-                $0 = $68!;
+                $0 = $66!;
               }
             }
             if (!state.ok) {
               if (flag$0 & 0x40 != 0) {
-                num? $71;
-                $71 = _number(state);
+                num? $69;
+                $69 = _number(state);
                 if (state.ok) {
-                  $0 = $71!;
+                  $0 = $69!;
                 }
               }
             }

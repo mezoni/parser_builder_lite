@@ -14,6 +14,7 @@ import 'package:parser_builder_lite/parser/preceded.dart';
 import 'package:parser_builder_lite/parser/predicate.dart';
 import 'package:parser_builder_lite/parser/ref.dart';
 import 'package:parser_builder_lite/parser/separated_list.dart';
+import 'package:parser_builder_lite/parser/separated_pair.dart';
 import 'package:parser_builder_lite/parser/skip_while.dart';
 import 'package:parser_builder_lite/parser/smart_choice.dart';
 import 'package:parser_builder_lite/parser/string_chars.dart';
@@ -120,8 +121,8 @@ const _hexValueChecked = Named('_hexValueChecked',
 const _keyValue = Named(
     '_keyValue',
     Mapped(
-      Tuple3(_string, _colon, _value),
-      Expr<MapEntry<String, Object?>>(r'MapEntry({{0}}.$1, {{0}}.$3)'),
+      SeparatedPair(Terminated(_string, _ws), _colon, _value),
+      Expr<MapEntry<String, Object?>>(r'MapEntry({{0}}.$1, {{0}}.$2)'),
     ));
 
 const _keyValues = Named('_keyValues', SeparatedList(_keyValue, _comma));
@@ -148,8 +149,7 @@ const _openBrace = Marked('_openBrace ', Terminated(Tag('{'), _ws));
 
 const _openBracket = Marked('_openBracket', Terminated(Tag('['), _ws));
 
-const _string = Named(
-    '_string', Delimited(Tag('"'), _stringChars, Terminated(Tag('"'), _ws)));
+const _string = Named('_string', Delimited(Tag('"'), _stringChars, Tag('"')));
 
 const _stringChars = Named(
     '_stringChars',

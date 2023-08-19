@@ -213,30 +213,12 @@ String? _string(State<String> state) {
     String? $1;
     $1 = _stringChars(state);
     if (state.ok) {
-      final pos$5 = state.pos;
       const tag$2 = '"';
       if (state.ok = state.pos + 1 <= state.input.length &&
           state.input.codeUnitAt(state.pos) == 34) {
         state.pos += 1;
       } else {
         state.fail(const ErrorExpectedTags([tag$2]));
-      }
-      if (state.ok) {
-        // => _ws
-        final input$2 = state.input;
-        while (state.pos < input$2.length) {
-          final c = input$2.codeUnitAt(state.pos);
-          final v = c >= 9 && c <= 10 || c == 13 || c == 32;
-          if (!v) {
-            break;
-          }
-          state.pos += 1;
-        }
-        state.ok = true;
-        // <= _ws
-        if (!state.ok) {
-          state.pos = pos$5;
-        }
       }
       if (state.ok) {
         $0 = $1;
@@ -251,20 +233,38 @@ String? _string(State<String> state) {
 
 MapEntry<String, Object?>? _keyValue(State<String> state) {
   MapEntry<String, Object?>? $0;
-  (String, String, Object?)? $1;
+  (String, Object?)? $1;
   final pos$0 = state.pos;
   String? $2;
-  $2 = _string(state);
+  final pos$1 = state.pos;
+  String? $3;
+  $3 = _string(state);
   if (state.ok) {
-    String? $16;
+    // => _ws
+    final input$2 = state.input;
+    while (state.pos < input$2.length) {
+      final c = input$2.codeUnitAt(state.pos);
+      final v = c >= 9 && c <= 10 || c == 13 || c == 32;
+      if (!v) {
+        break;
+      }
+      state.pos += 1;
+    }
+    state.ok = true;
+    // <= _ws
+    if (state.ok) {
+      $2 = $3;
+    } else {
+      state.pos = pos$1;
+    }
+  }
+  if (state.ok) {
     // => _colon
     final pos$7 = state.pos;
-    String? $17;
     const tag$3 = ':';
     if (state.ok = state.pos + 1 <= state.input.length &&
         state.input.codeUnitAt(state.pos) == 58) {
       state.pos += 1;
-      $17 = tag$3;
     } else {
       state.fail(const ErrorExpectedTags([tag$3]));
     }
@@ -281,18 +281,16 @@ MapEntry<String, Object?>? _keyValue(State<String> state) {
       }
       state.ok = true;
       // <= _ws
-      if (state.ok) {
-        $16 = $17;
-      } else {
+      if (!state.ok) {
         state.pos = pos$7;
       }
     }
     // <= _colon
     if (state.ok) {
-      Object? $18;
-      $18 = _value(state);
+      Object? $17;
+      $17 = _value(state);
       if (state.ok) {
-        $1 = ($2!, $16!, $18);
+        $1 = ($2!, $17);
       }
     }
   }
@@ -301,7 +299,7 @@ MapEntry<String, Object?>? _keyValue(State<String> state) {
   }
   if (state.ok) {
     final v = $1!;
-    $0 = MapEntry(v.$1, v.$3);
+    $0 = MapEntry(v.$1, v.$2);
   }
   return $0;
 }
@@ -396,17 +394,17 @@ Map<String, Object?>? _object(State<String> state) {
     List<MapEntry<String, Object?>>? $4;
     $4 = _keyValues(state);
     if (state.ok) {
-      String? $26;
+      String? $25;
       const tag$6 = '}';
       if (state.ok = state.pos + 1 <= state.input.length &&
           state.input.codeUnitAt(state.pos) == 125) {
         state.pos += 1;
-        $26 = tag$6;
+        $25 = tag$6;
       } else {
         state.fail(const ErrorExpectedTags([tag$6]));
       }
       if (state.ok) {
-        $1 = ($2!, $4!, $26!);
+        $1 = ($2!, $4!, $25!);
       }
     }
   }
@@ -885,50 +883,50 @@ Object? _value(State<String> state) {
   }
   if (!state.ok) {
     if (flag$0 & 0x2 != 0) {
-      String? $30;
-      $30 = _string(state);
+      String? $29;
+      $29 = _string(state);
       if (state.ok) {
-        $1 = $30!;
+        $1 = $29!;
       }
     }
     if (!state.ok) {
       if (flag$0 & 0x4 != 0) {
-        List<Object?>? $44;
-        $44 = _array(state);
+        List<Object?>? $43;
+        $43 = _array(state);
         if (state.ok) {
-          $1 = $44!;
+          $1 = $43!;
         }
       }
       if (!state.ok) {
         if (flag$0 & 0x8 != 0) {
-          Object? $49;
-          $49 = _null(state);
+          Object? $48;
+          $48 = _null(state);
           if (state.ok) {
-            $1 = $49;
+            $1 = $48;
           }
         }
         if (!state.ok) {
           if (flag$0 & 0x10 != 0) {
-            bool? $51;
-            $51 = _false(state);
+            bool? $50;
+            $50 = _false(state);
             if (state.ok) {
-              $1 = $51!;
+              $1 = $50!;
             }
           }
           if (!state.ok) {
             if (flag$0 & 0x20 != 0) {
-              bool? $53;
-              $53 = _true(state);
+              bool? $52;
+              $52 = _true(state);
               if (state.ok) {
-                $1 = $53!;
+                $1 = $52!;
               }
             }
             if (!state.ok) {
               if (flag$0 & 0x40 != 0) {
-                num? $55;
-                $55 = _number(state);
+                num? $54;
+                $54 = _number(state);
                 if (state.ok) {
-                  $1 = $55!;
+                  $1 = $54!;
                 }
               }
             }
@@ -950,9 +948,9 @@ Object? _value(State<String> state) {
   }
   if (state.ok) {
     // => _ws
-    final input$11 = state.input;
-    while (state.pos < input$11.length) {
-      final c = input$11.codeUnitAt(state.pos);
+    final input$10 = state.input;
+    while (state.pos < input$10.length) {
+      final c = input$10.codeUnitAt(state.pos);
       final v = c >= 9 && c <= 10 || c == 13 || c == 32;
       if (!v) {
         break;

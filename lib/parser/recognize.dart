@@ -1,7 +1,7 @@
 import '../helper.dart';
 import '../parser_builder.dart';
 
-class Recognize extends ParserBuilder<String, String> {
+class Recognize<O> extends ParserBuilder<String, String> {
   static const _template = '''
 final @pos = state.pos;
 @p1
@@ -14,7 +14,7 @@ if (state.ok) {
   static const _templateNoResult = '''
 @p1''';
 
-  final ParserBuilder<String, Object?> p;
+  final ParserBuilder<String, O> p;
 
   const Recognize(this.p);
 

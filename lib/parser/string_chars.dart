@@ -14,11 +14,10 @@ import '../parser_builder.dart';
 class StringChars extends ParserBuilder<String, String> {
   static const _template = '''
 final @input = state.input;
-final @list = <String>[];
-var @str = '';
+List<String>? @list;
+String? @str;
 while (state.pos < @input.length) {
   final @pos = state.pos;
-  @str = '';
   var c = -1;
   while (state.pos < @input.length) {
     c = @input.runeAt(state.pos);
@@ -26,12 +25,18 @@ while (state.pos < @input.length) {
     if (!ok) {
       break;
     }
-    state.pos += c < 0xffff ? 1 : 2;
+    state.pos += c > 0xffff ? 2 : 1;
   }
   if (state.pos != @pos) {
-    @str = @input.substring(@pos, state.pos);
-    if (@list.isNotEmpty) {
-      @list.add(@str);
+    final v = @input.substring(@pos, state.pos);
+    if (@str == null) {
+      @str = v;
+    } else {
+      if (@list == null) {
+        @list = [@str, v];
+      } else {
+        @list.add(v);
+      }
     }
   }
   if (c != @controlChar) {
@@ -43,15 +48,22 @@ while (state.pos < @input.length) {
     state.pos = @pos;
     break;
   }
-  if (@list.isEmpty && @str != '') {
-    @list.add(@str);
+  if (@str == null) {
+    @str = @rv1;
+  } else {
+    if (@list == null) {
+      @list = [@str, @rv1];
+    } else {
+      @list.add(@rv1);
+    }
   }
-  @list.add(@rv1);
 }
 state.ok = true;
-if (@list.isEmpty) {
+if (@str == null) {
+  @r = '';
+} else if (@list == null) {
   @r = @str;
-} else {
+} else  {
   @r = @list.join();
 }''';
 
@@ -69,7 +81,7 @@ while (state.pos < @input.length) {
     if (!ok) {
       break;
     }
-    state.pos += c < 0xffff ? 1 : 2;
+    state.pos += c > 0xffff ? 2 : 1;
   }
   if (state.pos != @pos) {
     @str = @input.substring(@pos, state.pos);

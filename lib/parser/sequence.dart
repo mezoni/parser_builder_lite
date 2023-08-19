@@ -2,7 +2,7 @@ import '../helper.dart';
 import '../parser_builder.dart';
 
 class Sequence<I, O> extends SequenceBase<I, O> {
-  final List<(ParserBuilder<I, Object?>, bool)> ps;
+  final List<(ParserBuilder<I, O>, bool)> ps;
 
   const Sequence(this.ps);
 

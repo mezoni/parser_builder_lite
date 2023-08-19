@@ -1,3 +1,7 @@
+## 0.7.2
+
+- Fixed bugs
+
 ## 0.7.1
 
 - Added `InRangeExcept` predicate. It works like a combination of `NotInRange` and `InRange`. It is not the best way, but it is much better than parsing using a combination of multiple parsers.

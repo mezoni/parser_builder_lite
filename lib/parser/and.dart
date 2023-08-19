@@ -1,7 +1,7 @@
 import '../helper.dart';
 import '../parser_builder.dart';
 
-class And<I> extends ParserBuilder<I, Object?> {
+class And<I, O> extends ParserBuilder<I, O> {
   static const _template = '''
 final @pos = state.pos;
 @p1
@@ -9,7 +9,7 @@ if (state.ok) {
   state.pos = @pos;
 }''';
 
-  final ParserBuilder<I, Object?> p;
+  final ParserBuilder<I, O> p;
 
   const And(this.p);
 

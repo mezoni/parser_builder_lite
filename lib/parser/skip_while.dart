@@ -3,7 +3,7 @@ import '../helper.dart';
 import '../parser_builder.dart';
 import 'take_while.dart';
 
-class SkipWhile extends ParserBuilder<String, Object?> {
+class SkipWhile extends ParserBuilder<String, String> {
   final Calculable<bool> predicate;
 
   const SkipWhile(this.predicate);

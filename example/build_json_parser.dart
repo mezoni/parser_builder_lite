@@ -6,13 +6,13 @@ import 'package:parser_builder_lite/fast_build.dart';
 import 'package:parser_builder_lite/parser/choice.dart';
 import 'package:parser_builder_lite/parser/delimited.dart';
 import 'package:parser_builder_lite/parser/eof.dart';
+import 'package:parser_builder_lite/parser/malformed.dart';
 import 'package:parser_builder_lite/parser/mapped.dart';
 import 'package:parser_builder_lite/parser/marked.dart';
 import 'package:parser_builder_lite/parser/named.dart';
 import 'package:parser_builder_lite/parser/preceded.dart';
 import 'package:parser_builder_lite/parser/predicate.dart';
 import 'package:parser_builder_lite/parser/ref.dart';
-import 'package:parser_builder_lite/parser/replace_errors.dart';
 import 'package:parser_builder_lite/parser/separated_list.dart';
 import 'package:parser_builder_lite/parser/skip_while.dart';
 import 'package:parser_builder_lite/parser/smart_choice.dart';
@@ -114,13 +114,8 @@ const _hexValue = Named(
     Mapped(TakeWhileMN(4, 4, isHexDigit),
         Expr<String>('String.fromCharCode(_toHexValue({{0}}))')));
 
-const _hexValueChecked = Named(
-    '_hexValueChecked',
-    ReplaceErrors(
-      _hexValue,
-      Expr(
-          "(true, [ErrorMessage({{1}} - {{0}}, 'Expected 4 digit hexadecimal number')])"),
-    ));
+const _hexValueChecked = Named('_hexValueChecked',
+    Malformed(_hexValue, 'Expected 4 digit hexadecimal number'));
 
 const _keyValue = Named(
     '_keyValue',

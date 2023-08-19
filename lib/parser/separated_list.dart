@@ -1,10 +1,10 @@
 import '../helper.dart';
 import '../parser_builder.dart';
 
-class SeparatedList<I, O> extends ParserBuilder<I, List<O>> {
+class SeparatedList<I, O1, O2> extends ParserBuilder<I, List<O1>> {
   static const _template = '''
 var @pos = state.pos;
-final @list = <@O>[];
+final @list = <@O1>[];
 while (true) {
   @p1
   if (!state.ok) {
@@ -38,9 +38,9 @@ while (true) {
 }
 state.ok = true;''';
 
-  final ParserBuilder<I, O> p;
+  final ParserBuilder<I, O1> p;
 
-  final ParserBuilder<I, Object?> sep;
+  final ParserBuilder<I, O2> sep;
 
   const SeparatedList(this.p, this.sep);
 
@@ -55,7 +55,7 @@ state.ok = true;''';
       hasResult,
       _template,
       _templateNoResult,
-      {'O': '$O'},
+      {'O1': '$O1'},
     );
   }
 

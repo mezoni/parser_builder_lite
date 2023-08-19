@@ -1,10 +1,10 @@
 import '../parser_builder.dart';
 import 'sequence.dart';
 
-class Terminated<I, O> extends SequenceBase<I, O> {
-  final ParserBuilder<I, O> p;
+class Terminated<I, O1, O2> extends SequenceBase<I, O1> {
+  final ParserBuilder<I, O1> p;
 
-  final ParserBuilder<I, dynamic> end;
+  final ParserBuilder<I, O2> end;
 
   const Terminated(this.p, this.end);
 

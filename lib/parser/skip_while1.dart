@@ -4,8 +4,8 @@ import '../parser_builder.dart';
 import '../parser_mixins.dart';
 import 'take_while1.dart';
 
-class SkipWhile1 extends ParserBuilder<String, Object?>
-    with SatisfyMixin<Object?> {
+class SkipWhile1 extends ParserBuilder<String, String>
+    with SatisfyMixin<String> {
   @override
   final Calculable<bool> predicate;
 

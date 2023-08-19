@@ -91,7 +91,7 @@ String getAsCode(Object? value) {
     return (name: 'codeUnitAt', size: '1');
   }
 
-  return (name: 'runeAt', size: '$name < 0xffff ? 1 : 2');
+  return (name: 'runeAt', size: '$name > 0xffff ? 2 : 1');
 }
 
 (int, int) getUnicodeRange() {

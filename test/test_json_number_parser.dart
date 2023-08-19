@@ -18,8 +18,8 @@ num parse(String input) {
   return result!;
 }
 
-Object? _ws(State<String> state) {
-  Object? $0;
+String? _ws(State<String> state) {
+  String? $0;
   final input$0 = state.input;
   while (state.pos < input$0.length) {
     final c = input$0.runeAt(state.pos);
@@ -27,7 +27,7 @@ Object? _ws(State<String> state) {
     if (!v) {
       break;
     }
-    state.pos += c < 0xffff ? 1 : 2;
+    state.pos += c > 0xffff ? 2 : 1;
   }
   state.ok = true;
   return $0;
@@ -485,6 +485,8 @@ abstract class ParseError {
 
   static String errorMessage(
       String input, int offset, List<ParseError> errors) {
+    int max(int x, int y) => x > y ? x : y;
+    int min(int x, int y) => x < y ? x : y;
     final sb = StringBuffer();
     final errorList = errors.toList();
     if (offset >= input.length) {
@@ -494,18 +496,24 @@ abstract class ParseError {
     final expectedTags = errorList.whereType<ErrorExpectedTags>().toList();
     if (expectedTags.isNotEmpty) {
       errorList.removeWhere((e) => e is ErrorExpectedTags);
-      final tags = <String>[];
+      final tags = <String>{};
       for (final error in expectedTags) {
         tags.addAll(error.tags);
       }
-      final error = ErrorExpectedTags(tags);
+      final error = ErrorExpectedTags(tags.toList());
       errorList.add(error);
     }
     final errorInfoList = errorList
-        .map((e) => (
-              message: e.getMessage(offset: offset, input: input),
-              start: offset - e.length,
-            ))
+        .map((e) {
+          final offset2 = offset + e.length;
+          final start = min(offset2, offset);
+          final end = max(offset2, offset);
+          return (
+            start: start,
+            end: end,
+            message: e.getMessage(offset: start, input: input),
+          );
+        })
         .toSet()
         .toList();
     for (var i = 0; i < errorInfoList.length; i++) {
@@ -516,9 +524,9 @@ abstract class ParseError {
         sb.writeln();
       }
       final errorInfo = errorInfoList[i];
+      final start = errorInfo.start;
+      final end = errorInfo.end;
       final message = errorInfo.message;
-      final start = min(errorInfo.start, offset);
-      final end = max(errorInfo.start, offset);
       var row = 1;
       var lineStart = 0, next = 0, pos = 0;
       while (pos < input.length) {
@@ -638,6 +646,19 @@ class State<T> {
       })?> _cache = List.filled(64, null, growable: false);
 
   State(this.input);
+
+  @pragma('vm:prefer-inline')
+  bool canHandleError(int failPos, int errorCount) => failPos == this.failPos
+      ? errorCount < this.errorCount
+      : failPos < this.failPos;
+
+  void clearErrors(int failPos, int errorCount) {
+    if (this.failPos == failPos) {
+      this.errorCount = errorCount;
+    } else if (this.failPos > failPos) {
+      this.errorCount = 0;
+    }
+  }
 
   @pragma('vm:prefer-inline')
   void fail(ParseError error) {

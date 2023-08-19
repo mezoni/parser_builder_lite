@@ -73,8 +73,8 @@ void _test() {
   _test_Tagshort$1();
   // Tag (long)
   _test_Taglong$1();
-  // Unterminated
-  _test_Unterminated$0();
+  // Malformed
+  _test_Malformed$0();
   // InRangeExcept
   _test_InRangeExcept$0();
 }
@@ -2866,11 +2866,11 @@ void _test_Taglong$1() {
   });
 }
 
-void _test_Unterminated$0() {
-  // Unterminated
-  test('Unterminated', () {
+void _test_Malformed$0() {
+  // Malformed
+  test('Malformed', () {
     final $state$0 = State('"123"');
-    final $result$0 = _Unterminated$0($state$0);
+    final $result$0 = _Malformed$0($state$0);
     expect($state$0.ok, true,
         reason: 'Testing \'state.ok == true\' failed, input: "123"');
     final $value$0 = $result$0!;
@@ -2878,7 +2878,7 @@ void _test_Unterminated$0() {
     expect($state$0.pos, 5,
         reason: 'Testing \'state.pos\' failed, input: "123"');
     final $state$1 = State('"123"');
-    final $result$1 = _Unterminated_NoResult$0($state$1);
+    final $result$1 = _Malformed_NoResult$0($state$1);
     expect($state$1.ok, true,
         reason: 'Testing \'state.ok == true\' failed, input: "123"');
     final $value$1 = $result$1;
@@ -2887,7 +2887,7 @@ void _test_Unterminated$0() {
     expect($state$1.pos, 5,
         reason: 'Testing \'state.pos\' failed, input: "123"');
     final $state$2 = State('');
-    final $result$2 = _Unterminated$0($state$2);
+    final $result$2 = _Malformed$0($state$2);
     expect($state$2.ok, false,
         reason: 'Testing \'state.ok == false\' failed, input: ');
     expect($result$2, null,
@@ -2900,7 +2900,7 @@ void _test_Unterminated$0() {
     expect($state$2.errors[0], isA<ErrorExpectedTags>(),
         reason: 'Testing \'state.error\' failed, input: ');
     final $state$3 = State('');
-    final $result$3 = _Unterminated_NoResult$0($state$3);
+    final $result$3 = _Malformed_NoResult$0($state$3);
     expect($state$3.ok, false,
         reason: 'Testing \'state.ok == false\' failed, input: ');
     expect($result$3, null,
@@ -2913,7 +2913,7 @@ void _test_Unterminated$0() {
     expect($state$3.errors[0], isA<ErrorExpectedTags>(),
         reason: 'Testing \'state.error\' failed, input: ');
     final $state$4 = State('"123');
-    final $result$4 = _Unterminated$0($state$4);
+    final $result$4 = _Malformed$0($state$4);
     expect($state$4.ok, false,
         reason: 'Testing \'state.ok == false\' failed, input: "123');
     expect($result$4, null,
@@ -2922,18 +2922,16 @@ void _test_Unterminated$0() {
         reason: 'Testing \'state.pos\' failed, input: "123');
     expect($state$4.failPos, 4,
         reason: 'Testing \'state.failPos\' failed, input: "123');
-    expect($state$4.errorCount, 2,
+    expect($state$4.errorCount, 1,
         reason: 'Testing \'state.errorCount\' failed, input: "123');
-    expect($state$4.errors[0], isA<ErrorExpectedTags>(),
+    expect($state$4.errors[0], isA<ErrorMessage>(),
         reason: 'Testing \'state.error\' failed, input: "123');
-    expect($state$4.errors[1], isA<ErrorMessage>(),
-        reason: 'Testing \'state.error\' failed, input: "123');
-    expect(($state$4.errors[1] as ErrorMessage).message, 'unterminated',
+    expect(($state$4.errors[0] as ErrorMessage).message, 'unterminated',
         reason: 'Testing \'ErrorMessage.message\' failed, input: "123');
-    expect(($state$4.errors[1] as ErrorMessage).length, -4,
+    expect(($state$4.errors[0] as ErrorMessage).length, -4,
         reason: 'Testing \'ErrorMessage.length\' failed, input: "123');
     final $state$5 = State('"123');
-    final $result$5 = _Unterminated_NoResult$0($state$5);
+    final $result$5 = _Malformed_NoResult$0($state$5);
     expect($state$5.ok, false,
         reason: 'Testing \'state.ok == false\' failed, input: "123');
     expect($result$5, null,
@@ -2942,15 +2940,13 @@ void _test_Unterminated$0() {
         reason: 'Testing \'state.pos\' failed, input: "123');
     expect($state$5.failPos, 4,
         reason: 'Testing \'state.failPos\' failed, input: "123');
-    expect($state$5.errorCount, 2,
+    expect($state$5.errorCount, 1,
         reason: 'Testing \'state.errorCount\' failed, input: "123');
-    expect($state$5.errors[0], isA<ErrorExpectedTags>(),
+    expect($state$5.errors[0], isA<ErrorMessage>(),
         reason: 'Testing \'state.error\' failed, input: "123');
-    expect($state$5.errors[1], isA<ErrorMessage>(),
-        reason: 'Testing \'state.error\' failed, input: "123');
-    expect(($state$5.errors[1] as ErrorMessage).message, 'unterminated',
+    expect(($state$5.errors[0] as ErrorMessage).message, 'unterminated',
         reason: 'Testing \'ErrorMessage.message\' failed, input: "123');
-    expect(($state$5.errors[1] as ErrorMessage).length, -4,
+    expect(($state$5.errors[0] as ErrorMessage).length, -4,
         reason: 'Testing \'ErrorMessage.length\' failed, input: "123');
   });
 }
@@ -3395,23 +3391,11 @@ Object? _Eof_NoResult$0(State<String> state) {
   }
   if (state.ok) {
     $0 = $1;
-  } else if (state.failPos >= failPos$0) {
-    final (bool, List<ParseError>?) v;
-    v = state.pos != state.failPos
-        ? const (false, null)
-        : const (
-            true,
-            [
-              ErrorExpectedTags(['expr'])
-            ]
-          );
-    if (v.$1) {
-      state.errorCount = state.failPos > failPos$0 ? 0 : errorCount$0;
-    }
-    if (v.$2 != null) {
-      final list = v.$2!;
-      for (var i = 0; i < list.length; i++) {
-        state.errors[state.errorCount++] = list[i];
+  } else {
+    if (state.canHandleError(failPos$0, errorCount$0)) {
+      if (state.pos == state.failPos) {
+        state.clearErrors(failPos$0, errorCount$0);
+        state.fail(const ErrorExpectedTags(['expr']));
       }
     }
   }
@@ -3440,23 +3424,11 @@ Object? _Expected_NoResult$0(State<String> state) {
       state.pos = pos$0;
     }
   }
-  if (!state.ok && state.failPos >= failPos$0) {
-    final (bool, List<ParseError>?) v;
-    v = state.pos != state.failPos
-        ? const (false, null)
-        : const (
-            true,
-            [
-              ErrorExpectedTags(['expr'])
-            ]
-          );
-    if (v.$1) {
-      state.errorCount = state.failPos > failPos$0 ? 0 : errorCount$0;
-    }
-    if (v.$2 != null) {
-      final list = v.$2!;
-      for (var i = 0; i < list.length; i++) {
-        state.errors[state.errorCount++] = list[i];
+  if (!state.ok) {
+    if (state.canHandleError(failPos$0, errorCount$0)) {
+      if (state.pos == state.failPos) {
+        state.clearErrors(failPos$0, errorCount$0);
+        state.fail(const ErrorExpectedTags(['expr']));
       }
     }
   }
@@ -4259,7 +4231,7 @@ String? _TakeWhileMN03$0(State<String> state) {
     if (!v) {
       break;
     }
-    state.pos += c < 0xffff ? 1 : 2;
+    state.pos += c > 0xffff ? 2 : 1;
     count$0++;
   }
   if (state.ok = true) {
@@ -4278,7 +4250,7 @@ Object? _TakeWhileMN03_NoResult$0(State<String> state) {
     if (!v) {
       break;
     }
-    state.pos += c < 0xffff ? 1 : 2;
+    state.pos += c > 0xffff ? 2 : 1;
     count$0++;
   }
   state.ok = true;
@@ -4296,7 +4268,7 @@ String? _TakeWhileMN12$0(State<String> state) {
     if (!v) {
       break;
     }
-    state.pos += c < 0xffff ? 1 : 2;
+    state.pos += c > 0xffff ? 2 : 1;
     count$0++;
   }
   if (state.ok = count$0 >= 1) {
@@ -4320,7 +4292,7 @@ Object? _TakeWhileMN12_NoResult$0(State<String> state) {
     if (!v) {
       break;
     }
-    state.pos += c < 0xffff ? 1 : 2;
+    state.pos += c > 0xffff ? 2 : 1;
     count$0++;
   }
   if (!(state.ok = count$0 >= 1)) {
@@ -4341,7 +4313,7 @@ String? _TakeWhile$0(State<String> state) {
     if (!v) {
       break;
     }
-    state.pos += c < 0xffff ? 1 : 2;
+    state.pos += c > 0xffff ? 2 : 1;
   }
   if (state.ok = true) {
     $0 = state.pos != pos$0 ? input$0.substring(pos$0, state.pos) : '';
@@ -4358,7 +4330,7 @@ Object? _TakeWhile_NoResult$0(State<String> state) {
     if (!v) {
       break;
     }
-    state.pos += c < 0xffff ? 1 : 2;
+    state.pos += c > 0xffff ? 2 : 1;
   }
   state.ok = true;
   return $0;
@@ -4374,7 +4346,7 @@ String? _TakeWhile1$0(State<String> state) {
     if (!v) {
       break;
     }
-    state.pos += c < 0xffff ? 1 : 2;
+    state.pos += c > 0xffff ? 2 : 1;
   }
   if (state.ok = state.pos != pos$0) {
     $0 = input$0.substring(pos$0, state.pos);
@@ -4396,7 +4368,7 @@ Object? _TakeWhile1_NoResult$0(State<String> state) {
     if (!v) {
       break;
     }
-    state.pos += c < 0xffff ? 1 : 2;
+    state.pos += c > 0xffff ? 2 : 1;
   }
   if (!(state.ok = state.pos != pos$0)) {
     final failPos = state.pos;
@@ -4510,7 +4482,7 @@ Object? _Taglong_NoResult$1(State<String> state) {
   return $0;
 }
 
-String? _Unterminated$0(State<String> state) {
+String? _Malformed$0(State<String> state) {
   String? $0;
   final failPos$0 = state.failPos;
   final errorCount$0 = state.errorCount;
@@ -4556,25 +4528,19 @@ String? _Unterminated$0(State<String> state) {
   }
   if (state.ok) {
     $0 = $1;
-  } else if (state.failPos >= failPos$0) {
-    final (bool, List<ParseError>?) v;
-    v = state.pos == state.failPos
-        ? const (false, null)
-        : (false, [ErrorMessage(state.pos - state.failPos, 'unterminated')]);
-    if (v.$1) {
-      state.errorCount = state.failPos > failPos$0 ? 0 : errorCount$0;
-    }
-    if (v.$2 != null) {
-      final list = v.$2!;
-      for (var i = 0; i < list.length; i++) {
-        state.errors[state.errorCount++] = list[i];
+  } else {
+    if (state.canHandleError(failPos$0, errorCount$0)) {
+      if (state.pos != state.failPos) {
+        state.clearErrors(failPos$0, errorCount$0);
+        state.failAt(state.failPos,
+            ErrorMessage(state.pos - state.failPos, 'unterminated'));
       }
     }
   }
   return $0;
 }
 
-Object? _Unterminated_NoResult$0(State<String> state) {
+Object? _Malformed_NoResult$0(State<String> state) {
   Object? $0;
   final failPos$0 = state.failPos;
   final errorCount$0 = state.errorCount;
@@ -4610,18 +4576,12 @@ Object? _Unterminated_NoResult$0(State<String> state) {
   if (!state.ok) {
     state.pos = pos$0;
   }
-  if (!state.ok && state.failPos >= failPos$0) {
-    final (bool, List<ParseError>?) v;
-    v = state.pos == state.failPos
-        ? const (false, null)
-        : (false, [ErrorMessage(state.pos - state.failPos, 'unterminated')]);
-    if (v.$1) {
-      state.errorCount = state.failPos > failPos$0 ? 0 : errorCount$0;
-    }
-    if (v.$2 != null) {
-      final list = v.$2!;
-      for (var i = 0; i < list.length; i++) {
-        state.errors[state.errorCount++] = list[i];
+  if (!state.ok) {
+    if (state.canHandleError(failPos$0, errorCount$0)) {
+      if (state.pos != state.failPos) {
+        state.clearErrors(failPos$0, errorCount$0);
+        state.failAt(state.failPos,
+            ErrorMessage(state.pos - state.failPos, 'unterminated'));
       }
     }
   }
@@ -4638,7 +4598,7 @@ String? _InRangeExcept$0(State<String> state) {
     if (!v) {
       break;
     }
-    state.pos += c < 0xffff ? 1 : 2;
+    state.pos += c > 0xffff ? 2 : 1;
   }
   if (state.ok = true) {
     $0 = state.pos != pos$0 ? input$0.substring(pos$0, state.pos) : '';
@@ -4655,7 +4615,7 @@ Object? _InRangeExcept_NoResult$0(State<String> state) {
     if (!v) {
       break;
     }
-    state.pos += c < 0xffff ? 1 : 2;
+    state.pos += c > 0xffff ? 2 : 1;
   }
   state.ok = true;
   return $0;
@@ -4815,6 +4775,8 @@ abstract class ParseError {
 
   static String errorMessage(
       String input, int offset, List<ParseError> errors) {
+    int max(int x, int y) => x > y ? x : y;
+    int min(int x, int y) => x < y ? x : y;
     final sb = StringBuffer();
     final errorList = errors.toList();
     if (offset >= input.length) {
@@ -4824,18 +4786,24 @@ abstract class ParseError {
     final expectedTags = errorList.whereType<ErrorExpectedTags>().toList();
     if (expectedTags.isNotEmpty) {
       errorList.removeWhere((e) => e is ErrorExpectedTags);
-      final tags = <String>[];
+      final tags = <String>{};
       for (final error in expectedTags) {
         tags.addAll(error.tags);
       }
-      final error = ErrorExpectedTags(tags);
+      final error = ErrorExpectedTags(tags.toList());
       errorList.add(error);
     }
     final errorInfoList = errorList
-        .map((e) => (
-              message: e.getMessage(offset: offset, input: input),
-              start: offset - e.length,
-            ))
+        .map((e) {
+          final offset2 = offset + e.length;
+          final start = min(offset2, offset);
+          final end = max(offset2, offset);
+          return (
+            start: start,
+            end: end,
+            message: e.getMessage(offset: start, input: input),
+          );
+        })
         .toSet()
         .toList();
     for (var i = 0; i < errorInfoList.length; i++) {
@@ -4846,9 +4814,9 @@ abstract class ParseError {
         sb.writeln();
       }
       final errorInfo = errorInfoList[i];
+      final start = errorInfo.start;
+      final end = errorInfo.end;
       final message = errorInfo.message;
-      final start = min(errorInfo.start, offset);
-      final end = max(errorInfo.start, offset);
       var row = 1;
       var lineStart = 0, next = 0, pos = 0;
       while (pos < input.length) {
@@ -4968,6 +4936,19 @@ class State<T> {
       })?> _cache = List.filled(64, null, growable: false);
 
   State(this.input);
+
+  @pragma('vm:prefer-inline')
+  bool canHandleError(int failPos, int errorCount) => failPos == this.failPos
+      ? errorCount < this.errorCount
+      : failPos < this.failPos;
+
+  void clearErrors(int failPos, int errorCount) {
+    if (this.failPos == failPos) {
+      this.errorCount = errorCount;
+    } else if (this.failPos > failPos) {
+      this.errorCount = 0;
+    }
+  }
 
   @pragma('vm:prefer-inline')
   void fail(ParseError error) {

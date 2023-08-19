@@ -2,7 +2,7 @@
 
 Parser Builder Lite is a source code generator of high performance real-time parsers.
 
-Version: 0.7.1
+Version: 0.7.2
 
 ## What is it and what is it for?
 
@@ -448,17 +448,17 @@ Test results based on data from this source https://github.com/miloyip/nativejso
 JIT code execution.
 
 ```
-Parse 20 times: E:\prj\test_json\bin\data\canada.json (2251.05 Kb)
-Dart SDK JSON : k: 2.75, 54.78 MB/s, 783.7180 ms (100.00%),
-JSON Parser: k: 1.00, 150.85 MB/s, 284.6280 ms (36.32%),
+Parse 20 times: E:\prj\test_json_new\bin\data\canada.json (2251.05 Kb)
+Dart SDK JSON        : k: 3.05, 46.70 MB/s, 919.3990 ms (100.00%),
+JSON Parser          : k: 1.00, 142.49 MB/s, 301.3300 ms (32.77%),
 
-Parse 20 times: E:\prj\test_json\bin\data\citm_catalog.json (1727.03 Kb)
-Dart SDK JSON : k: 1.00, 108.23 MB/s, 304.3650 ms (85.31%),
-JSON Parser: k: 1.17, 92.33 MB/s, 356.7710 ms (100.00%),
+Parse 20 times: E:\prj\test_json_new\bin\data\citm_catalog.json (1727.03 Kb)
+Dart SDK JSON        : k: 1.00, 100.64 MB/s, 327.3030 ms (89.28%),
+JSON Parser          : k: 1.12, 89.85 MB/s, 366.6040 ms (100.00%),
 
-Parse 20 times: E:\prj\test_json\bin\data\twitter.json (567.93 Kb)
-Dart SDK JSON : k: 1.00, 68.83 MB/s, 157.3720 ms (89.55%),
-JSON Parser: k: 1.12, 61.64 MB/s, 175.7270 ms (100.00%),
+Parse 20 times: E:\prj\test_json_new\bin\data\twitter.json (567.93 Kb)
+Dart SDK JSON        : k: 1.00, 66.03 MB/s, 164.0480 ms (89.75%),
+JSON Parser          : k: 1.11, 59.26 MB/s, 182.7920 ms (100.00%),
 
 OS: Њ ©Єа®б®дв Windows 10 Pro 10.0.19045
 Kernel: Windows_NT 10.0.19045
@@ -468,17 +468,17 @@ Processor (4 core) Intel(R) Core(TM) i5-3450 CPU @ 3.10GHz
 AOT code execution.
 
 ```
-Parse 20 times: E:\prj\test_json\bin\data\canada.json (2251.05 Kb)
-Dart SDK JSON : k: 1.76, 49.26 MB/s, 871.5480 ms (100.00%),
-JSON Parser: k: 1.00, 86.89 MB/s, 494.1260 ms (56.70%),
+Parse 20 times: E:\prj\test_json_new\bin\data\canada.json (2251.05 Kb)
+Dart SDK JSON        : k: 1.70, 47.65 MB/s, 900.9720 ms (100.00%),
+JSON Parser          : k: 1.00, 81.03 MB/s, 529.8630 ms (58.81%),
 
-Parse 20 times: E:\prj\test_json\bin\data\citm_catalog.json (1727.03 Kb)
-Dart SDK JSON : k: 1.00, 88.38 MB/s, 372.6970 ms (90.48%),
-JSON Parser: k: 1.11, 79.97 MB/s, 411.9100 ms (100.00%),
+Parse 20 times: E:\prj\test_json_new\bin\data\citm_catalog.json (1727.03 Kb)
+Dart SDK JSON        : k: 1.00, 89.48 MB/s, 368.1300 ms (87.84%),
+JSON Parser          : k: 1.14, 78.60 MB/s, 419.0910 ms (100.00%),
 
-Parse 20 times: E:\prj\test_json\bin\data\twitter.json (567.93 Kb)
-Dart SDK JSON : k: 1.00, 61.71 MB/s, 175.5400 ms (87.40%),
-JSON Parser: k: 1.14, 53.93 MB/s, 200.8460 ms (100.00%),
+Parse 20 times: E:\prj\test_json_new\bin\data\twitter.json (567.93 Kb)
+Dart SDK JSON        : k: 1.00, 60.43 MB/s, 179.2560 ms (85.30%),
+JSON Parser          : k: 1.17, 51.55 MB/s, 210.1430 ms (100.00%),
 
 OS: Њ ©Єа®б®дв Windows 10 Pro 10.0.19045
 Kernel: Windows_NT 10.0.19045

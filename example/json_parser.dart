@@ -90,22 +90,14 @@ String? _hexValueChecked(State<String> state) {
   $1 = _hexValue(state);
   if (state.ok) {
     $0 = $1;
-  } else if (state.failPos >= failPos$0) {
-    final (bool, List<ParseError>?) v;
-    v = (
-      true,
-      [
-        ErrorMessage(
-            state.failPos - state.pos, 'Expected 4 digit hexadecimal number')
-      ]
-    );
-    if (v.$1) {
-      state.errorCount = state.failPos > failPos$0 ? 0 : errorCount$0;
-    }
-    if (v.$2 != null) {
-      final list = v.$2!;
-      for (var i = 0; i < list.length; i++) {
-        state.errors[state.errorCount++] = list[i];
+  } else {
+    if (state.canHandleError(failPos$0, errorCount$0)) {
+      if (state.pos != state.failPos) {
+        state.clearErrors(failPos$0, errorCount$0);
+        state.failAt(
+            state.failPos,
+            ErrorMessage(state.pos - state.failPos,
+                'Expected 4 digit hexadecimal number'));
       }
     }
   }
@@ -137,11 +129,10 @@ String? _escapeHex(State<String> state) {
 String? _stringChars(State<String> state) {
   String? $0;
   final input$0 = state.input;
-  final list$0 = <String>[];
-  var str$0 = '';
+  List<String>? list$0;
+  String? str$0;
   while (state.pos < input$0.length) {
     final pos$0 = state.pos;
-    str$0 = '';
     var c = -1;
     while (state.pos < input$0.length) {
       c = input$0.runeAt(state.pos);
@@ -153,12 +144,18 @@ String? _stringChars(State<String> state) {
       if (!ok) {
         break;
       }
-      state.pos += c < 0xffff ? 1 : 2;
+      state.pos += c > 0xffff ? 2 : 1;
     }
     if (state.pos != pos$0) {
-      str$0 = input$0.substring(pos$0, state.pos);
-      if (list$0.isNotEmpty) {
-        list$0.add(str$0);
+      final v = input$0.substring(pos$0, state.pos);
+      if (str$0 == null) {
+        str$0 = v;
+      } else {
+        if (list$0 == null) {
+          list$0 = [str$0, v];
+        } else {
+          list$0.add(v);
+        }
       }
     }
     if (c != 92) {
@@ -181,13 +178,20 @@ String? _stringChars(State<String> state) {
       state.pos = pos$0;
       break;
     }
-    if (list$0.isEmpty && str$0 != '') {
-      list$0.add(str$0);
+    if (str$0 == null) {
+      str$0 = $1!;
+    } else {
+      if (list$0 == null) {
+        list$0 = [str$0, $1!];
+      } else {
+        list$0.add($1!);
+      }
     }
-    list$0.add($1!);
   }
   state.ok = true;
-  if (list$0.isEmpty) {
+  if (str$0 == null) {
+    $0 = '';
+  } else if (list$0 == null) {
     $0 = str$0;
   } else {
     $0 = list$0.join();
@@ -1175,6 +1179,8 @@ abstract class ParseError {
 
   static String errorMessage(
       String input, int offset, List<ParseError> errors) {
+    int max(int x, int y) => x > y ? x : y;
+    int min(int x, int y) => x < y ? x : y;
     final sb = StringBuffer();
     final errorList = errors.toList();
     if (offset >= input.length) {
@@ -1192,10 +1198,16 @@ abstract class ParseError {
       errorList.add(error);
     }
     final errorInfoList = errorList
-        .map((e) => (
-              message: e.getMessage(offset: offset, input: input),
-              start: offset - e.length,
-            ))
+        .map((e) {
+          final offset2 = offset + e.length;
+          final start = min(offset2, offset);
+          final end = max(offset2, offset);
+          return (
+            start: start,
+            end: end,
+            message: e.getMessage(offset: start, input: input),
+          );
+        })
         .toSet()
         .toList();
     for (var i = 0; i < errorInfoList.length; i++) {
@@ -1206,9 +1218,9 @@ abstract class ParseError {
         sb.writeln();
       }
       final errorInfo = errorInfoList[i];
+      final start = errorInfo.start;
+      final end = errorInfo.end;
       final message = errorInfo.message;
-      final start = min(errorInfo.start, offset);
-      final end = max(errorInfo.start, offset);
       var row = 1;
       var lineStart = 0, next = 0, pos = 0;
       while (pos < input.length) {
@@ -1328,6 +1340,19 @@ class State<T> {
       })?> _cache = List.filled(64, null, growable: false);
 
   State(this.input);
+
+  @pragma('vm:prefer-inline')
+  bool canHandleError(int failPos, int errorCount) => failPos == this.failPos
+      ? errorCount < this.errorCount
+      : failPos < this.failPos;
+
+  void clearErrors(int failPos, int errorCount) {
+    if (this.failPos == failPos) {
+      this.errorCount = errorCount;
+    } else if (this.failPos > failPos) {
+      this.errorCount = 0;
+    }
+  }
 
   @pragma('vm:prefer-inline')
   void fail(ParseError error) {

@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import '../expr.dart';
 import '../helper.dart';
 import '../parser_builder.dart';
@@ -106,7 +108,35 @@ if (!state.ok) {
       map[p] = parserRanges[p]!;
     }
 
+    bool compareSets(Set<Object?> x, Set<Object?> y) {
+      if (x.length != y.length) {
+        return false;
+      }
+
+      for (final element in x) {
+        if (!y.contains(element)) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
     final transitions = makeTransitions(map);
+    final map2 = HashMap<Set<ParserBuilder<I, O>>, Set<(int, int)>>(
+        equals: compareSets, hashCode: (e) => e.length);
+    for (final element in transitions) {
+      final key = element.$2;
+      final value = element.$1;
+      (map2[key] ??= {}).add(value);
+    }
+
+    final transitions2 = <(Set<(int, int)>, Set<ParserBuilder<I, O>>)>[];
+    for (final element in map2.entries) {
+      final value = (element.value, element.key);
+      transitions2.add(value);
+    }
+
     var badFlag = 0;
     for (final p in unknown) {
       final index = parserIndexes[p]!;
@@ -114,13 +144,18 @@ if (!state.ok) {
     }
 
     final branches = <String, String>{};
-    for (final transition in transitions) {
-      final range = transition.$1;
+    for (final transition in transitions2) {
+      final ranges = transition.$1;
       final ps = transition.$2;
-      final start = range.$1;
-      final end = range.$2;
-      final condition =
-          start == end ? '@v == $start' : '@v >= $start && @v <= $end';
+      final expressions = <String>[];
+      for (final range in ranges) {
+        final start = range.$1;
+        final end = range.$2;
+        final expression =
+            start == end ? '@v == $start' : '@v >= $start && @v <= $end';
+        expressions.add(expression);
+      }
+
       var flag = 0;
       for (final p in ps) {
         final index = parserIndexes[p]!;
@@ -128,6 +163,7 @@ if (!state.ok) {
       }
 
       flag |= badFlag;
+      final condition = expressions.join(' || ');
       branches[condition] = '@flag = 0x${flag.toRadixString(16)};';
     }
 

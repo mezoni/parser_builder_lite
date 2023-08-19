@@ -1,6 +1,6 @@
 name: parser_builder_lite
 description: Parser Builder Lite is a source code generator of high performance real-time parsers.
-version: 0.7.2
+version: 0.7.3
 homepage: https://github.com/mezoni/parser_builder_lite
 topics:
   - parser

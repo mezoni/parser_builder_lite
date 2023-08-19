@@ -736,18 +736,18 @@ Object? _value(State<String> state) {
       state.pos < state.input.length ? state.input.runeAt(state.pos) : null;
   var flag$0 = 0x40;
   if (v$0 != null) {
-    if (v$0 == 34) {
-      flag$0 = 0x42;
-    } else if (v$0 == 91) {
-      flag$0 = 0x44;
-    } else if (v$0 == 102) {
-      flag$0 = 0x50;
-    } else if (v$0 == 110) {
-      flag$0 = 0x48;
+    if (v$0 == 123) {
+      flag$0 = 0x41;
     } else if (v$0 == 116) {
       flag$0 = 0x60;
-    } else if (v$0 == 123) {
-      flag$0 = 0x41;
+    } else if (v$0 == 110) {
+      flag$0 = 0x48;
+    } else if (v$0 == 102) {
+      flag$0 = 0x50;
+    } else if (v$0 == 91) {
+      flag$0 = 0x44;
+    } else if (v$0 == 34) {
+      flag$0 = 0x42;
     }
   }
   state.ok = false;

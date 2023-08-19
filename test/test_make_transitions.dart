@@ -5,6 +5,20 @@ void main(List<String> args) {
   test('makeTransitions', () {
     {
       final input = [
+        ('a', (45, 45)),
+        ('a', (48, 57)),
+      ];
+      final result = _makeTransitions(input);
+      expect(_flatten(result), [
+        (45, 45),
+        ['a'],
+        (48, 57),
+        ['a'],
+      ]);
+    }
+
+    {
+      final input = [
         ('a', (0, 0)),
         ('b', (1, 1)),
       ];

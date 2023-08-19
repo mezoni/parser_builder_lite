@@ -857,9 +857,7 @@ Object? _value(State<String> state) {
   if (v$0 != null) {
     if (v$0 == 34) {
       flag$0 = 0x2;
-    } else if (v$0 == 45) {
-      flag$0 = 0x40;
-    } else if (v$0 >= 48 && v$0 <= 57) {
+    } else if (v$0 == 45 || v$0 >= 48 && v$0 <= 57) {
       flag$0 = 0x40;
     } else if (v$0 == 91) {
       flag$0 = 0x4;

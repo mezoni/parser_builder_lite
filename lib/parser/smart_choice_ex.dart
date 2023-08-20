@@ -137,10 +137,10 @@ if (!state.ok) {
       transitions2.add(value);
     }
 
-    var badFlag = 0;
+    var unknownFlag = 0;
     for (final p in unknown) {
       final index = parserIndexes[p]!;
-      badFlag |= 1 << index;
+      unknownFlag |= 1 << index;
     }
 
     final branches = <String, String>{};
@@ -162,7 +162,7 @@ if (!state.ok) {
         flag |= 1 << index;
       }
 
-      flag |= badFlag;
+      flag |= unknownFlag;
       final condition = expressions.join(' || ');
       branches[condition] = '@flag = 0x${flag.toRadixString(16)};';
     }
@@ -189,7 +189,7 @@ if (!state.ok) {
     final template = render(_template, {
       'O': '$O',
       'errors': '[${allErrors.join(', ')}]',
-      'mask': '0x${badFlag.toRadixString(16)}',
+      'mask': '0x${unknownFlag.toRadixString(16)}',
       'peek': peek.calculate(context, ['state']),
       'prepare': prepare.toString(),
       'parsers': choices.toString(),

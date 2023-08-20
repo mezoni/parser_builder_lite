@@ -147,7 +147,7 @@ String? _stringChars(State<String> state) {
   List<String>? list$0;
   String? str$0;
   while (state.pos < input$0.length) {
-    final pos$0 = state.pos;
+    var pos = state.pos;
     var c = -1;
     while (state.pos < input$0.length) {
       c = input$0.runeAt(state.pos);
@@ -161,21 +161,20 @@ String? _stringChars(State<String> state) {
       }
       state.pos += c > 0xffff ? 2 : 1;
     }
-    if (state.pos != pos$0) {
-      final v = input$0.substring(pos$0, state.pos);
+    if (state.pos != pos) {
+      final v = input$0.substring(pos, state.pos);
       if (str$0 == null) {
         str$0 = v;
+      } else if (list$0 == null) {
+        list$0 = [str$0, v];
       } else {
-        if (list$0 == null) {
-          list$0 = [str$0, v];
-        } else {
-          list$0.add(v);
-        }
+        list$0.add(v);
       }
     }
     if (c != 92) {
       break;
     }
+    pos = state.pos;
     state.pos += 1;
     String? $1;
     String? $2;
@@ -190,7 +189,7 @@ String? _stringChars(State<String> state) {
       }
     }
     if (!state.ok) {
-      state.pos = pos$0;
+      state.pos = pos;
       break;
     }
     if (str$0 == null) {
@@ -229,7 +228,7 @@ String? _string(State<String> state) {
     $1 = _stringChars(state);
     if (state.ok) {
       // => _doubleQuote
-      final pos$5 = state.pos;
+      final pos$4 = state.pos;
       const tag$2 = '"';
       if (state.ok = state.pos + 1 <= state.input.length &&
           state.input.codeUnitAt(state.pos) == 34) {
@@ -240,7 +239,7 @@ String? _string(State<String> state) {
       if (state.ok) {
         _ws(state);
         if (!state.ok) {
-          state.pos = pos$5;
+          state.pos = pos$4;
         }
       }
       // <= _doubleQuote
@@ -263,7 +262,7 @@ MapEntry<String, Object?>? _keyValue(State<String> state) {
   $2 = _string(state);
   if (state.ok) {
     // => _colon
-    final pos$7 = state.pos;
+    final pos$6 = state.pos;
     const tag$3 = ':';
     if (state.ok = state.pos + 1 <= state.input.length &&
         state.input.codeUnitAt(state.pos) == 58) {
@@ -274,7 +273,7 @@ MapEntry<String, Object?>? _keyValue(State<String> state) {
     if (state.ok) {
       _ws(state);
       if (!state.ok) {
-        state.pos = pos$7;
+        state.pos = pos$6;
       }
     }
     // <= _colon
@@ -374,7 +373,7 @@ Map<String, Object?>? _object(State<String> state) {
     if (state.ok) {
       String? $30;
       // => _closeBrace
-      final pos$12 = state.pos;
+      final pos$11 = state.pos;
       String? $31;
       const tag$6 = '}';
       if (state.ok = state.pos + 1 <= state.input.length &&
@@ -389,7 +388,7 @@ Map<String, Object?>? _object(State<String> state) {
         if (state.ok) {
           $30 = $31;
         } else {
-          state.pos = pos$12;
+          state.pos = pos$11;
         }
       }
       // <= _closeBrace

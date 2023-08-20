@@ -17,7 +17,7 @@ final @input = state.input;
 List<String>? @list;
 String? @str;
 while (state.pos < @input.length) {
-  final @pos = state.pos;
+  var pos = state.pos;
   var c = -1;
   while (state.pos < @input.length) {
     c = @input.runeAt(state.pos);
@@ -27,25 +27,24 @@ while (state.pos < @input.length) {
     }
     state.pos += c > 0xffff ? 2 : 1;
   }
-  if (state.pos != @pos) {
-    final v = @input.substring(@pos, state.pos);
+  if (state.pos != pos) {
+    final v = @input.substring(pos, state.pos);
     if (@str == null) {
       @str = v;
+    } else if (@list == null) {
+      @list = [@str, v];
     } else {
-      if (@list == null) {
-        @list = [@str, v];
-      } else {
-        @list.add(v);
-      }
+      @list.add(v);
     }
   }
   if (c != @controlChar) {
     break;
   }
+  pos = state.pos;
   state.pos += @size;
   @p1
   if (!state.ok) {
-    state.pos = @pos;
+    state.pos = pos;
     break;
   }
   if (@str == null) {
@@ -69,11 +68,8 @@ if (@str == null) {
 
   static const _templateNoResult = '''
 final @input = state.input;
-final @list = <String>[];
-var @str = '';
 while (state.pos < @input.length) {
-  final @pos = state.pos;
-  @str = '';
+  var pos = state.pos;
   var c = -1;
   while (state.pos < @input.length) {
     c = @input.runeAt(state.pos);
@@ -83,25 +79,16 @@ while (state.pos < @input.length) {
     }
     state.pos += c > 0xffff ? 2 : 1;
   }
-  if (state.pos != @pos) {
-    @str = @input.substring(@pos, state.pos);
-    if (@list.isNotEmpty) {
-      @list.add(@str);
-    }
-  }
   if (c != @controlChar) {
     break;
   }
+  pos = state.pos;
   state.pos += @size;
   @p1
   if (!state.ok) {
-    state.pos = @pos;
+    state.pos = pos;
     break;
   }
-  if (@list.isEmpty && @str != '') {
-    @list.add(@str);
-  }
-  @list.add(@rv1);
 }
 state.ok = true;''';
 

@@ -26,6 +26,9 @@ String? _ws(State<String> state) {
     state.pos += 1;
   }
   state.ok = true;
+  if (state.ok) {
+    $0 = '';
+  }
   return $0;
 }
 
@@ -588,6 +591,9 @@ String? _digit0(State<String> state) {
     state.pos += 1;
   }
   state.ok = true;
+  if (state.ok) {
+    $0 = '';
+  }
   return $0;
 }
 

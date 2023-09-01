@@ -3,7 +3,7 @@ import '../parser_builder.dart';
 
 class TakeUntil extends ParserBuilder<String, String> {
   static const _template = '''
-const @tag = @text;
+const @tag = @pattern;
 final @index = state.input.indexOf(@tag);
 if (state.ok = @index >= 0) {
   final pos = state.pos;
@@ -14,7 +14,7 @@ if (state.ok = @index >= 0) {
 }''';
 
   static const _templateNoResult = '''
-const @tag = @text;
+const @tag = @pattern;
 final @index = state.input.indexOf(@tag);
 if (state.ok = @index >= 0) {
   state.pos = @index;
@@ -39,7 +39,7 @@ if (state.ok = @index >= 0) {
       _template,
       _templateNoResult,
       {
-        'text': getAsCode(tag),
+        'pattern': getAsCode(tag),
       },
     );
   }

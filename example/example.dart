@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:parser_builder_lite/allocator.dart';
 import 'package:parser_builder_lite/expr.dart';
 import 'package:parser_builder_lite/fast_build.dart';

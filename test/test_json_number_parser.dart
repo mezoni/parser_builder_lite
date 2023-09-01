@@ -30,6 +30,9 @@ String? _ws(State<String> state) {
     state.pos += c > 0xffff ? 2 : 1;
   }
   state.ok = true;
+  if (state.ok) {
+    $0 = '';
+  }
   return $0;
 }
 

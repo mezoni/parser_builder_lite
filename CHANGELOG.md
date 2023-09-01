@@ -1,3 +1,7 @@
+## 0.7.3
+
+- Fixed bugs in the implementation of parsers `SkipWhile` and `SkipWhile1`.
+
 ## 0.7.2
 
 - Fixed bugs
